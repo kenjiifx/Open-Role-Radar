@@ -1,0 +1,44 @@
+name: Validate Sources
+
+on:
+  pull_request:
+    paths:
+      - "config/sources.yml"
+      - "config/aggregators-denylist.yml"
+      - "config/ats-hosts.yml"
+      - "scripts/validate-sources.py"
+      - "schemas/source.schema.json"
+      - ".github/workflows/validate-sources.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-sources-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate config/sources.yml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1635cea06169dac05bcb1fe423 # v4.2.2
+        with:
+          # Fork PRs receive a read-only token; no secrets are required or used.
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@7b6b7d71fd345867f2aecbb6ff63f536eea0024b # v6.3.1
+
+      - name: Install validation dependencies
+        run: pip install pyyaml
+
+      - name: Run source validator
+        run: python scripts/validate-sources.py
+
+      - name: Fork safety notice
+        if: github.event.pull_request.head.repo.fork == true
+        run: |
+          echo "Fork PR validation completed with read-only permissions."
+          echo "No repository secrets or write access were used."
