@@ -1,0 +1,98 @@
+# Technical skills dictionary with aliases for extraction and filtering.
+skills:
+  Python:
+    aliases: [python3, py]
+  Java:
+    aliases: []
+  C:
+    aliases: []
+  "C++":
+    aliases: [cpp, c plus plus]
+  "C#":
+    aliases: [csharp, c sharp]
+  Go:
+    aliases: [golang]
+  Rust:
+    aliases: []
+  JavaScript:
+    aliases: [js, ecmascript]
+  TypeScript:
+    aliases: [ts]
+  React:
+    aliases: [reactjs, react.js]
+  Next.js:
+    aliases: [nextjs]
+  "Node.js":
+    aliases: [nodejs, node]
+  SQL:
+    aliases: []
+  PostgreSQL:
+    aliases: [postgres, psql]
+  MongoDB:
+    aliases: [mongo]
+  Redis:
+    aliases: []
+  Linux:
+    aliases: []
+  Windows:
+    aliases: []
+  AWS:
+    aliases: [amazon web services]
+  Azure:
+    aliases: [microsoft azure]
+  GCP:
+    aliases: [google cloud, google cloud platform]
+  Docker:
+    aliases: [containers]
+  Kubernetes:
+    aliases: [k8s]
+  Terraform:
+    aliases: [tf]
+  Ansible:
+    aliases: []
+  Git:
+    aliases: []
+  "GitHub Actions":
+    aliases: [gh actions]
+  Jenkins:
+    aliases: []
+  "CI/CD":
+    aliases: [cicd, continuous integration]
+  "TCP/IP":
+    aliases: [tcp ip]
+  DNS:
+    aliases: []
+  DHCP:
+    aliases: []
+  BGP:
+    aliases: []
+  OSPF:
+    aliases: []
+  Wireshark:
+    aliases: []
+  Splunk:
+    aliases: []
+  SIEM:
+    aliases: []
+  SOC:
+    aliases: [security operations center]
+  IAM:
+    aliases: [identity access management]
+  OAuth:
+    aliases: []
+  SAML:
+    aliases: []
+  Kotlin:
+    aliases: []
+  Swift:
+    aliases: []
+  PyTorch:
+    aliases: [pytorch]
+  TensorFlow:
+    aliases: [tensorflow]
+  Pandas:
+    aliases: []
+  Spark:
+    aliases: [apache spark]
+  Kafka:
+    aliases: [apache kafka]

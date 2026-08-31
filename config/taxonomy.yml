@@ -1,0 +1,169 @@
+# Career discipline taxonomy — extensible without schema migrations.
+disciplines:
+  - id: software
+    label: Software Engineering
+    aliases: [software engineering, swe, developer]
+  - id: frontend
+    label: Frontend
+    aliases: [front-end, front end, ui engineer]
+  - id: backend
+    label: Backend
+    aliases: [back-end, back end, server]
+  - id: full_stack
+    label: Full Stack
+    aliases: [fullstack, full-stack]
+  - id: mobile
+    label: Mobile
+    aliases: [ios, android, mobile engineer]
+  - id: systems
+    label: Systems
+    aliases: [systems engineer, systems programming]
+  - id: infrastructure
+    label: Infrastructure
+    aliases: [infra engineer]
+  - id: cloud
+    label: Cloud
+    aliases: [cloud engineer, cloud architect]
+  - id: devops
+    label: DevOps
+    aliases: [dev ops, platform engineer]
+  - id: sre
+    label: SRE
+    aliases: [site reliability, reliability engineer]
+  - id: cybersecurity
+    label: Cybersecurity
+    aliases: [security engineer, infosec, cyber security]
+  - id: networking
+    label: Networking
+    aliases: [network engineer]
+  - id: it
+    label: IT
+    aliases: [information technology, it support]
+  - id: technical_support
+    label: Technical Support
+    aliases: [tech support, support engineer]
+  - id: data_engineering
+    label: Data Engineering
+    aliases: [data engineer]
+  - id: data_science
+    label: Data Science
+    aliases: [data scientist]
+  - id: machine_learning
+    label: Machine Learning
+    aliases: [ml engineer, ml]
+  - id: artificial_intelligence
+    label: Artificial Intelligence
+    aliases: [ai engineer, ai researcher]
+  - id: quantitative_development
+    label: Quantitative Development
+    aliases: [quant dev, quant developer]
+  - id: quantitative_research
+    label: Quantitative Research
+    aliases: [quant research, quant researcher]
+  - id: product
+    label: Product
+    aliases: [product manager, pm]
+  - id: hardware
+    label: Hardware
+    aliases: [hardware engineer]
+  - id: embedded
+    label: Embedded Systems
+    aliases: [embedded engineer, embedded software]
+  - id: firmware
+    label: Firmware
+    aliases: [firmware engineer]
+  - id: robotics
+    label: Robotics
+    aliases: [robotics engineer]
+  - id: qa_automation
+    label: QA / Automation
+    aliases: [qa engineer, test automation, quality assurance]
+  - id: other
+    label: Other
+    aliases: []
+
+career_levels:
+  - id: internship
+    label: Internship
+    patterns:
+      - intern
+      - internship
+      - summer analyst
+  - id: co_op
+    label: Co-op
+    patterns:
+      - co-op
+      - coop
+      - co op
+  - id: new_grad
+    label: New Grad
+    patterns:
+      - new grad
+      - new graduate
+      - university grad
+      - campus hire
+      - graduate engineer
+      - graduate developer
+  - id: entry_level
+    label: Entry Level
+    patterns:
+      - entry level
+      - entry-level
+      - junior
+      - early career
+  - id: apprenticeship
+    label: Apprenticeship
+    patterns:
+      - apprentice
+      - apprenticeship
+  - id: graduate_program
+    label: Graduate Program
+    patterns:
+      - graduate program
+      - rotational program
+      - analyst program
+  - id: rotational_program
+    label: Rotational Program
+    patterns:
+      - rotation
+      - rotational
+  - id: research_internship
+    label: Research Internship
+    patterns:
+      - research intern
+      - research internship
+  - id: fellowship
+    label: Fellowship
+    patterns:
+      - fellowship
+      - fellow
+  - id: student_program
+    label: Student Program
+    patterns:
+      - student program
+      - student engineer
+
+senior_exclusions:
+  - senior
+  - staff
+  - principal
+  - lead engineer
+  - engineering manager
+  - director
+  - vp
+  - vice president
+  - head of
+
+academic_terms:
+  - id: winter
+    patterns: [winter]
+  - id: spring
+    patterns: [spring]
+  - id: summer
+    patterns: [summer]
+  - id: fall
+    patterns: [fall, autumn]
+  - id: rolling
+    patterns: [rolling, ongoing]
+  - id: off_cycle
+    patterns: [off-cycle, off cycle]
