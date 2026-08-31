@@ -1,0 +1,44 @@
+{
+  "jobs": [
+    {
+      "absolute_url": "https://boards.greenhouse.io/stripe/jobs/7234561",
+      "data_compliance": [
+        {
+          "type": "gdpr",
+          "requires_consent": false
+        }
+      ],
+      "internal_job_id": 4567890,
+      "location": {
+        "name": "San Francisco, CA"
+      },
+      "metadata": [
+        {
+          "id": 12345,
+          "name": "Department",
+          "value": "Engineering",
+          "value_type": "single_select"
+        }
+      ],
+      "id": 7234561,
+      "updated_at": "2025-08-15T18:42:11Z",
+      "requisition_id": "REQ-2025-1842",
+      "title": "Software Engineer, Intern",
+      "content": "<p>Help build economic infrastructure for the internet.</p><ul><li>Write high-quality code</li><li>Collaborate with mentors</li></ul>",
+      "first_published": "2025-07-01T12:00:00Z"
+    },
+    {
+      "absolute_url": "https://boards.greenhouse.io/stripe/jobs/7234562",
+      "internal_job_id": 4567891,
+      "location": {
+        "name": "Remote - US"
+      },
+      "metadata": null,
+      "id": 7234562,
+      "updated_at": "2025-08-10T09:15:00Z",
+      "requisition_id": "REQ-2025-1901",
+      "title": "New Grad Software Engineer",
+      "content": "<p>Join Stripe's new grad program.</p>"
+    }
+  ]
+}

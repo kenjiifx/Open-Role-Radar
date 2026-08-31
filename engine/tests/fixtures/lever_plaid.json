@@ -1,0 +1,42 @@
+[
+  {
+    "additionalPlain": "Plaid's mission is to unlock financial freedom for everyone.",
+    "additional": "<div>Plaid's mission is to unlock financial freedom for everyone.</div>",
+    "categories": {
+      "commitment": "Full-time",
+      "department": "Engineering",
+      "location": "San Francisco, CA",
+      "team": "Platform"
+    },
+    "createdAt": 1722441600000,
+    "descriptionPlain": "Build APIs that power fintech innovation.",
+    "description": "<div>Build APIs that power fintech innovation.</div>",
+    "id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+    "lists": [],
+    "text": "Backend Engineer, Early Career",
+    "country": "US",
+    "workplaceType": "hybrid",
+    "opening": "",
+    "openingPlain": "",
+    "descriptionBody": "<div>Build APIs that power fintech innovation.</div>",
+    "descriptionBodyPlain": "Build APIs that power fintech innovation.",
+    "hostedUrl": "https://jobs.lever.co/plaid/a1b2c3d4-5678-90ab-cdef-1234567890ab",
+    "applyUrl": "https://jobs.lever.co/plaid/a1b2c3d4-5678-90ab-cdef-1234567890ab/apply",
+    "updatedAt": 1725120000000
+  },
+  {
+    "categories": {
+      "commitment": "Internship",
+      "department": "Engineering",
+      "location": "New York, NY",
+      "team": "Data"
+    },
+    "createdAt": 1720022400000,
+    "descriptionPlain": "Summer internship on the data platform team.",
+    "id": "b2c3d4e5-6789-01bc-def0-234567890abc",
+    "text": "Software Engineering Intern",
+    "hostedUrl": "https://jobs.lever.co/plaid/b2c3d4e5-6789-01bc-def0-234567890abc",
+    "applyUrl": "https://jobs.lever.co/plaid/b2c3d4e5-6789-01bc-def0-234567890abc/apply",
+    "updatedAt": 1722700800000
+  }
+]

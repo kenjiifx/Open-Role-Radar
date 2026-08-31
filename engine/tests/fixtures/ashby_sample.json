@@ -1,0 +1,30 @@
+{
+  "jobs": [
+    {
+      "id": "f3a2b1c0-9d8e-7f6a-5b4c-3d2e1f0a9b8c",
+      "title": "Software Engineer, New Grad",
+      "department": "Engineering",
+      "team": "Core Product",
+      "employmentType": "FullTime",
+      "location": "New York, NY",
+      "publishedAt": "2025-06-12T16:00:00.000Z",
+      "updatedAt": "2025-08-01T10:30:00.000Z",
+      "descriptionPlain": "Ship product features with a small, senior team.",
+      "jobUrl": "https://jobs.ashbyhq.com/ramp/f3a2b1c0-9d8e-7f6a-5b4c-3d2e1f0a9b8c",
+      "applyUrl": "https://jobs.ashbyhq.com/ramp/f3a2b1c0-9d8e-7f6a-5b4c-3d2e1f0a9b8c/application"
+    },
+    {
+      "id": "a9b8c7d6-e5f4-3210-abcd-ef0987654321",
+      "title": "Business Operations Intern",
+      "department": {
+        "name": "Operations"
+      },
+      "employmentType": "Intern",
+      "location": "Remote - US",
+      "publishedAt": "2025-05-20T12:00:00.000Z",
+      "descriptionHtml": "<p>Support strategic operations initiatives.</p>",
+      "jobUrl": "https://jobs.ashbyhq.com/ramp/a9b8c7d6-e5f4-3210-abcd-ef0987654321",
+      "applyUrl": "https://jobs.ashbyhq.com/ramp/a9b8c7d6-e5f4-3210-abcd-ef0987654321/application"
+    }
+  ]
+}

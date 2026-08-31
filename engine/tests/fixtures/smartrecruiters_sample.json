@@ -1,0 +1,50 @@
+{
+  "totalFound": 2,
+  "content": [
+    {
+      "id": "sr-job-10001",
+      "name": "Graduate Software Engineer",
+      "jobAdTitle": "Graduate Software Engineer",
+      "ref": "REF-GRAD-2025-01",
+      "uuid": "11111111-2222-3333-4444-555555555555",
+      "slug": "graduate-software-engineer",
+      "releasedDate": "2025-07-08T08:00:00.000Z",
+      "updatedOn": "2025-08-02T14:22:00.000Z",
+      "location": {
+        "city": "London",
+        "region": "England",
+        "country": "United Kingdom"
+      },
+      "department": {
+        "label": "Engineering"
+      },
+      "typeOfEmployment": {
+        "label": "Full-time"
+      },
+      "experienceLevel": {
+        "label": "Entry Level"
+      },
+      "company": {
+        "identifier": "AcmeCorp",
+        "name": "Acme Corp"
+      },
+      "postingUrl": "https://careers.smartrecruiters.com/AcmeCorp/graduate-software-engineer",
+      "applyUrl": "https://jobs.smartrecruiters.com/AcmeCorp/11111111-2222-3333-4444-555555555555"
+    },
+    {
+      "id": "sr-job-10002",
+      "name": "Summer Intern - Product Design",
+      "refNumber": "REF-INT-2025-04",
+      "releasedDate": "2025-06-01T09:30:00.000Z",
+      "location": {
+        "city": "Berlin",
+        "country": "Germany"
+      },
+      "department": "Design",
+      "typeOfEmployment": "Internship",
+      "company": {
+        "identifier": "AcmeCorp"
+      }
+    }
+  ]
+}
