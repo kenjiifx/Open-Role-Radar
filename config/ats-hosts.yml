@@ -1,0 +1,90 @@
+# Recognized ATS host patterns for detection and validation.
+platforms:
+  greenhouse:
+    hosts:
+      - boards.greenhouse.io
+      - job-boards.greenhouse.io
+      - boards-api.greenhouse.io
+    api_pattern: "https://boards-api.greenhouse.io/v1/boards/{tenant}/jobs"
+    board_pattern: "https://boards.greenhouse.io/{tenant}"
+    supported: true
+
+  lever:
+    hosts:
+      - jobs.lever.co
+      - api.lever.co
+    api_pattern: "https://api.lever.co/v0/postings/{tenant}"
+    board_pattern: "https://jobs.lever.co/{tenant}"
+    supported: true
+
+  ashby:
+    hosts:
+      - jobs.ashbyhq.com
+      - api.ashbyhq.com
+    api_pattern: "https://api.ashbyhq.com/posting-api/job-board/{tenant}"
+    board_pattern: "https://jobs.ashbyhq.com/{tenant}"
+    supported: true
+
+  smartrecruiters:
+    hosts:
+      - careers.smartrecruiters.com
+      - api.smartrecruiters.com
+    api_pattern: "https://api.smartrecruiters.com/v1/companies/{tenant}/postings"
+    board_pattern: "https://careers.smartrecruiters.com/{tenant}"
+    supported: true
+
+  workable:
+    hosts:
+      - apply.workable.com
+    supported: partial
+
+  workday:
+    hosts:
+      - myworkdayjobs.com
+      - wd1.myworkdayjobs.com
+      - wd3.myworkdayjobs.com
+      - wd5.myworkdayjobs.com
+    supported: partial
+
+  icims:
+    hosts:
+      - careers.icims.com
+    supported: partial
+
+  teamtailor:
+    hosts:
+      - career.teamtailor.com
+      - jobs.teamtailor.com
+    supported: partial
+
+  recruitee:
+    hosts:
+      - recruitee.com
+    supported: partial
+
+  bamboohr:
+    hosts:
+      - bamboohr.com
+    supported: partial
+
+  successfactors:
+    hosts:
+      - successfactors.com
+      - successfactors.eu
+    supported: false
+
+  oracle:
+    hosts:
+      - oraclecloud.com
+    supported: false
+
+  json_ld:
+    hosts: []
+    supported: true
+
+discovery_patterns:
+  - boards.greenhouse.io
+  - job-boards.greenhouse.io
+  - jobs.lever.co
+  - jobs.ashbyhq.com
+  - careers.smartrecruiters.com

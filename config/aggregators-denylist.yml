@@ -1,0 +1,44 @@
+# Application URL denylist — aggregator and mirror domains.
+# Sources redirecting to these are rejected from publication.
+
+domains:
+  - linkedin.com
+  - www.linkedin.com
+  - indeed.com
+  - www.indeed.com
+  - glassdoor.com
+  - www.glassdoor.com
+  - ziprecruiter.com
+  - www.ziprecruiter.com
+  - jooble.org
+  - www.jooble.org
+  - monster.com
+  - www.monster.com
+  - careerbuilder.com
+  - www.careerbuilder.com
+  - simplyhired.com
+  - www.simplyhired.com
+  - talent.com
+  - www.talent.com
+  - snagajob.com
+  - wellfound.com
+  - angel.co
+  - builtin.com
+  - www.builtin.com
+  - dice.com
+  - www.dice.com
+  - flexjobs.com
+  - remote.co
+  - weworkremotely.com
+  - jobstreet.com
+  - seek.com.au
+  - totaljobs.com
+  - reed.co.uk
+  - naukri.com
+  - shine.com
+
+patterns:
+  - "utm_source=indeed"
+  - "utm_source=linkedin"
+  - "/jobs/view/"
+  - "redirect=indeed"
