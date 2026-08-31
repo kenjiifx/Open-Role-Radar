@@ -1,0 +1,79 @@
+# Central branding and project configuration — rename here, not across the codebase.
+name: OpenRoleRadar
+slug: openroleradar
+display_name: OpenRoleRadar
+tagline: Global early-career opportunity intelligence
+description: >
+  Fully autonomous, zero-cost opportunity intelligence platform that discovers
+  first-party early-career roles, normalizes them, and publishes searchable data.
+repository: kenjiifx/Open-Role-Radar
+website_url: https://kenjiifx.github.io/Open-Role-Radar/
+user_agent: OpenRoleRadar/1.0 (+https://github.com/kenjiifx/Open-Role-Radar)
+
+versions:
+  state_format: 1
+  static_api: 1
+  job_schema: 1
+  company_schema: 1
+  source_schema: 1
+  event_schema: 1
+  parser: "1.0.0"
+  classification: "1.0.0"
+
+live_state:
+  release_tag: live-state
+  asset_name: state.tar.zst
+  manifest_name: manifest.json
+  checksums_name: SHA256SUMS
+
+polling:
+  tiers:
+    hot_minutes: 15
+    warm_minutes: 60
+    cold_minutes: 360
+    dormant_minutes: 1440
+  max_sources_per_sync: 200
+  max_sync_runtime_minutes: 45
+
+http:
+  timeout_seconds: 30
+  max_redirects: 5
+  max_response_bytes: 10485760
+  global_concurrency: 20
+  per_host_concurrency: 3
+  retry_max_attempts: 3
+  retry_base_delay_seconds: 1.0
+  retry_max_delay_seconds: 60.0
+
+lifecycle:
+  misses_before_suspected_closed: 2
+  misses_before_closed: 4
+  unhealthy_source_never_closes: true
+
+closure:
+  authoritative_status_codes: [404, 410]
+
+sharding:
+  max_shard_bytes: 2097152
+  max_shard_jobs: 2000
+  hash_buckets: 32
+
+feeds:
+  max_items: 500
+
+discovery:
+  github_search_per_run: 30
+  common_crawl_per_run: 100
+  quarantine_retry_hours: 72
+  promotion_min_confidence: 0.75
+
+health:
+  adapter_failure_threshold: 0.5
+  adapter_min_samples: 10
+
+archive:
+  prefix: dataset
+
+classification:
+  early_career_min_confidence: 0.6
+  quarantine_below_confidence: 0.4
