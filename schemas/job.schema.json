@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openroleradar.dev/schemas/job.schema.json",
+  "title": "OpenRoleRadar Job",
+  "description": "Normalized early-career job posting exported by OpenRoleRadar.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "job_id",
+    "source_job_id",
+    "company_id",
+    "company_name",
+    "title",
+    "job_url",
+    "apply_url",
+    "first_seen_at",
+    "last_seen_at",
+    "provenance",
+    "lifecycle"
+  ],
+  "properties": {
+    "job_id": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Stable SHA-256-derived identifier for this job within OpenRoleRadar."
+    },
+    "source_job_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier assigned by the upstream ATS or careers page."
+    },
+    "requisition_id": {
+      "type": ["string", "null"]
+    },
+    "company_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "company_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "job_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "apply_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "careers_url": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "source_url": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "summary": {
+      "type": ["string", "null"],
+      "maxLength": 1000
+    },
+    "career_level": {
+      "type": "string",
+      "enum": [
+        "internship",
+        "co_op",
+        "new_grad",
+        "entry_level",
+        "apprenticeship",
+        "graduate_program",
+        "rotational_program",
+        "research_internship",
+        "fellowship",
+        "student_program",
+        "unknown"
+      ]
+    },
+    "career_level_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "employment_type": {
+      "type": "string",
+      "enum": ["full_time", "part_time", "contract", "temporary", "internship", "unknown"]
+    },
+    "disciplines": {
+      "$ref": "#/$defs/discipline_classification"
+    },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "locations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/location" }
+    },
+    "workplace_type": {
+      "type": "string",
+      "enum": ["onsite", "hybrid", "remote", "unknown"]
+    },
+    "remote_scope": {
+      "type": "string",
+      "enum": [
+        "worldwide",
+        "country_limited",
+        "region_limited",
+        "timezone_limited",
+        "location_limited",
+        "unknown"
+      ]
+    },
+    "remote_allowed_countries": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "remote_allowed_regions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "source_posted_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "first_seen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_seen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_changed_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "closed_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "reopened_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "application_deadline": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "expected_start_date": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "expected_end_date": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "duration_months": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "academic_term": {
+      "type": "string",
+      "enum": ["winter", "spring", "summer", "fall", "rolling", "off_cycle", "unknown"]
+    },
+    "compensation": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/compensation" }]
+    },
+    "education": {
+      "$ref": "#/$defs/education_requirements"
+    },
+    "eligibility": {
+      "$ref": "#/$defs/eligibility"
+    },
+    "mobility": {
+      "$ref": "#/$defs/mobility_benefits"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "lifecycle": {
+      "type": "string",
+      "enum": ["open", "suspected_closed", "closed", "reopened", "quarantined"]
+    },
+    "extra": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "evidence_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["confirmed", "not_available", "unknown", "not_applicable"]
+        },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "extraction_rule": { "type": ["string", "null"] },
+        "evidence_excerpt": { "type": ["string", "null"], "maxLength": 500 }
+      }
+    },
+    "mobility_benefits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "visa_sponsorship": { "$ref": "#/$defs/evidence_claim" },
+        "immigration_assistance": { "$ref": "#/$defs/evidence_claim" },
+        "international_candidates": { "$ref": "#/$defs/evidence_claim" },
+        "relocation_assistance": { "$ref": "#/$defs/evidence_claim" },
+        "relocation_stipend": { "$ref": "#/$defs/evidence_claim" },
+        "moving_expenses": { "$ref": "#/$defs/evidence_claim" },
+        "airfare": { "$ref": "#/$defs/evidence_claim" },
+        "travel_reimbursement": { "$ref": "#/$defs/evidence_claim" },
+        "housing_provided": { "$ref": "#/$defs/evidence_claim" },
+        "housing_stipend": { "$ref": "#/$defs/evidence_claim" },
+        "temporary_housing": { "$ref": "#/$defs/evidence_claim" },
+        "fully_funded_relocation": { "$ref": "#/$defs/evidence_claim" }
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "raw": { "type": ["string", "null"] },
+        "city": { "type": ["string", "null"] },
+        "region": { "type": ["string", "null"] },
+        "country": { "type": ["string", "null"] },
+        "country_code": { "type": ["string", "null"], "maxLength": 2 },
+        "continent": { "type": ["string", "null"] }
+      }
+    },
+    "compensation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_amount": { "type": ["number", "null"] },
+        "max_amount": { "type": ["number", "null"] },
+        "currency": { "type": ["string", "null"], "maxLength": 3 },
+        "period": {
+          "type": "string",
+          "enum": ["hour", "day", "week", "month", "year", "internship", "unknown"]
+        },
+        "raw": { "type": ["string", "null"] }
+      }
+    },
+    "education_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "student_required": { "type": ["boolean", "null"] },
+        "return_to_school_required": { "type": ["boolean", "null"] },
+        "degree_levels": { "type": "array", "items": { "type": "string" } },
+        "graduation_years": { "type": "array", "items": { "type": "integer" } },
+        "majors": { "type": "array", "items": { "type": "string" } },
+        "academic_years": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "work_authorization": { "type": ["string", "null"] },
+        "explicit_allowed_countries": { "type": "array", "items": { "type": "string" } },
+        "explicit_excluded_countries": { "type": "array", "items": { "type": "string" } },
+        "citizenship_requirements": { "type": "array", "items": { "type": "string" } },
+        "residency_requirements": { "type": "array", "items": { "type": "string" } },
+        "security_clearance": { "type": ["string", "null"] },
+        "export_control_restrictions": { "type": ["boolean", "null"] },
+        "language_requirements": { "type": "array", "items": { "type": "string" } },
+        "origin_match": {
+          "type": "string",
+          "enum": ["explicit_match", "potential_match", "unknown", "explicitly_ineligible"]
+        }
+      }
+    },
+    "discipline_classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "primary": { "type": "string" },
+        "secondary": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "source_id",
+        "source_job_id",
+        "fetched_at",
+        "content_hash"
+      ],
+      "properties": {
+        "adapter": { "type": "string", "minLength": 1 },
+        "source_id": { "type": "string", "minLength": 8 },
+        "source_job_id": { "type": "string", "minLength": 1 },
+        "fetched_at": { "type": "string", "format": "date-time" },
+        "source_posted_at": { "type": ["string", "null"], "format": "date-time" },
+        "first_seen_at": { "type": ["string", "null"], "format": "date-time" },
+        "parser_version": { "type": "string" },
+        "classification_version": { "type": "string" },
+        "content_hash": { "type": "string", "minLength": 8 },
+        "source_health_at_fetch": { "type": "string" },
+        "first_party_verified": { "type": "boolean" }
+      }
+    }
+  }
+}

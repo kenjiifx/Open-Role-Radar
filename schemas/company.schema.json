@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openroleradar.dev/schemas/company.schema.json",
+  "title": "OpenRoleRadar Company",
+  "description": "Employer record aggregated from one or more first-party career sources.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "company_id",
+    "name",
+    "normalized_name",
+    "canonical_domain",
+    "first_seen_at",
+    "last_seen_at"
+  ],
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Stable identifier derived from canonical domain."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name as observed on careers pages."
+    },
+    "normalized_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Lowercase slug used for search and deduplication."
+    },
+    "canonical_domain": {
+      "type": "string",
+      "minLength": 3,
+      "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$",
+      "description": "Primary corporate domain (no scheme, no path)."
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Alternate names or brands associated with this employer."
+    },
+    "careers_urls": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "description": "Known first-party careers landing pages."
+    },
+    "ats_sources": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "ATS adapters observed for this company."
+    },
+    "headquarters": {
+      "oneOf": [{ "type": "null" }, { "$ref": "job.schema.json#/$defs/location" }]
+    },
+    "first_seen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_seen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "active_job_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of open or reopened roles at last export."
+    },
+    "historical_job_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total roles ever tracked for this company."
+    }
+  }
+}

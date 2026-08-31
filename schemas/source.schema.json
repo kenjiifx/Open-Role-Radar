@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openroleradar.dev/schemas/source.schema.json",
+  "title": "OpenRoleRadar Source",
+  "description": "A polled first-party careers endpoint tied to a single ATS tenant.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_id",
+    "company_id",
+    "company_name",
+    "company_domain",
+    "careers_url",
+    "adapter",
+    "adapter_tenant",
+    "first_discovered_at",
+    "enabled"
+  ],
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Deterministic ID from domain, adapter, and tenant."
+    },
+    "company_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "company_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "company_domain": {
+      "type": "string",
+      "minLength": 3,
+      "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$"
+    },
+    "careers_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "adapter": {
+      "type": "string",
+      "enum": [
+        "greenhouse",
+        "lever",
+        "ashby",
+        "smartrecruiters",
+        "workday",
+        "json_ld"
+      ],
+      "description": "Registered adapter responsible for fetching this source."
+    },
+    "adapter_tenant": {
+      "type": "string",
+      "minLength": 1,
+      "description": "ATS board slug or tenant identifier."
+    },
+    "discovered_via": {
+      "type": "string",
+      "enum": ["seed", "github", "common_crawl", "career_site", "manual"],
+      "default": "seed"
+    },
+    "discovery_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "first_discovered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_validated_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "last_success_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "last_failure_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "consecutive_failures": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "poll_tier": {
+      "type": "string",
+      "enum": ["hot", "warm", "cold", "dormant"]
+    },
+    "next_due_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "health_status": {
+      "type": "string",
+      "enum": ["healthy", "degraded", "failing", "blocked", "unsupported", "disabled"]
+    },
+    "etag": {
+      "type": ["string", "null"]
+    },
+    "last_modified": {
+      "type": ["string", "null"]
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "last_response_hash": {
+      "type": ["string", "null"],
+      "minLength": 8
+    }
+  }
+}

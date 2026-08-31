@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openroleradar.dev/schemas/event.schema.json",
+  "title": "OpenRoleRadar Job Event",
+  "description": "Lifecycle event emitted when a tracked job opens, updates, closes, or reopens.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_type", "job_id", "timestamp"],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": ["OPENED", "UPDATED", "CLOSED", "REOPENED"],
+      "description": "High-level lifecycle transition."
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Target job identifier."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC time the event was recorded."
+    },
+    "changed_fields": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Top-level job fields that changed (UPDATED events only)."
+    },
+    "previous_hash": {
+      "type": ["string", "null"],
+      "minLength": 8,
+      "description": "Content hash before the change."
+    },
+    "new_hash": {
+      "type": ["string", "null"],
+      "minLength": 8,
+      "description": "Content hash after the change."
+    }
+  }
+}
