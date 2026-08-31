@@ -1,0 +1,46 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import JobSearch from '../../components/JobSearch';
+import { slugifyCompany } from '../../lib/types';
+import type { DataManifest, Job } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const dataDir = path.join(process.cwd(), 'public', 'data');
+  const manifestPath = path.join(dataDir, 'manifest.json');
+  if (!fs.existsSync(manifestPath)) return [];
+
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8')) as DataManifest;
+  const slugs = new Set<string>();
+
+  for (const shard of manifest.shards) {
+    const shardPath = path.join(dataDir, shard.filename);
+    if (!fs.existsSync(shardPath)) continue;
+    const jobs = JSON.parse(fs.readFileSync(shardPath, 'utf-8')) as Job[];
+    for (const job of jobs) {
+      slugs.add(slugifyCompany(job.company_name));
+    }
+  }
+
+  return [...slugs].map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const title = slug
+  ? `${slug.replace(/-/g, ' ')} — OpenRoleRadar`
+  : 'Company — OpenRoleRadar';
+---
+
+<BaseLayout
+  title={title}
+  description={`Browse early-career roles at ${slug?.replace(/-/g, ' ') ?? 'this company'} on OpenRoleRadar.`}
+  canonicalPath={`company/${slug}/`}
+>
+  <section class="hero hero--compact">
+    <h1>{slug?.replace(/-/g, ' ')}</h1>
+    <p class="hero__lead">Early-career roles at this company</p>
+  </section>
+
+  <JobSearch client:load companySlug={slug} showStats={false} />
+</BaseLayout>
