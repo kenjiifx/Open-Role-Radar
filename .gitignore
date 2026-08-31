@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+htmlcov/
+.coverage
+coverage.xml
+
+# Node
+node_modules/
+site/dist/
+site/.astro/
+site/playwright-report/
+site/test-results/
+*.tsbuildinfo
+
+# Local state & generated temp
+.local/
+state/
+*.tar.zst
+*.tar.gz
+generated-temp/
+site/public/api/
+site/public/data/
+site/public/feeds/
+generated/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+*.log
