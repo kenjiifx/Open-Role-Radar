@@ -1,0 +1,102 @@
+# Seed sources — human-maintained first-party career boards.
+# PRs are validated automatically against SSRF and aggregator denylist rules.
+
+- company: Stripe
+  domain: stripe.com
+  adapter: greenhouse
+  tenant: stripe
+
+- company: Figma
+  domain: figma.com
+  adapter: greenhouse
+  tenant: figma
+
+- company: Notion
+  domain: notion.so
+  adapter: greenhouse
+  tenant: notion
+
+- company: Cloudflare
+  domain: cloudflare.com
+  adapter: greenhouse
+  tenant: cloudflare
+
+- company: Datadog
+  domain: datadoghq.com
+  adapter: greenhouse
+  tenant: datadog
+
+- company: Plaid
+  domain: plaid.com
+  adapter: lever
+  tenant: plaid
+
+- company: Ramp
+  domain: ramp.com
+  adapter: ashby
+  tenant: ramp
+
+- company: Linear
+  domain: linear.app
+  adapter: ashby
+  tenant: linear
+
+- company: Vercel
+  domain: vercel.com
+  adapter: greenhouse
+  tenant: vercel
+
+- company: Supabase
+  domain: supabase.com
+  adapter: ashby
+  tenant: supabase
+
+- company: GitLab
+  domain: about.gitlab.com
+  adapter: greenhouse
+  tenant: gitlab
+
+- company: HashiCorp
+  domain: hashicorp.com
+  adapter: greenhouse
+  tenant: hashicorp
+
+- company: MongoDB
+  domain: mongodb.com
+  adapter: greenhouse
+  tenant: mongodb
+
+- company: Snowflake
+  domain: snowflake.com
+  adapter: greenhouse
+  tenant: snowflake
+
+- company: Databricks
+  domain: databricks.com
+  adapter: greenhouse
+  tenant: databricks
+
+- company: Robinhood
+  domain: robinhood.com
+  adapter: greenhouse
+  tenant: robinhood
+
+- company: Coinbase
+  domain: coinbase.com
+  adapter: greenhouse
+  tenant: coinbase
+
+- company: Shopify
+  domain: shopify.com
+  adapter: greenhouse
+  tenant: shopify
+
+- company: Spotify
+  domain: lifeatspotify.com
+  adapter: greenhouse
+  tenant: spotify
+
+- company: Reddit
+  domain: redditinc.com
+  adapter: greenhouse
+  tenant: reddit
