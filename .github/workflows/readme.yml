@@ -1,0 +1,58 @@
+name: Update README Stats
+
+on:
+  schedule:
+    - cron: "45 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: openroleradar-readme
+  cancel-in-progress: true
+
+jobs:
+  readme:
+    name: Refresh generated statistics
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1635cea06169dac05bcb1fe423 # v4.2.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@7b6b7d71fd345867f2aecbb6ff63f536eea0024b # v6.3.1
+        with:
+          enable-cache: true
+          cache-dependency-glob: engine/uv.lock
+
+      - name: Sync dependencies
+        working-directory: engine
+        run: uv sync --all-extras --dev
+
+      - name: Restore live state
+        uses: actions/cache@7a6bd7af641a0165805d177f9339a6e8acad65b9 # v4.2.2
+        with:
+          path: .local/state
+          key: live-state-${{ github.run_id }}
+          restore-keys: |
+            live-state-
+
+      - name: Update README
+        working-directory: engine
+        run: uv run openroleradar update-readme
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet README.md; then
+            echo "No README changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: update README live statistics"
+          git push
