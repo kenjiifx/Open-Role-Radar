@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JobSearch from '../components/JobSearch';
+---
+
+<BaseLayout
+  title="OpenRoleRadar — Search early-career roles"
+  description="Search global early-career opportunities with filters for mobility, eligibility, workplace type, and more."
+  canonicalPath=""
+>
+  <section class="hero">
+    <div class="hero__content">
+      <p class="hero__eyebrow">Global early-career opportunity intelligence</p>
+      <h1>Find roles that move with you</h1>
+      <p class="hero__lead">
+        OpenRoleRadar discovers first-party internships, co-ops, and new-grad roles — with
+        evidence-backed mobility claims and origin-country eligibility signals.
+      </p>
+    </div>
+  </section>
+
+  <JobSearch client:load showStats />
+</BaseLayout>
