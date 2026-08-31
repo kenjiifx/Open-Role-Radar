@@ -1,0 +1,68 @@
+name: Source Discovery
+
+on:
+  schedule:
+    - cron: "15 4 * * *"
+  workflow_dispatch:
+    inputs:
+      github:
+        description: Run GitHub code search discovery
+        type: boolean
+        default: true
+      common_crawl:
+        description: Run Common Crawl index discovery
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: openroleradar-discover
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    name: Discover new sources
+    runs-on: ubuntu-latest
+    # Discovery writes candidate lists only on the default branch with elevated token.
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1635cea06169dac05bcb1fe423 # v4.2.2
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@7b6b7d71fd345867f2aecbb6ff63f536eea0024b # v6.3.1
+        with:
+          enable-cache: true
+          cache-dependency-glob: engine/uv.lock
+
+      - name: Sync dependencies
+        working-directory: engine
+        run: uv sync --all-extras --dev
+
+      - name: Restore live state
+        uses: actions/cache@7a6bd7af641a0165805d177f9339a6e8acad65b9 # v4.2.2
+        with:
+          path: .local/state
+          key: live-state-${{ github.run_id }}
+          restore-keys: |
+            live-state-
+
+      - name: Run discovery
+        working-directory: engine
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.github }}" = "false" ]; then
+            ARGS="--no-github"
+          fi
+          uv run openroleradar discover $ARGS
+
+      - name: Save live state
+        if: success()
+        uses: actions/cache/save@7a6bd7af641a0165805d177f9339a6e8acad65b9 # v4.2.2
+        with:
+          path: .local/state
+          key: live-state-${{ github.run_id }}
