@@ -1,0 +1,127 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  ogImage?: string;
+}
+
+const {
+  title = 'OpenRoleRadar — Global early-career opportunity intelligence',
+  description = 'Discover first-party early-career roles worldwide with mobility benefits, eligibility signals, and shareable search filters.',
+  canonicalPath = '',
+  ogImage = '/og-default.png',
+} = Astro.props;
+
+const siteBase = import.meta.env.BASE_URL;
+const siteUrl = Astro.site?.href ?? 'https://kenjiifx.github.io';
+const canonical = new URL(canonicalPath || '.', `${siteUrl}${siteBase}`).href;
+const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
+---
+
+<!doctype html>
+<html lang="en" data-theme="system">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <title>{title}</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:site_name" content="OpenRoleRadar" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href={`${siteBase}favicon.svg`} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a href={siteBase} class="site-logo" aria-label="OpenRoleRadar home">
+          <span class="site-logo__mark" aria-hidden="true">◎</span>
+          <span class="site-logo__text">OpenRoleRadar</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href={siteBase}>Search</a>
+          <a href={`${siteBase}status`}>Status</a>
+          <a
+            href="https://github.com/kenjiifx/Open-Role-Radar"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </nav>
+        <div class="theme-switcher" role="group" aria-label="Theme">
+          <button type="button" data-theme-choice="light" aria-pressed="false">
+            Light
+          </button>
+          <button type="button" data-theme-choice="dark" aria-pressed="false">
+            Dark
+          </button>
+          <button type="button" data-theme-choice="system" aria-pressed="true">
+            System
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <strong>OpenRoleRadar</strong> — Global early-career opportunity intelligence
+      </p>
+      <p class="text-muted">
+        Fully autonomous, zero-cost opportunity intelligence. Data is refreshed automatically.
+      </p>
+    </footer>
+
+    <script>
+      import { applyTheme, loadPreferences, setTheme } from '../lib/storage';
+
+      function syncThemeButtons(theme: string) {
+        document.querySelectorAll('[data-theme-choice]').forEach((button) => {
+          const el = button as HTMLButtonElement;
+          const choice = el.dataset.themeChoice ?? 'system';
+          el.setAttribute('aria-pressed', String(choice === theme));
+        });
+      }
+
+      const initial = loadPreferences().theme;
+      applyTheme(initial);
+      syncThemeButtons(initial);
+
+      document.querySelectorAll('[data-theme-choice]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const choice = (button as HTMLButtonElement).dataset.themeChoice as
+            | 'light'
+            | 'dark'
+            | 'system';
+          setTheme(choice);
+          applyTheme(choice);
+          syncThemeButtons(choice);
+        });
+      });
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (loadPreferences().theme === 'system') applyTheme('system');
+      });
+    </script>
+  </body>
+</html>
