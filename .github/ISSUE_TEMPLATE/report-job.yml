@@ -1,0 +1,51 @@
+name: Report incorrect job
+description: Flag a specific listing with wrong classification or metadata
+title: "job: "
+labels:
+  - data-quality
+  - needs-triage
+body:
+  - type: input
+    id: job_url
+    attributes:
+      label: Job URL
+      placeholder: https://boards.greenhouse.io/company/jobs/123
+    validations:
+      required: true
+
+  - type: input
+    id: job_id
+    attributes:
+      label: OpenRoleRadar job ID (if known)
+      placeholder: a1b2c3d4e5f67890
+
+  - type: checkboxes
+    id: issues
+    attributes:
+      label: What is wrong?
+      options:
+        - label: Not early-career (should be removed or reclassified)
+        - label: Wrong career level
+        - label: Incorrect location or remote scope
+        - label: Wrong eligibility / work authorization
+        - label: Incorrect mobility / visa signal
+        - label: Duplicate of another listing
+        - label: Role is closed but still shown as open
+        - label: Other (describe below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details and expected correction
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Quote from the official posting or screenshot description
+    validations:
+      required: false

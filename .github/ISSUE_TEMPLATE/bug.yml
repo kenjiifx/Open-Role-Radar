@@ -1,0 +1,65 @@
+name: Bug report
+description: Report incorrect data, broken adapters, or engine failures
+title: "bug: "
+labels:
+  - bug
+  - needs-triage
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected instead.
+    validations:
+      required: true
+
+  - type: input
+    id: job_id
+    attributes:
+      label: Job ID (if applicable)
+      placeholder: a1b2c3d4e5f67890
+
+  - type: input
+    id: source_id
+    attributes:
+      label: Source ID (if applicable)
+      placeholder: a1b2c3d4e5f67890
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Engine / sync
+        - ATS adapter
+        - Classification
+        - Site / API
+        - GitHub Actions
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run `openroleradar sync --sample`
+        2. Inspect job ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Confirmation
+      options:
+        - label: I searched existing issues before filing this report
+          required: true

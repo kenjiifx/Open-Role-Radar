@@ -1,0 +1,69 @@
+name: Add career source
+description: Propose a new first-party company careers board for the seed list
+title: "source: "
+labels:
+  - source
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping expand OpenRoleRadar. We only index **first-party** employer career pages
+        (Greenhouse, Lever, Ashby, etc.) — not job aggregators like LinkedIn or Indeed.
+
+  - type: input
+    id: company
+    attributes:
+      label: Company name
+      placeholder: Acme Corp
+    validations:
+      required: true
+
+  - type: input
+    id: domain
+    attributes:
+      label: Primary domain
+      description: Corporate website domain without scheme (e.g. acme.com)
+      placeholder: acme.com
+    validations:
+      required: true
+
+  - type: dropdown
+    id: adapter
+    attributes:
+      label: ATS adapter
+      options:
+        - greenhouse
+        - lever
+        - ashby
+        - smartrecruiters
+        - workday
+        - json_ld
+    validations:
+      required: true
+
+  - type: input
+    id: tenant
+    attributes:
+      label: ATS tenant / board slug
+      description: The identifier in the ATS URL (e.g. boards.greenhouse.io/**acme**)
+      placeholder: acme
+    validations:
+      required: true
+
+  - type: input
+    id: careers_url
+    attributes:
+      label: Careers page URL
+      description: Link to the company's own careers landing page
+      placeholder: https://acme.com/careers
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
+      description: Why this source should be included, early-career hiring evidence, etc.
+    validations:
+      required: false
