@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kenjiifx.github.io/Open-Role-Radar/sitemap-index.xml
