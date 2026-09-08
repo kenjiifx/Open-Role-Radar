@@ -147,6 +147,10 @@ class LifecycleManager:
         existing.provenance.first_seen_at = preserve_opened
         existing.provenance.content_hash = updated.provenance.content_hash
         existing.provenance.fetched_at = updated.provenance.fetched_at
+        # Keep ATS posting dates current when the board provides them.
+        if updated.source_posted_at is not None:
+            existing.source_posted_at = updated.source_posted_at
+            existing.provenance.source_posted_at = updated.source_posted_at
         return changed
 
     def process_missing_jobs(

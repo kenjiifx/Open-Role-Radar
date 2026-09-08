@@ -168,10 +168,8 @@ export interface SearchIndexEntry {
   discipline: string;
   location_text: string;
   workplace_type: WorkplaceType;
-  remote_scope: RemoteScope;
-  academic_term: AcademicTerm;
+  posted_at: string;
   first_seen_at: string;
-  origin_match: EligibilityMatch;
   mobility_flags: MobilityFlag[];
   bucket: number;
 }
@@ -184,6 +182,8 @@ export type MobilityFlag =
 
 export type FreshnessFilter = 'all' | '24h' | '7d' | '30d' | 'new_since_visit';
 
+export type SortMode = 'newest' | 'company' | 'title';
+
 export type ViewMode = 'cards' | 'table';
 
 export interface FilterState {
@@ -192,14 +192,12 @@ export interface FilterState {
   disciplines: string[];
   locations: string[];
   workplaceTypes: WorkplaceType[];
-  remoteScopes: RemoteScope[];
-  academicTerms: AcademicTerm[];
   freshness: FreshnessFilter;
   mobility: MobilityFlag[];
   originCountry: string;
-  eligibilityMatches: EligibilityMatch[];
   showSavedOnly: boolean;
   hideDismissed: boolean;
+  sort: SortMode;
   page: number;
   pageSize: number;
   view: ViewMode;

@@ -9,8 +9,8 @@ interface Props {
 }
 
 const {
-  title = 'OpenRoleRadar — Global early-career opportunity intelligence',
-  description = 'Discover first-party early-career roles worldwide with mobility benefits, eligibility signals, and shareable search filters.',
+  title = 'OpenRoleRadar — Early-career roles from first-party ATS boards',
+  description = 'Search internships, co-ops, and new-grad roles scraped directly from employer career pages — with real post dates, visa signals, and shareable filters.',
   canonicalPath = '',
   ogImage = '/og-default.png',
 } = Astro.props;
@@ -30,6 +30,13 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Source+Sans+3:wght@400;600;700&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
@@ -51,7 +58,7 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
     <header class="site-header">
       <div class="site-header__inner">
         <a href={siteBase} class="site-logo" aria-label="OpenRoleRadar home">
-          <span class="site-logo__mark" aria-hidden="true">◎</span>
+          <span class="site-logo__mark" aria-hidden="true">◈</span>
           <span class="site-logo__text">OpenRoleRadar</span>
         </a>
         <nav class="site-nav" aria-label="Primary">
@@ -73,7 +80,7 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
             Dark
           </button>
           <button type="button" data-theme-choice="system" aria-pressed="true">
-            System
+            Auto
           </button>
         </div>
       </div>
@@ -85,10 +92,7 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
 
     <footer class="site-footer">
       <p>
-        <strong>OpenRoleRadar</strong> — Global early-career opportunity intelligence
-      </p>
-      <p class="text-muted">
-        Fully autonomous, zero-cost opportunity intelligence. Data is refreshed automatically.
+        <strong>OpenRoleRadar</strong> tracks first-party early-career roles and refreshes on a schedule — reload for the latest publish.
       </p>
     </footer>
 

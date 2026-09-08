@@ -89,6 +89,8 @@ career_levels:
       - intern
       - internship
       - summer analyst
+      - winter analyst
+      - fall analyst
   - id: co_op
     label: Co-op
     patterns:
@@ -101,16 +103,24 @@ career_levels:
       - new grad
       - new graduate
       - university grad
+      - university graduate
       - campus hire
+      - campus recruiting
       - graduate engineer
       - graduate developer
+      - graduate software
   - id: entry_level
     label: Entry Level
     patterns:
       - entry level
       - entry-level
-      - junior
+      - junior engineer
+      - junior developer
+      - junior software
+      - junior analyst
       - early career
+      - associate engineer
+      - associate developer
   - id: apprenticeship
     label: Apprenticeship
     patterns:
@@ -120,13 +130,14 @@ career_levels:
     label: Graduate Program
     patterns:
       - graduate program
-      - rotational program
+      - graduate scheme
       - analyst program
   - id: rotational_program
     label: Rotational Program
     patterns:
-      - rotation
-      - rotational
+      - rotational program
+      - rotational engineer
+      - rotational analyst
   - id: research_internship
     label: Research Internship
     patterns:
@@ -136,12 +147,13 @@ career_levels:
     label: Fellowship
     patterns:
       - fellowship
-      - fellow
+      - research fellow
   - id: student_program
     label: Student Program
     patterns:
       - student program
       - student engineer
+      - student developer
 
 senior_exclusions:
   - senior
@@ -153,6 +165,9 @@ senior_exclusions:
   - vp
   - vice president
   - head of
+  - mid-level
+  - mid level
+  - experienced
 
 academic_terms:
   - id: winter

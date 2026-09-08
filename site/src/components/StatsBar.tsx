@@ -1,3 +1,4 @@
+import { formatUpdatedLabel } from '../lib/dates';
 import type { SiteStats } from '../lib/types';
 
 interface StatsBarProps {
@@ -5,50 +6,30 @@ interface StatsBarProps {
   loading?: boolean;
 }
 
-function StatCard({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="stat-card">
-      <dt>{label}</dt>
-      <dd>{value}</dd>
-    </div>
-  );
-}
-
 export default function StatsBar({ stats, loading }: StatsBarProps) {
-  const generated = new Date(stats.generatedAt);
-  const generatedLabel = Number.isNaN(generated.getTime())
-    ? '—'
-    : generated.toLocaleString(undefined, {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      });
+  const updated = formatUpdatedLabel(stats.generatedAt);
 
   return (
-    <section className="stats-bar" aria-label="Platform statistics" aria-busy={loading}>
-      <h2 className="sr-only">Statistics</h2>
-      <dl className="stats-bar__grid">
-        <StatCard label="Open roles" value={loading ? '…' : stats.totalJobs.toLocaleString()} />
-        <StatCard
-          label="Companies"
-          value={loading ? '…' : stats.totalCompanies.toLocaleString()}
-        />
-        <StatCard
-          label="Visa sponsorship"
-          value={loading ? '…' : stats.withVisa.toLocaleString()}
-        />
-        <StatCard
-          label="Relocation support"
-          value={loading ? '…' : stats.withRelocation.toLocaleString()}
-        />
-        <StatCard label="Remote roles" value={loading ? '…' : stats.remoteCount.toLocaleString()} />
-        <StatCard
-          label="New since visit"
-          value={loading ? '…' : stats.newSinceVisit.toLocaleString()}
-        />
-      </dl>
-      <p className="stats-bar__updated">
-        Data updated: <time dateTime={stats.generatedAt}>{generatedLabel}</time>
+    <section className="stats-bar" aria-label="Live dataset summary" aria-busy={loading}>
+      <div className="stats-bar__pulse" aria-hidden="true" />
+      <p className="stats-bar__line">
+        <strong>{loading ? '…' : stats.totalJobs.toLocaleString()}</strong> open roles
+        <span className="stats-bar__sep" aria-hidden="true">
+          ·
+        </span>
+        <strong>{loading ? '…' : stats.totalCompanies.toLocaleString()}</strong> companies
+        <span className="stats-bar__sep" aria-hidden="true">
+          ·
+        </span>
+        <strong>{loading ? '…' : stats.withVisa.toLocaleString()}</strong> with visa signal
+        <span className="stats-bar__sep" aria-hidden="true">
+          ·
+        </span>
+        <time dateTime={stats.generatedAt}>{loading ? 'Refreshing…' : updated}</time>
       </p>
+      {!loading && stats.newSinceVisit > 0 ? (
+        <p className="stats-bar__new">{stats.newSinceVisit} new since your last visit</p>
+      ) : null}
     </section>
   );
 }

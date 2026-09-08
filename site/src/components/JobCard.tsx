@@ -1,8 +1,8 @@
+import { formatDate, formatRelative, postedAt } from '../lib/dates';
 import { companyUrl } from '../lib/paths';
 import type { Job, MobilityFlag } from '../lib/types';
 import { slugifyCompany } from '../lib/types';
 import {
-  ACADEMIC_TERM_LABELS,
   CAREER_LEVEL_LABELS,
   formatLocation,
   getMobilityFlags,
@@ -30,9 +30,7 @@ function MobilityBadges({
   onEvidence: (job: Job, flag: MobilityFlag) => void;
 }) {
   const flags = getMobilityFlags(job.mobility);
-  if (flags.length === 0) {
-    return <span className="text-muted">No mobility claims</span>;
-  }
+  if (flags.length === 0) return null;
 
   return (
     <div className="mobility-badges" role="list" aria-label="Mobility benefits">
@@ -64,16 +62,6 @@ function MobilityBadges({
   );
 }
 
-function formatDate(iso: string): string {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return iso;
-  return date.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
 export default function JobCard({
   job,
   saved,
@@ -84,7 +72,10 @@ export default function JobCard({
   onEvidence,
 }: JobCardProps) {
   const firstParty = isFirstPartyVerified(job);
-  const applyLabel = firstParty ? 'Apply (first-party)' : 'Apply';
+  const applyLabel = firstParty ? 'Apply' : 'Apply';
+  const posted = postedAt(job);
+  const postedLabel = formatDate(posted);
+  const postedRelative = formatRelative(posted);
 
   if (view === 'table') {
     return (
@@ -105,7 +96,9 @@ export default function JobCard({
           <MobilityBadges job={job} onEvidence={onEvidence} />
         </td>
         <td>
-          <time dateTime={job.first_seen_at}>{formatDate(job.first_seen_at)}</time>
+          <time dateTime={posted} title={postedLabel}>
+            {postedRelative}
+          </time>
         </td>
         <td className="job-row__actions">
           <a
@@ -141,7 +134,7 @@ export default function JobCard({
   return (
     <article className={isNew ? 'job-card job-card--new' : 'job-card'} aria-labelledby={`job-${job.job_id}`}>
       <header className="job-card__header">
-        <div>
+        <div className="job-card__identity">
           <p className="job-card__company">
             <a href={companyUrl(slugifyCompany(job.company_name))} className="link">
               {job.company_name}
@@ -149,24 +142,25 @@ export default function JobCard({
           </p>
           <h3 id={`job-${job.job_id}`} className="job-card__title">
             {job.title}
-            {isNew ? <span className="badge badge--new">New since last visit</span> : null}
+            {isNew ? <span className="badge badge--new">New</span> : null}
           </h3>
         </div>
-        <div className="job-card__meta">
-          <span className="badge">{CAREER_LEVEL_LABELS[job.career_level]}</span>
-          <span className="badge">{WORKPLACE_LABELS[job.workplace_type]}</span>
-          {job.academic_term !== 'unknown' ? (
-            <span className="badge">{ACADEMIC_TERM_LABELS[job.academic_term]}</span>
-          ) : null}
-        </div>
+        <time dateTime={posted} className="job-card__date" title={postedLabel}>
+          <span className="job-card__date-label">Posted</span>
+          <span className="job-card__date-value">{postedRelative}</span>
+        </time>
       </header>
-      <p className="job-card__location">{formatLocation(job.locations)}</p>
+
+      <div className="job-card__meta">
+        <span className="badge badge--level">{CAREER_LEVEL_LABELS[job.career_level]}</span>
+        <span className="badge">{WORKPLACE_LABELS[job.workplace_type]}</span>
+        <span className="job-card__location">{formatLocation(job.locations)}</span>
+      </div>
+
       {job.summary ? <p className="job-card__summary">{job.summary}</p> : null}
       <MobilityBadges job={job} onEvidence={onEvidence} />
+
       <footer className="job-card__footer">
-        <time dateTime={job.first_seen_at} className="job-card__date">
-          First seen {formatDate(job.first_seen_at)}
-        </time>
         <div className="job-card__actions">
           <a
             href={job.apply_url}

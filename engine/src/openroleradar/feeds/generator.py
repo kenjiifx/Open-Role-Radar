@@ -34,9 +34,13 @@ class FeedGenerator:
         self.config = config or load_project_config()
         self.max_items = int(self.config.feeds.get("max_items", 500))
 
+    @staticmethod
+    def _posted_at(job: Job) -> datetime:
+        return job.source_posted_at or job.first_seen_at
+
     def _select_jobs(self, state: LiveState) -> list[Job]:
         jobs = [job for job in state.jobs.values() if is_public_job(job)]
-        jobs.sort(key=lambda job: job.first_seen_at, reverse=True)
+        jobs.sort(key=lambda job: self._posted_at(job), reverse=True)
         return jobs[: self.max_items]
 
     def _format_dt(self, when: datetime) -> str:
@@ -58,7 +62,7 @@ class FeedGenerator:
                     "url": job.job_url,
                     "title": job.title,
                     "content_text": job.summary,
-                    "date_published": job.first_seen_at.isoformat(),
+                    "date_published": self._posted_at(job).isoformat(),
                     "authors": [{"name": job.company_name}],
                 }
                 for job in jobs
@@ -104,7 +108,7 @@ class FeedGenerator:
             SubElement(item, "title").text = job.title
             SubElement(item, "link").text = job.job_url
             SubElement(item, "guid", isPermaLink="false").text = job.job_id
-            SubElement(item, "pubDate").text = self._format_dt(job.first_seen_at)
+            SubElement(item, "pubDate").text = self._format_dt(self._posted_at(job))
             if job.summary:
                 SubElement(item, "description").text = html.escape(job.summary)
 

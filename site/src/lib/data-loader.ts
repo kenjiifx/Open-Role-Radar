@@ -9,6 +9,7 @@ const shardCache = new Map<string, Job[]>();
 const inflight = new Map<string, Promise<Job[]>>();
 
 let manifestPromise: Promise<DataManifest> | null = null;
+let manifestVersion = '';
 
 export function getDataBaseUrl(): string {
   return DATA_BASE;
@@ -16,12 +17,15 @@ export function getDataBaseUrl(): string {
 
 export async function loadManifest(): Promise<DataManifest> {
   if (!manifestPromise) {
-    manifestPromise = fetch(`${DATA_BASE}manifest.json`, { cache: 'no-cache' })
+    const bust = Date.now();
+    manifestPromise = fetch(`${DATA_BASE}manifest.json?t=${bust}`, { cache: 'no-store' })
       .then(async (response) => {
         if (!response.ok) {
           throw new Error(`Failed to load manifest: ${response.status}`);
         }
-        return (await response.json()) as DataManifest;
+        const manifest = (await response.json()) as DataManifest;
+        manifestVersion = manifest.generated_at || String(bust);
+        return manifest;
       })
       .catch((error) => {
         manifestPromise = null;
@@ -33,33 +37,36 @@ export async function loadManifest(): Promise<DataManifest> {
 
 export function resetDataLoader(): void {
   manifestPromise = null;
+  manifestVersion = '';
   shardCache.clear();
   inflight.clear();
 }
 
 export async function loadShard(filename: string): Promise<Job[]> {
-  const cached = shardCache.get(filename);
+  const cacheKey = `${filename}::${manifestVersion}`;
+  const cached = shardCache.get(cacheKey);
   if (cached) return cached;
 
-  const pending = inflight.get(filename);
+  const pending = inflight.get(cacheKey);
   if (pending) return pending;
 
-  const promise = fetch(`${DATA_BASE}${filename}`, { cache: 'force-cache' })
+  const version = encodeURIComponent(manifestVersion || String(Date.now()));
+  const promise = fetch(`${DATA_BASE}${filename}?v=${version}`, { cache: 'no-store' })
     .then(async (response) => {
       if (!response.ok) {
         throw new Error(`Failed to load shard ${filename}: ${response.status}`);
       }
       const jobs = (await response.json()) as Job[];
-      shardCache.set(filename, jobs);
-      inflight.delete(filename);
+      shardCache.set(cacheKey, jobs);
+      inflight.delete(cacheKey);
       return jobs;
     })
     .catch((error) => {
-      inflight.delete(filename);
+      inflight.delete(cacheKey);
       throw error;
     });
 
-  inflight.set(filename, promise);
+  inflight.set(cacheKey, promise);
   return promise;
 }
 

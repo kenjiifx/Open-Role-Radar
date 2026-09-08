@@ -1,6 +1,7 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { loadAllJobs, loadManifest } from '../lib/data-loader';
+import { postedAt } from '../lib/dates';
+import { loadAllJobs, loadManifest, resetDataLoader } from '../lib/data-loader';
 import {
   countActiveFilters,
   DEFAULT_FILTERS,
@@ -24,7 +25,7 @@ import {
   toggleDismissedJob,
   toggleSavedJob,
 } from '../lib/storage';
-import type { Job, MobilityFlag, SiteStats } from '../lib/types';
+import type { Job, MobilityFlag, SiteStats, SortMode } from '../lib/types';
 import EvidenceModal from './EvidenceModal';
 import FilterPanel from './FilterPanel';
 import JobCard from './JobCard';
@@ -76,6 +77,7 @@ export default function JobSearch({
       setLoading(true);
       setError(null);
       try {
+        resetDataLoader();
         const manifest = await loadManifest();
         const allJobs = await loadAllJobs(manifest);
         if (cancelled) return;
@@ -139,11 +141,7 @@ export default function JobSearch({
     };
   }, []);
 
-  const index = useMemo(
-    () => buildSearchIndex(jobs),
-    [jobs],
-  );
-
+  const index = useMemo(() => buildSearchIndex(jobs), [jobs]);
   const facets = useMemo(() => collectFacetValues(jobs), [jobs]);
 
   const filteredJobs = useMemo(
@@ -168,7 +166,7 @@ export default function JobSearch({
   const virtualizer = useVirtualizer({
     count: useVirtualization ? pageJobs.length : 0,
     getScrollElement: () => listRef.current,
-    estimateSize: () => 220,
+    estimateSize: () => 200,
     overscan: 4,
     enabled: useVirtualization,
   });
@@ -188,7 +186,7 @@ export default function JobSearch({
   const isNewJob = useCallback(
     (job: Job) => {
       if (!prefs.lastVisit) return false;
-      const seen = Date.parse(job.first_seen_at);
+      const seen = Date.parse(postedAt(job));
       const visit = Date.parse(prefs.lastVisit);
       return !Number.isNaN(seen) && !Number.isNaN(visit) && seen > visit;
     },
@@ -227,25 +225,44 @@ export default function JobSearch({
             <p className="job-search__count" aria-live="polite">
               {loading
                 ? 'Loading roles…'
-                : `${filteredJobs.length.toLocaleString()} role${filteredJobs.length === 1 ? '' : 's'} found`}
+                : `${filteredJobs.length.toLocaleString()} role${filteredJobs.length === 1 ? '' : 's'}`}
             </p>
-            <div className="job-search__view-toggle" role="group" aria-label="View mode">
-              <button
-                type="button"
-                className={filters.view === 'cards' ? 'btn btn--secondary' : 'btn btn--ghost'}
-                aria-pressed={filters.view === 'cards'}
-                onClick={() => setFilters((current) => ({ ...current, view: 'cards' }))}
-              >
-                Cards
-              </button>
-              <button
-                type="button"
-                className={filters.view === 'table' ? 'btn btn--secondary' : 'btn btn--ghost'}
-                aria-pressed={filters.view === 'table'}
-                onClick={() => setFilters((current) => ({ ...current, view: 'table' }))}
-              >
-                Table
-              </button>
+            <div className="job-search__controls">
+              <label className="job-search__sort">
+                <span className="sr-only">Sort by</span>
+                <select
+                  value={filters.sort}
+                  onChange={(event) =>
+                    setFilters((current) => ({
+                      ...current,
+                      sort: event.target.value as SortMode,
+                      page: 1,
+                    }))
+                  }
+                >
+                  <option value="newest">Newest posted</option>
+                  <option value="company">Company A–Z</option>
+                  <option value="title">Title A–Z</option>
+                </select>
+              </label>
+              <div className="job-search__view-toggle" role="group" aria-label="View mode">
+                <button
+                  type="button"
+                  className={filters.view === 'cards' ? 'btn btn--secondary' : 'btn btn--ghost'}
+                  aria-pressed={filters.view === 'cards'}
+                  onClick={() => setFilters((current) => ({ ...current, view: 'cards' }))}
+                >
+                  Cards
+                </button>
+                <button
+                  type="button"
+                  className={filters.view === 'table' ? 'btn btn--secondary' : 'btn btn--ghost'}
+                  aria-pressed={filters.view === 'table'}
+                  onClick={() => setFilters((current) => ({ ...current, view: 'table' }))}
+                >
+                  Table
+                </button>
+              </div>
             </div>
           </div>
 
@@ -257,8 +274,8 @@ export default function JobSearch({
 
           {!loading && filteredJobs.length === 0 ? (
             <div className="empty-state">
-              <h3>No roles match your filters</h3>
-              <p>Try adjusting filters or check back when new data is published.</p>
+              <h3>No roles match</h3>
+              <p>Loosen filters or check back after the next sync.</p>
             </div>
           ) : null}
 
@@ -274,7 +291,7 @@ export default function JobSearch({
                     <th scope="col">Workplace</th>
                     <th scope="col">Level</th>
                     <th scope="col">Mobility</th>
-                    <th scope="col">First seen</th>
+                    <th scope="col">Posted</th>
                     <th scope="col">
                       <span className="sr-only">Actions</span>
                     </th>

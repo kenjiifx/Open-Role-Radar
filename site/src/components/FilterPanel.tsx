@@ -1,19 +1,13 @@
 import type { FilterState } from '../lib/filters';
 import { toggleArrayValue } from '../lib/filters';
 import type {
-  AcademicTerm,
   CareerLevel,
-  EligibilityMatch,
   MobilityFlag,
-  RemoteScope,
   WorkplaceType,
 } from '../lib/types';
 import {
-  ACADEMIC_TERM_LABELS,
   CAREER_LEVEL_LABELS,
-  ELIGIBILITY_MATCH_LABELS,
   MOBILITY_LABELS,
-  REMOTE_SCOPE_LABELS,
   WORKPLACE_LABELS,
 } from '../lib/types';
 
@@ -28,10 +22,7 @@ interface FilterPanelProps {
 
 const CAREER_LEVELS = Object.keys(CAREER_LEVEL_LABELS) as CareerLevel[];
 const WORKPLACE_TYPES = Object.keys(WORKPLACE_LABELS) as WorkplaceType[];
-const REMOTE_SCOPES = Object.keys(REMOTE_SCOPE_LABELS) as RemoteScope[];
-const ACADEMIC_TERMS = Object.keys(ACADEMIC_TERM_LABELS) as AcademicTerm[];
 const MOBILITY_FLAGS = Object.keys(MOBILITY_LABELS) as MobilityFlag[];
-const ELIGIBILITY_MATCHES = Object.keys(ELIGIBILITY_MATCH_LABELS) as EligibilityMatch[];
 
 function CheckboxGroup<T extends string>({
   legend,
@@ -85,10 +76,10 @@ export default function FilterPanel({
   return (
     <aside className="filter-panel" aria-label="Job filters">
       <div className="filter-panel__header">
-        <h2>Filters</h2>
+        <h2>Refine</h2>
         {activeCount > 0 ? (
           <button type="button" className="btn btn--ghost btn--sm" onClick={onReset}>
-            Clear all ({activeCount})
+            Clear ({activeCount})
           </button>
         ) : null}
       </div>
@@ -100,13 +91,13 @@ export default function FilterPanel({
           type="search"
           value={filters.q}
           onChange={(event) => update({ q: event.target.value })}
-          placeholder="Title, company, skills…"
+          placeholder="Title, company, city…"
           autoComplete="off"
         />
       </div>
 
       <CheckboxGroup
-        legend="Career level"
+        legend="Role type"
         options={CAREER_LEVELS}
         labels={CAREER_LEVEL_LABELS}
         selected={filters.careerLevels}
@@ -118,7 +109,7 @@ export default function FilterPanel({
       {disciplines.length > 0 ? (
         <fieldset className="filter-group">
           <legend>Discipline</legend>
-          <div className="filter-group__options">
+          <div className="filter-group__options filter-group__options--scroll">
             {disciplines.map((discipline) => {
               const id = `discipline-${discipline}`;
               return (
@@ -145,7 +136,7 @@ export default function FilterPanel({
         <fieldset className="filter-group">
           <legend>Location</legend>
           <div className="filter-group__options filter-group__options--scroll">
-            {locations.slice(0, 40).map((location) => {
+            {locations.slice(0, 50).map((location) => {
               const id = `location-${location}`;
               return (
                 <label key={location} htmlFor={id} className="filter-checkbox">
@@ -177,20 +168,10 @@ export default function FilterPanel({
         }
       />
 
-      <CheckboxGroup
-        legend="Remote scope"
-        options={REMOTE_SCOPES}
-        labels={REMOTE_SCOPE_LABELS}
-        selected={filters.remoteScopes}
-        onToggle={(value) =>
-          update({ remoteScopes: toggleArrayValue(filters.remoteScopes, value) })
-        }
-      />
-
       <fieldset className="filter-group">
-        <legend>Freshness</legend>
+        <legend>Posted</legend>
         <label htmlFor="freshness" className="sr-only">
-          Freshness filter
+          Posted date filter
         </label>
         <select
           id="freshness"
@@ -199,23 +180,13 @@ export default function FilterPanel({
             update({ freshness: event.target.value as FilterState['freshness'] })
           }
         >
-          <option value="all">All time</option>
+          <option value="all">Any time</option>
           <option value="24h">Last 24 hours</option>
           <option value="7d">Last 7 days</option>
           <option value="30d">Last 30 days</option>
-          <option value="new_since_visit">New since your last visit</option>
+          <option value="new_since_visit">New since last visit</option>
         </select>
       </fieldset>
-
-      <CheckboxGroup
-        legend="Academic term"
-        options={ACADEMIC_TERMS}
-        labels={ACADEMIC_TERM_LABELS}
-        selected={filters.academicTerms}
-        onToggle={(value) =>
-          update({ academicTerms: toggleArrayValue(filters.academicTerms, value) })
-        }
-      />
 
       <CheckboxGroup
         legend="Mobility"
@@ -228,40 +199,29 @@ export default function FilterPanel({
       />
 
       <fieldset className="filter-group">
-        <legend>Origin country</legend>
+        <legend>Your country</legend>
         <label htmlFor="origin-country" className="sr-only">
-          Your origin country (ISO code or name)
+          Your origin country
         </label>
         <input
           id="origin-country"
           type="text"
           value={filters.originCountry}
           onChange={(event) => update({ originCountry: event.target.value })}
-          placeholder="e.g. Canada, IN, United Kingdom"
+          placeholder="e.g. Canada, India, UK"
         />
+        <p className="filter-hint">Hides roles that explicitly exclude your country.</p>
       </fieldset>
 
-      <CheckboxGroup
-        legend="Eligibility match"
-        options={ELIGIBILITY_MATCHES}
-        labels={ELIGIBILITY_MATCH_LABELS}
-        selected={filters.eligibilityMatches}
-        onToggle={(value) =>
-          update({
-            eligibilityMatches: toggleArrayValue(filters.eligibilityMatches, value),
-          })
-        }
-      />
-
       <fieldset className="filter-group">
-        <legend>Display</legend>
+        <legend>Saved</legend>
         <label className="filter-checkbox">
           <input
             type="checkbox"
             checked={filters.showSavedOnly}
             onChange={(event) => update({ showSavedOnly: event.target.checked })}
           />
-          <span>Saved jobs only</span>
+          <span>Saved only</span>
         </label>
         <label className="filter-checkbox">
           <input

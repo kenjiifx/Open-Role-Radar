@@ -21,8 +21,12 @@ EARLY_CAREER_LEVELS: frozenset[CareerLevel] = frozenset(
 )
 
 
-def is_public_job(job: Job, *, min_confidence: float = 0.4) -> bool:
-    """Return True when a job should appear on the public site/API/feeds."""
+def is_public_job(job: Job, *, min_confidence: float = 0.65) -> bool:
+    """Return True when a job should appear on the public site/API/feeds.
+
+    Default confidence requires a title-level early-career signal so description
+    keyword noise (mentions of intern programs, junior teams, etc.) stays private.
+    """
     if job.lifecycle not in {JobLifecycle.OPEN, JobLifecycle.REOPENED}:
         return False
     if job.career_level not in EARLY_CAREER_LEVELS:

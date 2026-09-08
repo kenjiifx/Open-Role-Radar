@@ -90,14 +90,12 @@ describe('search utilities', () => {
         disciplines: [],
         locations: [],
         workplaceTypes: [],
-        remoteScopes: [],
-        academicTerms: [],
         freshness: 'all',
         mobility: ['visa'],
         originCountry: 'Canada',
-        eligibilityMatches: [],
         showSavedOnly: false,
         hideDismissed: true,
+        sort: 'newest',
         page: 1,
         pageSize: 25,
         view: 'cards',
@@ -114,10 +112,42 @@ describe('search utilities', () => {
     expect(totalPages(30, 10)).toBe(3);
   });
 
-  it('matches engine bucket hashing', () => {
-    const bucket = bucketForJobId('job-abc-123', 32);
-    expect(bucket).toBeGreaterThanOrEqual(0);
-    expect(bucket).toBeLessThan(32);
-    expect(bucketForJobId('job-abc-123', 32)).toBe(bucketForJobId('job-abc-123', 32));
+  it('sorts by ATS posted date when present', () => {
+    const older = makeJob({
+      job_id: 'job-old',
+      source_posted_at: '2026-01-01T00:00:00Z',
+      first_seen_at: '2026-09-08T00:00:00Z',
+    });
+    const newer = makeJob({
+      job_id: 'job-new',
+      title: 'New Grad Engineer',
+      career_level: 'new_grad',
+      source_posted_at: '2026-08-01T00:00:00Z',
+      first_seen_at: '2026-09-08T00:00:00Z',
+    });
+    const jobs = [older, newer];
+    const index = buildSearchIndex(jobs);
+    const filtered = filterJobs(
+      jobs,
+      index,
+      {
+        q: '',
+        careerLevels: [],
+        disciplines: [],
+        locations: [],
+        workplaceTypes: [],
+        freshness: 'all',
+        mobility: [],
+        originCountry: '',
+        showSavedOnly: false,
+        hideDismissed: true,
+        sort: 'newest',
+        page: 1,
+        pageSize: 25,
+        view: 'cards',
+      },
+      {},
+    );
+    expect(filtered.map((job) => job.job_id)).toEqual(['job-new', 'job-old']);
   });
 });

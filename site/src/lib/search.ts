@@ -1,3 +1,4 @@
+import { postedAt } from './dates';
 import type { FilterState } from './filters';
 import { bucketForJobId } from './sha256';
 import type {
@@ -7,6 +8,7 @@ import type {
   MobilityFlag,
   SearchIndexEntry,
   SiteStats,
+  SortMode,
 } from './types';
 import {
   getMobilityFlags,
@@ -35,10 +37,8 @@ export function buildSearchIndex(jobs: Job[], hashBuckets = 32): SearchIndexEntr
       .join(' | ')
       .toLowerCase(),
     workplace_type: job.workplace_type,
-    remote_scope: job.remote_scope,
-    academic_term: job.academic_term,
+    posted_at: postedAt(job),
     first_seen_at: job.first_seen_at,
-    origin_match: job.eligibility.origin_match,
     mobility_flags: getMobilityFlags(job.mobility),
     bucket: bucketForJobId(job.job_id, hashBuckets),
   }));
@@ -59,12 +59,12 @@ export function matchesQuery(entry: SearchIndexEntry, tokens: string[]): boolean
 }
 
 export function matchesFreshness(
-  firstSeenAt: string,
+  dateIso: string,
   freshness: FilterState['freshness'],
   lastVisit: string | null,
 ): boolean {
   if (freshness === 'all') return true;
-  const seen = Date.parse(firstSeenAt);
+  const seen = Date.parse(dateIso);
   if (Number.isNaN(seen)) return true;
 
   if (freshness === 'new_since_visit') {
@@ -86,6 +86,29 @@ export function matchesMobility(job: Job, flags: MobilityFlag[]): boolean {
   });
 }
 
+export function sortJobs(jobs: Job[], sort: SortMode): Job[] {
+  const copy = [...jobs];
+  if (sort === 'company') {
+    return copy.sort(
+      (a, b) =>
+        a.company_name.localeCompare(b.company_name) ||
+        a.title.localeCompare(b.title),
+    );
+  }
+  if (sort === 'title') {
+    return copy.sort(
+      (a, b) =>
+        a.title.localeCompare(b.title) ||
+        a.company_name.localeCompare(b.company_name),
+    );
+  }
+  return copy.sort((a, b) => {
+    const diff = Date.parse(postedAt(b)) - Date.parse(postedAt(a));
+    if (diff !== 0) return diff;
+    return a.job_id.localeCompare(b.job_id);
+  });
+}
+
 export function filterJobs(
   jobs: Job[],
   index: SearchIndexEntry[],
@@ -101,7 +124,7 @@ export function filterJobs(
   const saved = options.savedJobIds ?? new Set<string>();
   const dismissed = options.dismissedJobIds ?? new Set<string>();
 
-  return jobs.filter((job) => {
+  const filtered = jobs.filter((job) => {
     const entry = indexById.get(job.job_id);
     if (!entry) return false;
 
@@ -138,21 +161,7 @@ export function filterJobs(
       return false;
     }
 
-    if (
-      filters.remoteScopes.length > 0 &&
-      !filters.remoteScopes.includes(job.remote_scope)
-    ) {
-      return false;
-    }
-
-    if (
-      filters.academicTerms.length > 0 &&
-      !filters.academicTerms.includes(job.academic_term)
-    ) {
-      return false;
-    }
-
-    if (!matchesFreshness(job.first_seen_at, filters.freshness, options.lastVisit ?? null)) {
+    if (!matchesFreshness(entry.posted_at, filters.freshness, options.lastVisit ?? null)) {
       return false;
     }
 
@@ -166,15 +175,10 @@ export function filterJobs(
       if (allowed.length > 0 && !allowed.includes(country)) return false;
     }
 
-    if (
-      filters.eligibilityMatches.length > 0 &&
-      !filters.eligibilityMatches.includes(job.eligibility.origin_match)
-    ) {
-      return false;
-    }
-
     return true;
   });
+
+  return sortJobs(filtered, filters.sort);
 }
 
 export function paginateJobs<T>(items: T[], page: number, pageSize: number): T[] {
@@ -201,7 +205,7 @@ export function computeStats(
   ).length;
   const remoteCount = jobs.filter((job) => job.workplace_type === 'remote').length;
   const newSinceVisit = lastVisit
-    ? jobs.filter((job) => matchesFreshness(job.first_seen_at, 'new_since_visit', lastVisit))
+    ? jobs.filter((job) => matchesFreshness(postedAt(job), 'new_since_visit', lastVisit))
         .length
     : 0;
 

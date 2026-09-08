@@ -4,19 +4,15 @@ import JobSearch from '../components/JobSearch';
 ---
 
 <BaseLayout
-  title="OpenRoleRadar — Search early-career roles"
-  description="Search global early-career opportunities with filters for mobility, eligibility, workplace type, and more."
+  title="OpenRoleRadar — Early-career roles from first-party ATS boards"
+  description="Search internships, co-ops, and new-grad roles scraped directly from employer career pages — with real post dates and mobility signals."
   canonicalPath=""
 >
   <section class="hero">
-    <div class="hero__content">
-      <p class="hero__eyebrow">Global early-career opportunity intelligence</p>
-      <h1>Find roles that move with you</h1>
-      <p class="hero__lead">
-        OpenRoleRadar discovers first-party internships, co-ops, and new-grad roles — with
-        evidence-backed mobility claims and origin-country eligibility signals.
-      </p>
-    </div>
+    <h1 class="hero__brand">OpenRole<span>Radar</span></h1>
+    <p class="hero__lead">
+      Internships, co-ops, and new-grad roles — pulled from company ATS boards, not job boards.
+    </p>
   </section>
 
   <JobSearch client:load showStats />

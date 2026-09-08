@@ -38,8 +38,8 @@ const title = slug
   canonicalPath={`company/${slug}/`}
 >
   <section class="hero hero--compact">
-    <h1>{slug?.replace(/-/g, ' ')}</h1>
-    <p class="hero__lead">Early-career roles at this company</p>
+    <h1 class="hero__brand">{slug?.replace(/-/g, ' ')}</h1>
+    <p class="hero__lead">Early-career openings at this company</p>
   </section>
 
   <JobSearch client:load companySlug={slug} showStats={false} />

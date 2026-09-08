@@ -1,11 +1,10 @@
 import type {
-  AcademicTerm,
   CareerLevel,
   EligibilityMatch,
   FilterState,
   FreshnessFilter,
   MobilityFlag,
-  RemoteScope,
+  SortMode,
   ViewMode,
   WorkplaceType,
 } from './types';
@@ -29,14 +28,12 @@ export const DEFAULT_FILTERS: FilterState = {
   disciplines: [],
   locations: [],
   workplaceTypes: [],
-  remoteScopes: [],
-  academicTerms: [],
   freshness: 'all',
   mobility: [],
   originCountry: '',
-  eligibilityMatches: [],
   showSavedOnly: false,
   hideDismissed: true,
+  sort: 'newest',
   page: 1,
   pageSize: DEFAULT_PAGE_SIZE,
   view: 'cards',
@@ -47,10 +44,7 @@ const ARRAY_KEYS = new Set([
   'disciplines',
   'locations',
   'workplaceTypes',
-  'remoteScopes',
-  'academicTerms',
   'mobility',
-  'eligibilityMatches',
 ]);
 
 const BOOL_KEYS = new Set(['showSavedOnly', 'hideDismissed']);
@@ -82,10 +76,7 @@ export function parseFiltersFromUrl(search: string): FilterState {
     disciplines: [],
     locations: [],
     workplaceTypes: [],
-    remoteScopes: [],
-    academicTerms: [],
     mobility: [],
-    eligibilityMatches: [],
   };
 
   for (const key of Object.keys(DEFAULT_FILTERS) as (keyof FilterState)[]) {
@@ -117,6 +108,11 @@ export function parseFiltersFromUrl(search: string): FilterState {
 
     if (key === 'view') {
       next.view = raw as ViewMode;
+      continue;
+    }
+
+    if (key === 'sort') {
+      next.sort = raw as SortMode;
       continue;
     }
 
@@ -185,12 +181,9 @@ export function countActiveFilters(filters: FilterState): number {
   if (filters.disciplines.length) count += 1;
   if (filters.locations.length) count += 1;
   if (filters.workplaceTypes.length) count += 1;
-  if (filters.remoteScopes.length) count += 1;
-  if (filters.academicTerms.length) count += 1;
   if (filters.freshness !== 'all') count += 1;
   if (filters.mobility.length) count += 1;
   if (filters.originCountry) count += 1;
-  if (filters.eligibilityMatches.length) count += 1;
   if (filters.showSavedOnly) count += 1;
   return count;
 }
@@ -202,13 +195,12 @@ export function toggleArrayValue<T extends string>(values: T[], value: T): T[] {
 }
 
 export type {
-  AcademicTerm,
   CareerLevel,
   EligibilityMatch,
   FilterState,
   FreshnessFilter,
   MobilityFlag,
-  RemoteScope,
+  SortMode,
   ViewMode,
   WorkplaceType,
 };
