@@ -119,38 +119,45 @@ class LifecycleManager:
     def apply_update(self, existing: Job, updated: Job, now: datetime) -> list[str]:
         """Apply meaningful updates; preserve first_seen_at. Returns changed fields."""
         changed: list[str] = []
+
+        # Always refresh classification + posting date so taxonomy/rule changes take effect
+        # even when the ATS content hash is unchanged.
+        if existing.career_level != updated.career_level:
+            changed.append("career_level")
+        if existing.career_level_confidence != updated.career_level_confidence:
+            changed.append("career_level_confidence")
+        existing.career_level = updated.career_level
+        existing.career_level_confidence = updated.career_level_confidence
+        existing.disciplines = updated.disciplines
+        existing.eligibility = updated.eligibility
+        existing.mobility = updated.mobility
+        if updated.source_posted_at is not None:
+            existing.source_posted_at = updated.source_posted_at
+            existing.provenance.source_posted_at = updated.source_posted_at
+        existing.provenance.classification_version = updated.provenance.classification_version
+        existing.provenance.fetched_at = updated.provenance.fetched_at
+        existing.last_seen_at = now
+
         if existing.provenance.content_hash == updated.provenance.content_hash:
-            existing.last_seen_at = now
             return changed
 
         preserve_first = existing.first_seen_at
         preserve_opened = existing.provenance.first_seen_at
-        for field_name in ("title", "summary", "career_level", "compensation", "locations"):
+        for field_name in ("title", "summary", "compensation", "locations"):
             if getattr(existing, field_name) != getattr(updated, field_name):
                 changed.append(field_name)
 
         existing.title = updated.title
         existing.summary = updated.summary
-        existing.career_level = updated.career_level
-        existing.career_level_confidence = updated.career_level_confidence
-        existing.disciplines = updated.disciplines
         existing.skills = updated.skills
         existing.locations = updated.locations
         existing.workplace_type = updated.workplace_type
         existing.remote_scope = updated.remote_scope
         existing.compensation = updated.compensation
-        existing.eligibility = updated.eligibility
-        existing.mobility = updated.mobility
-        existing.last_seen_at = now
         existing.last_changed_at = now
         existing.first_seen_at = preserve_first
         existing.provenance.first_seen_at = preserve_opened
         existing.provenance.content_hash = updated.provenance.content_hash
-        existing.provenance.fetched_at = updated.provenance.fetched_at
-        # Keep ATS posting dates current when the board provides them.
-        if updated.source_posted_at is not None:
-            existing.source_posted_at = updated.source_posted_at
-            existing.provenance.source_posted_at = updated.source_posted_at
         return changed
 
     def process_missing_jobs(
