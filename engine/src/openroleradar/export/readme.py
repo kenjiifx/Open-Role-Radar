@@ -70,8 +70,7 @@ class ReadmeGenerator:
         )
 
     def update_readme(self, readme_path: Path, state: LiveState) -> str:
-        """Replace or append the generated stats block in a README file."""
-        section = self.render_section(state)
+        """Replace the generated stats block when markers exist; otherwise leave README alone."""
         if readme_path.exists():
             content = readme_path.read_text(encoding="utf-8")
         else:
@@ -81,10 +80,12 @@ class ReadmeGenerator:
             re.escape(START_MARKER) + r".*?" + re.escape(END_MARKER),
             flags=re.DOTALL,
         )
-        if pattern.search(content):
-            updated = pattern.sub(section, content)
-        else:
-            updated = content.rstrip() + "\n\n" + section + "\n"
+        if not pattern.search(content):
+            # Simplified READMEs omit live stats; do not inject a block.
+            return content
+
+        section = self.render_section(state)
+        updated = pattern.sub(section, content)
         readme_path.write_text(updated, encoding="utf-8")
         return updated
 

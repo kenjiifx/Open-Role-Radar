@@ -240,6 +240,7 @@ export default function JobSearch({
                     }))
                   }
                 >
+                  <option value="diverse">Mixed companies</option>
                   <option value="newest">Newest posted</option>
                   <option value="company">Company A–Z</option>
                   <option value="title">Title A–Z</option>

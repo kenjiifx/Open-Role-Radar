@@ -10,7 +10,7 @@ interface Props {
 
 const {
   title = 'OpenRoleRadar — Early-career roles from first-party ATS boards',
-  description = 'Search internships, co-ops, and new-grad roles scraped directly from employer career pages — with real post dates, visa signals, and shareable filters.',
+  description = 'Search internships, co-ops, and new-grad roles scraped directly from employer career pages — with real post dates and mobility signals.',
   canonicalPath = '',
   ogImage = '/og-default.png',
 } = Astro.props;
@@ -34,7 +34,7 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Source+Sans+3:wght@400;600;700&family=Syne:wght@700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;700&display=swap"
       rel="stylesheet"
     />
 
@@ -58,7 +58,7 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
     <header class="site-header">
       <div class="site-header__inner">
         <a href={siteBase} class="site-logo" aria-label="OpenRoleRadar home">
-          <span class="site-logo__mark" aria-hidden="true">◈</span>
+          <span class="site-logo__mark" aria-hidden="true"></span>
           <span class="site-logo__text">OpenRoleRadar</span>
         </a>
         <nav class="site-nav" aria-label="Primary">
@@ -73,15 +73,9 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
           </a>
         </nav>
         <div class="theme-switcher" role="group" aria-label="Theme">
-          <button type="button" data-theme-choice="light" aria-pressed="false">
-            Light
-          </button>
-          <button type="button" data-theme-choice="dark" aria-pressed="false">
-            Dark
-          </button>
-          <button type="button" data-theme-choice="system" aria-pressed="true">
-            Auto
-          </button>
+          <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+          <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+          <button type="button" data-theme-choice="system" aria-pressed="true">Auto</button>
         </div>
       </div>
     </header>
@@ -92,7 +86,7 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
 
     <footer class="site-footer">
       <p>
-        <strong>OpenRoleRadar</strong> tracks first-party early-career roles and refreshes on a schedule — reload for the latest publish.
+        <strong>OpenRoleRadar</strong> — first-party early-career roles. Data refreshes on a schedule; reload for the latest publish.
       </p>
     </footer>
 

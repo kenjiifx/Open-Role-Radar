@@ -95,7 +95,7 @@ describe('search utilities', () => {
         originCountry: 'Canada',
         showSavedOnly: false,
         hideDismissed: true,
-        sort: 'newest',
+        sort: 'diverse',
         page: 1,
         pageSize: 25,
         view: 'cards',
@@ -149,5 +149,36 @@ describe('search utilities', () => {
       {},
     );
     expect(filtered.map((job) => job.job_id)).toEqual(['job-new', 'job-old']);
+  });
+
+  it('interleaves companies in diverse sort', () => {
+    const jobs = [
+      makeJob({ job_id: 'a1', company_id: 'co-a', company_name: 'Alpha', source_posted_at: '2026-09-01T00:00:00Z' }),
+      makeJob({ job_id: 'a2', company_id: 'co-a', company_name: 'Alpha', source_posted_at: '2026-08-01T00:00:00Z' }),
+      makeJob({ job_id: 'b1', company_id: 'co-b', company_name: 'Beta', source_posted_at: '2026-09-02T00:00:00Z' }),
+    ];
+    const index = buildSearchIndex(jobs);
+    const filtered = filterJobs(
+      jobs,
+      index,
+      {
+        q: '',
+        careerLevels: [],
+        disciplines: [],
+        locations: [],
+        workplaceTypes: [],
+        freshness: 'all',
+        mobility: [],
+        originCountry: '',
+        showSavedOnly: false,
+        hideDismissed: true,
+        sort: 'diverse',
+        page: 1,
+        pageSize: 25,
+        view: 'cards',
+      },
+      {},
+    );
+    expect(filtered.map((job) => job.job_id)).toEqual(['b1', 'a1', 'a2']);
   });
 });

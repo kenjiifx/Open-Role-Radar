@@ -86,6 +86,45 @@ export function matchesMobility(job: Job, flags: MobilityFlag[]): boolean {
   });
 }
 
+/** Round-robin across companies so big boards don't flood the first pages. */
+export function diversifyByCompany(jobs: Job[]): Job[] {
+  const byCompany = new Map<string, Job[]>();
+  for (const job of jobs) {
+    const list = byCompany.get(job.company_id);
+    if (list) list.push(job);
+    else byCompany.set(job.company_id, [job]);
+  }
+
+  for (const list of byCompany.values()) {
+    list.sort((a, b) => {
+      const diff = Date.parse(postedAt(b)) - Date.parse(postedAt(a));
+      if (diff !== 0) return diff;
+      return a.job_id.localeCompare(b.job_id);
+    });
+  }
+
+  // Prefer companies with freshest top role when starting the round-robin.
+  const queues = [...byCompany.values()].sort((a, b) => {
+    const diff = Date.parse(postedAt(b[0])) - Date.parse(postedAt(a[0]));
+    if (diff !== 0) return diff;
+    return a[0].company_name.localeCompare(b[0].company_name);
+  });
+
+  const result: Job[] = [];
+  let progressed = true;
+  while (progressed) {
+    progressed = false;
+    for (const queue of queues) {
+      const next = queue.shift();
+      if (next) {
+        result.push(next);
+        progressed = true;
+      }
+    }
+  }
+  return result;
+}
+
 export function sortJobs(jobs: Job[], sort: SortMode): Job[] {
   const copy = [...jobs];
   if (sort === 'company') {
@@ -102,11 +141,14 @@ export function sortJobs(jobs: Job[], sort: SortMode): Job[] {
         a.company_name.localeCompare(b.company_name),
     );
   }
-  return copy.sort((a, b) => {
-    const diff = Date.parse(postedAt(b)) - Date.parse(postedAt(a));
-    if (diff !== 0) return diff;
-    return a.job_id.localeCompare(b.job_id);
-  });
+  if (sort === 'newest') {
+    return copy.sort((a, b) => {
+      const diff = Date.parse(postedAt(b)) - Date.parse(postedAt(a));
+      if (diff !== 0) return diff;
+      return a.job_id.localeCompare(b.job_id);
+    });
+  }
+  return diversifyByCompany(copy);
 }
 
 export function filterJobs(

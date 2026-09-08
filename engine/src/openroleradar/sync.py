@@ -236,9 +236,8 @@ class SyncOrchestrator:
 
         state = self.store.load()
         reclassified = reclassify_state(state, root=self.root)
-        if reclassified:
-            state.generated_at = datetime.now(UTC)
-            self.store.save(state)
+        state.generated_at = datetime.now(UTC)
+        self.store.save(state)
 
         site_root = self.root / "site"
         StaticApiExporter(self.config).export(state, site_root)

@@ -82,7 +82,11 @@ def test_full_export_pipeline(tmp_path: Path, pipeline_state: LiveState) -> None
     assert artifact.path.exists()
     assert artifact.job_count == 3
 
-    # README stats
+    # README stats (only when markers are present)
+    readme_path.write_text(
+        "# Test\n\n<!-- GENERATED_STATS:START -->\nold\n<!-- GENERATED_STATS:END -->\n",
+        encoding="utf-8",
+    )
     readme_gen = ReadmeGenerator()
     content = readme_gen.update_readme(readme_path, loaded)
     assert "Open roles" in content
