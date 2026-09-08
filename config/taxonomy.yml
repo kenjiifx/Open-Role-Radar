@@ -91,6 +91,7 @@ career_levels:
       - summer analyst
       - winter analyst
       - fall analyst
+      - spring analyst
   - id: co_op
     label: Co-op
     patterns:
@@ -102,13 +103,18 @@ career_levels:
     patterns:
       - new grad
       - new graduate
+      - recent graduate
+      - recent grad
       - university grad
       - university graduate
       - campus hire
       - campus recruiting
+      - campus recruit
+      - graduating
       - graduate engineer
       - graduate developer
       - graduate software
+      - university hire
   - id: entry_level
     label: Entry Level
     patterns:
@@ -118,9 +124,12 @@ career_levels:
       - junior developer
       - junior software
       - junior analyst
+      - junior associate
       - early career
+      - early careers
       - associate engineer
       - associate developer
+      - associate software
   - id: apprenticeship
     label: Apprenticeship
     patterns:
@@ -154,6 +163,9 @@ career_levels:
       - student program
       - student engineer
       - student developer
+      - undergraduate
+      - undergrad
+      - student role
 
 senior_exclusions:
   - senior

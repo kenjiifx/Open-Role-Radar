@@ -20,6 +20,27 @@ interface FilterPanelProps {
   activeCount: number;
 }
 
+const CANADA_LOCATIONS = [
+  'Canada',
+  'Toronto',
+  'Vancouver',
+  'Montreal',
+  'Montréal',
+  'Ottawa',
+  'Ontario',
+  'Quebec',
+  'Québec',
+  'Alberta',
+  'British Columbia',
+  'Calgary',
+  'Edmonton',
+  'Waterloo',
+  'Kitchener',
+  'Mississauga',
+  'Winnipeg',
+  'Halifax',
+];
+
 const CAREER_LEVELS = Object.keys(CAREER_LEVEL_LABELS) as CareerLevel[];
 const WORKPLACE_TYPES = Object.keys(WORKPLACE_LABELS) as WorkplaceType[];
 const MOBILITY_FLAGS = Object.keys(MOBILITY_LABELS) as MobilityFlag[];
@@ -94,6 +115,33 @@ export default function FilterPanel({
           placeholder="Title, company, city…"
           autoComplete="off"
         />
+      </div>
+
+      <div className="filter-quick">
+        <button
+          type="button"
+          className="btn btn--secondary btn--sm"
+          onClick={() =>
+            update({
+              locations: [...new Set([...filters.locations, ...CANADA_LOCATIONS])],
+            })
+          }
+        >
+          Canada roles
+        </button>
+        <button
+          type="button"
+          className="btn btn--ghost btn--sm"
+          onClick={() =>
+            update({
+              locations: filters.locations.filter(
+                (loc) => !CANADA_LOCATIONS.some((c) => c.toLowerCase() === loc.toLowerCase()),
+              ),
+            })
+          }
+        >
+          Clear Canada
+        </button>
       </div>
 
       <CheckboxGroup

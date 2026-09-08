@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
+
+from openroleradar.config import load_project_config
 from openroleradar.models.enums import CareerLevel, JobLifecycle
 from openroleradar.models.job import Job
 
@@ -21,14 +24,25 @@ EARLY_CAREER_LEVELS: frozenset[CareerLevel] = frozenset(
 )
 
 
-def is_public_job(job: Job, *, min_confidence: float = 0.65) -> bool:
+@lru_cache(maxsize=1)
+def _configured_min_confidence() -> float:
+    try:
+        config = load_project_config()
+        value = float(config.classification.get("early_career_min_confidence", 0.55))
+    except Exception:
+        value = 0.55
+    return max(0.0, min(value, 1.0))
+
+
+def is_public_job(job: Job, *, min_confidence: float | None = None) -> bool:
     """Return True when a job should appear on the public site/API/feeds.
 
-    Default confidence requires a title-level early-career signal so description
-    keyword noise (mentions of intern programs, junior teams, etc.) stays private.
+    Title-level early-career signals are preferred; min confidence comes from
+    config/project.yml unless overridden.
     """
+    threshold = _configured_min_confidence() if min_confidence is None else min_confidence
     if job.lifecycle not in {JobLifecycle.OPEN, JobLifecycle.REOPENED}:
         return False
     if job.career_level not in EARLY_CAREER_LEVELS:
         return False
-    return job.career_level_confidence >= min_confidence
+    return job.career_level_confidence >= threshold

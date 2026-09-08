@@ -28,11 +28,11 @@ live_state:
 
 polling:
   tiers:
-    hot_minutes: 15
-    warm_minutes: 60
-    cold_minutes: 360
-    dormant_minutes: 1440
-  max_sources_per_sync: 200
+    hot_minutes: 5
+    warm_minutes: 5
+    cold_minutes: 15
+    dormant_minutes: 60
+  max_sources_per_sync: 500
   max_sync_runtime_minutes: 45
 
 http:
@@ -75,5 +75,5 @@ archive:
   prefix: dataset
 
 classification:
-  early_career_min_confidence: 0.6
-  quarantine_below_confidence: 0.4
+  early_career_min_confidence: 0.55
+  quarantine_below_confidence: 0.35

@@ -70,13 +70,23 @@ export default function JobSearch({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [reloadToken, setReloadToken] = useState(0);
+  const [lastGeneratedAt, setLastGeneratedAt] = useState<string | null>(null);
   const tableRef = useRef<HTMLDivElement>(null);
+  const silentRef = useRef(false);
+
+  const reload = useCallback((silent = false) => {
+    silentRef.current = silent;
+    setReloadToken((token) => token + 1);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      setLoading(true);
+      if (!silentRef.current) {
+        setLoading(true);
+      }
       setError(null);
       try {
         resetDataLoader();
@@ -98,6 +108,7 @@ export default function JobSearch({
         const stored = loadPreferences();
         setPrefs(stored);
         setStats(computeStats(scopedJobs, stored.lastVisit, manifest.generated_at));
+        setLastGeneratedAt(manifest.generated_at);
 
         if (stored.originCountry && !filters.originCountry) {
           setFilters((current) => ({
@@ -112,6 +123,7 @@ export default function JobSearch({
         }
       } finally {
         if (!cancelled) setLoading(false);
+        silentRef.current = false;
       }
     }
 
@@ -120,7 +132,22 @@ export default function JobSearch({
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companySlug]);
+  }, [companySlug, reloadToken]);
+
+  useEffect(() => {
+    const onFocus = () => reload(true);
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') reload(true);
+    };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisible);
+    const timer = window.setInterval(() => reload(true), 60_000);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.clearInterval(timer);
+    };
+  }, [reload]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -295,10 +322,24 @@ export default function JobSearch({
                   ? 'Syncing roles…'
                   : `${filteredJobs.length.toLocaleString()} role${filteredJobs.length === 1 ? '' : 's'}`}
               </p>
+              <button
+                type="button"
+                className="btn btn--ghost btn--sm"
+                onClick={() => reload(false)}
+                title="Reload the latest published dataset"
+              >
+                Refresh data
+              </button>
             </div>
             <div className="job-search__controls">
               <p className="job-search__hint" title="Keyboard shortcuts">
                 <kbd>j</kbd>/<kbd>k</kbd> move · <kbd>Enter</kbd> expand · <kbd>s</kbd> save
+                {lastGeneratedAt ? (
+                  <>
+                    {' '}
+                    · live feed
+                  </>
+                ) : null}
               </p>
               <label className="job-search__sort">
                 <span className="sr-only">Sort by</span>

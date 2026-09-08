@@ -48,26 +48,44 @@ class SyncOrchestrator:
         return state
 
     def merge_seeds(self, state: LiveState) -> int:
-        """Ensure newly added seed sources appear in existing live state."""
+        """Ensure newly added seed sources appear in existing live state.
+
+        Also disables obsolete seed variants (same company domain, old adapter/tenant)
+        so broken Greenhouse→Ashby migrations do not keep failing forever.
+        """
         now = datetime.now(UTC)
         added = 0
+        seed_ids: set[str] = set()
+        seed_domains: set[str] = set()
         for seed in load_seed_sources(self.root):
             company = seed_to_company(seed, now=now)
             source = seed_to_source(seed, now=now)
+            seed_ids.add(source.source_id)
+            seed_domains.add(seed.domain.lower())
             if company.company_id not in state.companies:
                 state.companies[company.company_id] = company
             if source.source_id not in state.sources:
+                source.poll_tier = "hot"
                 state.sources[source.source_id] = source
                 added += 1
             else:
                 existing = state.sources[source.source_id]
-                # Keep health/schedule, but refresh identity fields from seeds.
                 existing.company_name = source.company_name
                 existing.company_domain = source.company_domain
                 existing.careers_url = source.careers_url
                 existing.adapter = source.adapter
                 existing.adapter_tenant = source.adapter_tenant
                 existing.enabled = True
+                existing.poll_tier = "hot"
+                if existing.health_status in {"failing", "degraded", "unsupported"}:
+                    existing.health_status = "healthy"
+                    existing.consecutive_failures = 0
+
+        for existing in state.sources.values():
+            domain = (existing.company_domain or "").lower()
+            if domain in seed_domains and existing.source_id not in seed_ids:
+                existing.enabled = False
+                existing.health_status = "disabled"
         return added
 
     def load_or_bootstrap(self) -> LiveState:
@@ -81,15 +99,18 @@ class SyncOrchestrator:
         return state
 
     def _sources_due(self, state: LiveState, now: datetime) -> list[Source]:
-        max_sources = int(self.config.polling.get("max_sources_per_sync", 200))
+        """Return every enabled source each sync so refresh gets fresh publishes.
+
+        Ordering still prefers the oldest / never-polled sources when capped.
+        """
+        max_sources = int(self.config.polling.get("max_sources_per_sync", 500))
         due: list[Source] = []
         for source in state.sources.values():
             if not source.enabled:
                 continue
             if source.health_status in ("blocked", "disabled", "unsupported"):
                 continue
-            if source.next_due_at is None or source.next_due_at <= now:
-                due.append(source)
+            due.append(source)
         due.sort(key=lambda s: s.next_due_at or datetime.min.replace(tzinfo=UTC))
         return due[:max_sources]
 

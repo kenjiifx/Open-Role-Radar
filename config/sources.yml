@@ -4,7 +4,7 @@
 # --- Core tech ---
 - { company: Stripe, domain: stripe.com, adapter: greenhouse, tenant: stripe }
 - { company: Figma, domain: figma.com, adapter: greenhouse, tenant: figma }
-- { company: Notion, domain: notion.so, adapter: greenhouse, tenant: notion }
+- { company: Notion, domain: notion.so, adapter: ashby, tenant: notion }
 - { company: Cloudflare, domain: cloudflare.com, adapter: greenhouse, tenant: cloudflare }
 - { company: Datadog, domain: datadoghq.com, adapter: greenhouse, tenant: datadog }
 - { company: Plaid, domain: plaid.com, adapter: lever, tenant: plaid }
@@ -19,7 +19,7 @@
 - { company: Databricks, domain: databricks.com, adapter: greenhouse, tenant: databricks }
 - { company: Robinhood, domain: robinhood.com, adapter: greenhouse, tenant: robinhood }
 - { company: Coinbase, domain: coinbase.com, adapter: greenhouse, tenant: coinbase }
-- { company: Shopify, domain: shopify.com, adapter: greenhouse, tenant: shopify }
+# Shopify careers are Ashby-embedded but the public job-board API is closed; skip until a public feed exists.
 - { company: Spotify, domain: lifeatspotify.com, adapter: greenhouse, tenant: spotify }
 - { company: Reddit, domain: redditinc.com, adapter: greenhouse, tenant: reddit }
 
@@ -30,7 +30,6 @@
 - { company: Twitch, domain: twitch.tv, adapter: greenhouse, tenant: twitch }
 - { company: Lyft, domain: lyft.com, adapter: greenhouse, tenant: lyft }
 - { company: DoorDash, domain: doordash.com, adapter: greenhouse, tenant: doordash }
-- { company: Instacart, domain: instacart.com, adapter: greenhouse, tenant: instacart }
 - { company: Affirm, domain: affirm.com, adapter: greenhouse, tenant: affirm }
 - { company: Block, domain: block.xyz, adapter: greenhouse, tenant: square }
 - { company: Twilio, domain: twilio.com, adapter: greenhouse, tenant: twilio }
@@ -86,7 +85,6 @@
 - { company: Palo Alto Networks, domain: paloaltonetworks.com, adapter: greenhouse, tenant: paloaltonetworks }
 - { company: Fastly, domain: fastly.com, adapter: greenhouse, tenant: fastly }
 - { company: Akamai, domain: akamai.com, adapter: greenhouse, tenant: akamai }
-- { company: 1Password, domain: 1password.com, adapter: greenhouse, tenant: 1password }
 - { company: Trail of Bits, domain: trailofbits.com, adapter: greenhouse, tenant: trailofbits }
 
 # --- Product / design ---
@@ -100,12 +98,27 @@
 - { company: Webflow, domain: webflow.com, adapter: greenhouse, tenant: webflow }
 - { company: Framer, domain: framer.com, adapter: ashby, tenant: framer }
 
-# --- Canada / global ---
-- { company: Wealthsimple, domain: wealthsimple.com, adapter: greenhouse, tenant: wealthsimple }
+# --- Canada (verified live ATS boards) ---
+# Prefer Ashby/Greenhouse tenants that respond today; banks/retail often need Workday.
+- { company: Wealthsimple, domain: wealthsimple.com, adapter: ashby, tenant: wealthsimple }
+- { company: 1Password, domain: 1password.com, adapter: ashby, tenant: 1password }
+- { company: Lightspeed, domain: lightspeedhq.com, adapter: ashby, tenant: lightspeedhq }
+- { company: Cohere, domain: cohere.com, adapter: ashby, tenant: cohere }
+- { company: Hopper, domain: hopper.com, adapter: ashby, tenant: hopper }
+- { company: Loopio, domain: loopio.com, adapter: ashby, tenant: loopio }
+- { company: Benevity, domain: benevity.com, adapter: ashby, tenant: benevity }
+- { company: Clearco, domain: clear.co, adapter: ashby, tenant: clearco }
+- { company: Thinkific, domain: thinkific.com, adapter: ashby, tenant: thinkific }
+- { company: 7shifts, domain: 7shifts.com, adapter: ashby, tenant: 7shifts }
 - { company: Hootsuite, domain: hootsuite.com, adapter: greenhouse, tenant: hootsuite }
-- { company: Lightspeed, domain: lightspeedhq.com, adapter: greenhouse, tenant: lightspeedhq }
-- { company: Ada, domain: ada.cx, adapter: greenhouse, tenant: ada }
-- { company: Nubank, domain: nubank.com.br, adapter: greenhouse, tenant: nubank }
+- { company: Faire, domain: faire.com, adapter: greenhouse, tenant: faire }
+- { company: Ritual, domain: ritual.co, adapter: greenhouse, tenant: ritual }
+- { company: Flipp, domain: flipp.com, adapter: greenhouse, tenant: flipp }
+- { company: League, domain: league.com, adapter: greenhouse, tenant: leagueinc }
+- { company: Instacart, domain: instacart.com, adapter: greenhouse, tenant: instacart }
+
+# --- Global fintech / consumer (Greenhouse) ---
+- { company: Nubank, domain: nubank.com.br, adapter: ashby, tenant: nubank }
 - { company: Revolut, domain: revolut.com, adapter: greenhouse, tenant: revolut }
 - { company: Wise, domain: wise.com, adapter: greenhouse, tenant: transferwise }
 - { company: Monzo, domain: monzo.com, adapter: greenhouse, tenant: monzo }
@@ -132,7 +145,6 @@
 - { company: ServiceTitan, domain: servicetitan.com, adapter: greenhouse, tenant: servicetitan }
 - { company: Benchling, domain: benchling.com, adapter: greenhouse, tenant: benchling }
 - { company: Klarna, domain: klarna.com, adapter: greenhouse, tenant: klarna }
-- { company: Faire, domain: faire.com, adapter: greenhouse, tenant: faire }
 - { company: Thumbtack, domain: thumbtack.com, adapter: greenhouse, tenant: thumbtack }
 - { company: Nextdoor, domain: nextdoor.com, adapter: greenhouse, tenant: nextdoor }
 - { company: Pinterest, domain: pinterest.com, adapter: greenhouse, tenant: pinterest }

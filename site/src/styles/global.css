@@ -479,6 +479,13 @@ main {
 }
 
 .filter-panel__search {
+  margin-bottom: 0.75rem;
+}
+
+.filter-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
   margin-bottom: 1rem;
 }
 

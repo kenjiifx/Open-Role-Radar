@@ -2,8 +2,8 @@ name: Sync and Deploy
 
 on:
   schedule:
-    # Every 15 minutes, offset from the hour to reduce GitHub Actions queue contention.
-    - cron: "7,22,37,52 * * * *"
+    # Every 5 minutes so a user refresh is rarely more than one deploy behind.
+    - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       sample:

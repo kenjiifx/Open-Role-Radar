@@ -26,7 +26,7 @@ def test_description_only_intern_mention_not_public() -> None:
         "Software Engineer II",
         "We also run an intern program and hire junior teammates.",
     )
-    assert confidence < 0.65
+    assert confidence < 0.55
     assert not is_public_job(
         sample_job(career_level=level, career_level_confidence=confidence)
     )
