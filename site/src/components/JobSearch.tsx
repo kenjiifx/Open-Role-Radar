@@ -1,4 +1,3 @@
-import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { postedAt } from '../lib/dates';
 import { loadAllJobs, loadManifest, resetDataLoader } from '../lib/data-loader';
@@ -28,7 +27,7 @@ import {
 import type { Job, MobilityFlag, SiteStats, SortMode } from '../lib/types';
 import EvidenceModal from './EvidenceModal';
 import FilterPanel from './FilterPanel';
-import JobCard from './JobCard';
+import JobRow from './JobRow';
 import StatsBar from './StatsBar';
 
 interface JobSearchProps {
@@ -57,18 +56,21 @@ export default function JobSearch({
   companySlug,
   showStats = true,
 }: JobSearchProps) {
-  const [filters, setFilters] = useState<FilterState>(() =>
-    typeof window !== 'undefined'
-      ? parseFiltersFromUrl(window.location.search)
-      : DEFAULT_FILTERS,
-  );
+  const [filters, setFilters] = useState<FilterState>(() => {
+    if (typeof window === 'undefined') return DEFAULT_FILTERS;
+    const parsed = parseFiltersFromUrl(window.location.search);
+    return { ...parsed, view: 'table' };
+  });
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [prefs, setPrefs] = useState(() => loadPreferences());
   const [evidence, setEvidence] = useState<EvidenceState | null>(null);
   const [stats, setStats] = useState<SiteStats>(initialStats ?? EMPTY_STATS);
-  const listRef = useRef<HTMLDivElement>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -95,12 +97,14 @@ export default function JobSearch({
         setJobs(scopedJobs);
         const stored = loadPreferences();
         setPrefs(stored);
-        setStats(
-          computeStats(scopedJobs, stored.lastVisit, manifest.generated_at),
-        );
+        setStats(computeStats(scopedJobs, stored.lastVisit, manifest.generated_at));
 
         if (stored.originCountry && !filters.originCountry) {
-          setFilters((current) => ({ ...current, originCountry: stored.originCountry }));
+          setFilters((current) => ({
+            ...current,
+            originCountry: stored.originCountry,
+            view: 'table',
+          }));
         }
       } catch (err) {
         if (!cancelled) {
@@ -120,7 +124,7 @@ export default function JobSearch({
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const query = serializeFiltersToUrl(filters);
+    const query = serializeFiltersToUrl({ ...filters, view: 'table' });
     const base = window.location.pathname;
     window.history.replaceState(null, '', query ? `${base}${query}` : base);
   }, [filters]);
@@ -141,12 +145,26 @@ export default function JobSearch({
     };
   }, []);
 
+  useEffect(() => {
+    const node = tableRef.current;
+    if (!node) return;
+
+    const onMove = (event: MouseEvent) => {
+      const rect = node.getBoundingClientRect();
+      node.style.setProperty('--spot-x', `${event.clientX - rect.left}px`);
+      node.style.setProperty('--spot-y', `${event.clientY - rect.top}px`);
+    };
+
+    node.addEventListener('mousemove', onMove);
+    return () => node.removeEventListener('mousemove', onMove);
+  }, [loading]);
+
   const index = useMemo(() => buildSearchIndex(jobs), [jobs]);
   const facets = useMemo(() => collectFacetValues(jobs), [jobs]);
 
   const filteredJobs = useMemo(
     () =>
-      filterJobs(jobs, index, filters, {
+      filterJobs(jobs, index, { ...filters, view: 'table' }, {
         savedJobIds: new Set(prefs.savedJobIds),
         dismissedJobIds: new Set(prefs.dismissedJobIds),
         lastVisit: prefs.lastVisit,
@@ -162,21 +180,13 @@ export default function JobSearch({
   const pages = totalPages(filteredJobs.length, filters.pageSize);
   const activeFilterCount = countActiveFilters(filters);
 
-  const useVirtualization = filters.view === 'cards' && pageJobs.length > 20;
-  const virtualizer = useVirtualizer({
-    count: useVirtualization ? pageJobs.length : 0,
-    getScrollElement: () => listRef.current,
-    estimateSize: () => 200,
-    overscan: 4,
-    enabled: useVirtualization,
-  });
-
   const handleSave = useCallback((jobId: string) => {
     setPrefs(toggleSavedJob(jobId));
   }, []);
 
   const handleDismiss = useCallback((jobId: string) => {
     setPrefs(toggleDismissedJob(jobId));
+    setExpandedId((current) => (current === jobId ? null : current));
   }, []);
 
   const handleEvidence = useCallback((job: Job, flag: MobilityFlag) => {
@@ -193,41 +203,103 @@ export default function JobSearch({
     [prefs.lastVisit],
   );
 
-  const renderJob = (job: Job) => (
-    <JobCard
-      key={job.job_id}
-      job={job}
-      saved={prefs.savedJobIds.includes(job.job_id)}
-      isNew={isNewJob(job)}
-      view={filters.view}
-      onSave={handleSave}
-      onDismiss={handleDismiss}
-      onEvidence={handleEvidence}
-    />
-  );
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
+      if (pageJobs.length === 0) return;
+
+      const currentIndex = Math.max(
+        0,
+        pageJobs.findIndex((job) => job.job_id === selectedId),
+      );
+
+      if (event.key === 'j' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        const next = pageJobs[Math.min(pageJobs.length - 1, currentIndex + 1)];
+        setSelectedId(next.job_id);
+        document
+          .querySelector<HTMLElement>(`[data-job-id="${next.job_id}"]`)
+          ?.scrollIntoView({ block: 'nearest' });
+      }
+
+      if (event.key === 'k' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const next = pageJobs[Math.max(0, currentIndex - 1)];
+        setSelectedId(next.job_id);
+        document
+          .querySelector<HTMLElement>(`[data-job-id="${next.job_id}"]`)
+          ?.scrollIntoView({ block: 'nearest' });
+      }
+
+      if (event.key === 'Enter' && selectedId) {
+        event.preventDefault();
+        setExpandedId((current) => (current === selectedId ? null : selectedId));
+      }
+
+      if (event.key === 's' && selectedId) {
+        event.preventDefault();
+        handleSave(selectedId);
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [pageJobs, selectedId, handleSave]);
+
+  useEffect(() => {
+    if (pageJobs.length === 0) {
+      setSelectedId(null);
+      return;
+    }
+    if (!selectedId || !pageJobs.some((job) => job.job_id === selectedId)) {
+      setSelectedId(pageJobs[0].job_id);
+    }
+  }, [pageJobs, selectedId]);
 
   return (
     <div className="job-search">
       {showStats ? <StatsBar stats={stats} loading={loading} /> : null}
 
       <div className="job-search__layout">
-        <FilterPanel
-          filters={filters}
-          disciplines={facets.disciplines}
-          locations={facets.locations}
-          activeCount={activeFilterCount}
-          onChange={setFilters}
-          onReset={() => setFilters({ ...DEFAULT_FILTERS, originCountry: prefs.originCountry })}
-        />
+        <div className={filtersOpen ? 'filter-shell filter-shell--open' : 'filter-shell'}>
+          <FilterPanel
+            filters={filters}
+            disciplines={facets.disciplines}
+            locations={facets.locations}
+            activeCount={activeFilterCount}
+            onChange={(next) => setFilters({ ...next, view: 'table' })}
+            onReset={() =>
+              setFilters({
+                ...DEFAULT_FILTERS,
+                originCountry: prefs.originCountry,
+                view: 'table',
+              })
+            }
+          />
+        </div>
 
         <section className="job-search__results" aria-label="Job results">
           <div className="job-search__toolbar">
-            <p className="job-search__count" aria-live="polite">
-              {loading
-                ? 'Loading roles…'
-                : `${filteredJobs.length.toLocaleString()} role${filteredJobs.length === 1 ? '' : 's'}`}
-            </p>
+            <div className="job-search__toolbar-left">
+              <button
+                type="button"
+                className="btn btn--secondary btn--sm filter-toggle"
+                onClick={() => setFiltersOpen((open) => !open)}
+                aria-expanded={filtersOpen}
+              >
+                Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+              </button>
+              <p className="job-search__count" aria-live="polite">
+                {loading
+                  ? 'Syncing roles…'
+                  : `${filteredJobs.length.toLocaleString()} role${filteredJobs.length === 1 ? '' : 's'}`}
+              </p>
+            </div>
             <div className="job-search__controls">
+              <p className="job-search__hint" title="Keyboard shortcuts">
+                <kbd>j</kbd>/<kbd>k</kbd> move · <kbd>Enter</kbd> expand · <kbd>s</kbd> save
+              </p>
               <label className="job-search__sort">
                 <span className="sr-only">Sort by</span>
                 <select
@@ -237,6 +309,7 @@ export default function JobSearch({
                       ...current,
                       sort: event.target.value as SortMode,
                       page: 1,
+                      view: 'table',
                     }))
                   }
                 >
@@ -246,24 +319,6 @@ export default function JobSearch({
                   <option value="title">Title A–Z</option>
                 </select>
               </label>
-              <div className="job-search__view-toggle" role="group" aria-label="View mode">
-                <button
-                  type="button"
-                  className={filters.view === 'cards' ? 'btn btn--secondary' : 'btn btn--ghost'}
-                  aria-pressed={filters.view === 'cards'}
-                  onClick={() => setFilters((current) => ({ ...current, view: 'cards' }))}
-                >
-                  Cards
-                </button>
-                <button
-                  type="button"
-                  className={filters.view === 'table' ? 'btn btn--secondary' : 'btn btn--ghost'}
-                  aria-pressed={filters.view === 'table'}
-                  onClick={() => setFilters((current) => ({ ...current, view: 'table' }))}
-                >
-                  Table
-                </button>
-              </div>
             </div>
           </div>
 
@@ -280,14 +335,14 @@ export default function JobSearch({
             </div>
           ) : null}
 
-          {filters.view === 'table' && pageJobs.length > 0 ? (
-            <div className="table-wrap">
+          {pageJobs.length > 0 ? (
+            <div ref={tableRef} className="table-wrap table-wrap--spotlight">
               <table className="job-table">
-                <caption className="sr-only">Job listings</caption>
+                <caption className="sr-only">Early-career job listings</caption>
                 <thead>
                   <tr>
                     <th scope="col">Company</th>
-                    <th scope="col">Title</th>
+                    <th scope="col">Role</th>
                     <th scope="col">Location</th>
                     <th scope="col">Workplace</th>
                     <th scope="col">Level</th>
@@ -298,44 +353,28 @@ export default function JobSearch({
                     </th>
                   </tr>
                 </thead>
-                <tbody>{pageJobs.map((job) => renderJob(job))}</tbody>
+                <tbody>
+                  {pageJobs.map((job, index) => (
+                    <JobRow
+                      key={job.job_id}
+                      job={job}
+                      index={index}
+                      saved={prefs.savedJobIds.includes(job.job_id)}
+                      isNew={isNewJob(job)}
+                      expanded={expandedId === job.job_id}
+                      selected={selectedId === job.job_id}
+                      onToggle={(jobId) =>
+                        setExpandedId((current) => (current === jobId ? null : jobId))
+                      }
+                      onSelect={setSelectedId}
+                      onSave={handleSave}
+                      onDismiss={handleDismiss}
+                      onEvidence={handleEvidence}
+                    />
+                  ))}
+                </tbody>
               </table>
             </div>
-          ) : null}
-
-          {filters.view === 'cards' && pageJobs.length > 0 ? (
-            useVirtualization ? (
-              <div ref={listRef} className="job-list job-list--virtual" tabIndex={0}>
-                <div
-                  style={{
-                    height: `${virtualizer.getTotalSize()}px`,
-                    width: '100%',
-                    position: 'relative',
-                  }}
-                >
-                  {virtualizer.getVirtualItems().map((virtualRow) => {
-                    const job = pageJobs[virtualRow.index];
-                    return (
-                      <div
-                        key={job.job_id}
-                        className="job-list__item"
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          transform: `translateY(${virtualRow.start}px)`,
-                        }}
-                      >
-                        {renderJob(job)}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : (
-              <div className="job-list">{pageJobs.map((job) => renderJob(job))}</div>
-            )
           ) : null}
 
           {filteredJobs.length > 0 ? (
@@ -345,12 +384,12 @@ export default function JobSearch({
                 className="btn btn--secondary"
                 disabled={filters.page <= 1}
                 onClick={() =>
-                  setFilters((current) => ({ ...current, page: current.page - 1 }))
+                  setFilters((current) => ({ ...current, page: current.page - 1, view: 'table' }))
                 }
               >
                 Previous
               </button>
-              <span>
+              <span className="pagination__status">
                 Page {filters.page} of {pages}
               </span>
               <button
@@ -358,7 +397,7 @@ export default function JobSearch({
                 className="btn btn--secondary"
                 disabled={filters.page >= pages}
                 onClick={() =>
-                  setFilters((current) => ({ ...current, page: current.page + 1 }))
+                  setFilters((current) => ({ ...current, page: current.page + 1, view: 'table' }))
                 }
               >
                 Next
@@ -367,6 +406,15 @@ export default function JobSearch({
           ) : null}
         </section>
       </div>
+
+      {filtersOpen ? (
+        <button
+          type="button"
+          className="filter-backdrop"
+          aria-label="Close filters"
+          onClick={() => setFiltersOpen(false)}
+        />
+      ) : null}
 
       {evidence ? (
         <EvidenceModal

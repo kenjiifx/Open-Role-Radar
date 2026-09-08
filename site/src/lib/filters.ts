@@ -5,11 +5,10 @@ import type {
   FreshnessFilter,
   MobilityFlag,
   SortMode,
-  ViewMode,
   WorkplaceType,
 } from './types';
 
-const DEFAULT_PAGE_SIZE = 25;
+const DEFAULT_PAGE_SIZE = 40;
 
 export const DEFAULT_FILTERS: FilterState = {
   q: '',
@@ -36,7 +35,7 @@ export const DEFAULT_FILTERS: FilterState = {
   sort: 'diverse',
   page: 1,
   pageSize: DEFAULT_PAGE_SIZE,
-  view: 'cards',
+  view: 'table',
 };
 
 const ARRAY_KEYS = new Set([
@@ -107,7 +106,7 @@ export function parseFiltersFromUrl(search: string): FilterState {
     }
 
     if (key === 'view') {
-      next.view = raw as ViewMode;
+      next.view = 'table';
       continue;
     }
 
@@ -201,6 +200,5 @@ export type {
   FreshnessFilter,
   MobilityFlag,
   SortMode,
-  ViewMode,
   WorkplaceType,
 };

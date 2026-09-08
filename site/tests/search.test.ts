@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { bucketForJobId } from '../src/lib/sha256';
 import {
   buildSearchIndex,
   filterJobs,
@@ -98,7 +97,7 @@ describe('search utilities', () => {
         sort: 'diverse',
         page: 1,
         pageSize: 25,
-        view: 'cards',
+        view: 'table',
       },
       {},
     );
@@ -144,7 +143,7 @@ describe('search utilities', () => {
         sort: 'newest',
         page: 1,
         pageSize: 25,
-        view: 'cards',
+        view: 'table',
       },
       {},
     );
@@ -175,7 +174,7 @@ describe('search utilities', () => {
         sort: 'diverse',
         page: 1,
         pageSize: 25,
-        view: 'cards',
+        view: 'table',
       },
       {},
     );
