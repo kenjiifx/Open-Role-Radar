@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from openroleradar.config import find_repo_root
+from openroleradar.models.enums import CareerLevel
 from openroleradar.models.job import Company, Job, Provenance, Source
 from openroleradar.models.state import LiveState
 
@@ -39,6 +40,8 @@ def sample_job(job_id: str = "job-1", **overrides: object) -> Job:
         "title": "Software Engineer Intern",
         "job_url": "https://boards.greenhouse.io/stripe/jobs/1",
         "apply_url": "https://boards.greenhouse.io/stripe/jobs/1/apply",
+        "career_level": CareerLevel.INTERNSHIP,
+        "career_level_confidence": 0.9,
         "first_seen_at": now,
         "last_seen_at": now,
         "provenance": sample_provenance(source_job_id=f"src-{job_id}"),

@@ -180,11 +180,16 @@ class GitHubReleaseStore:
     def _upload_asset(self, release_id: int, name: str, data: bytes, content_type: str) -> None:
         client = self._get_client()
         encoded_name = quote(name, safe="")
+        # GitHub requires the uploads.github.com host for release assets.
         response = client.post(
-            f"{GITHUB_API}/repos/{self.owner}/{self.repo}/releases/{release_id}/assets",
+            f"https://uploads.github.com/repos/{self.owner}/{self.repo}/releases/{release_id}/assets",
             params={"name": encoded_name},
             content=data,
-            headers={"Content-Type": content_type},
+            headers={
+                **self._headers(),
+                "Content-Type": content_type,
+                "Content-Length": str(len(data)),
+            },
         )
         response.raise_for_status()
 

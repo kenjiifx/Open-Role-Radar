@@ -80,9 +80,11 @@ def normalize_raw_job(
     classification_version = project.versions.classification
 
     description = strip_html(raw.description_text)
-    summary = normalize_whitespace(raw.summary) if raw.summary else None
-    if not summary and description:
-        summary = description[:1000]
+    # Strip HTML first, then hard-cap length so Pydantic never rejects the record.
+    summary_source = raw.summary or description
+    summary = normalize_whitespace(strip_html(summary_source)) if summary_source else None
+    if summary and len(summary) > 1000:
+        summary = summary[:997].rstrip() + "..."
 
     career_level, career_confidence = classify_career_level(raw.title, description, root=root)
     disciplines = classify_discipline(

@@ -49,8 +49,12 @@ def sync(
 ) -> None:
     """Poll due sources, normalize jobs, update lifecycle state."""
     root = _repo_root()
+    orchestrator = SyncOrchestrator(root=root)
+    restored = orchestrator.restore_live_state_release()
+    if restored:
+        console.print("[cyan]Restored live state from GitHub Release[/cyan]")
     console.print("[bold]Starting synchronization...[/bold]")
-    summary = asyncio.run(SyncOrchestrator(root=root).run_sync(sample=sample))
+    summary = asyncio.run(orchestrator.run_sync(sample=sample))
     table = Table(title="Sync Summary")
     table.add_column("Metric", style="cyan")
     table.add_column("Value", style="green")
@@ -59,6 +63,14 @@ def sync(
     console.print(table)
     if summary.get("failures", 0) > 0 and summary.get("fetched", 0) == 0:
         raise typer.Exit(1)
+
+
+@app.command("publish-state")
+def publish_state() -> None:
+    """Publish local live-state to the durable GitHub Release."""
+    root = _repo_root()
+    result = SyncOrchestrator(root=root).publish_live_state_release()
+    console.print_json(json.dumps(result, indent=2))
 
 
 @app.command("build-data")

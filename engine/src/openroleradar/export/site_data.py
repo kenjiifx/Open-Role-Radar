@@ -10,6 +10,7 @@ from typing import Any
 import orjson
 
 from openroleradar.config import ProjectConfig, load_project_config
+from openroleradar.export.public_filter import is_public_job
 from openroleradar.models.job import Job
 from openroleradar.models.state import LiveState
 
@@ -75,7 +76,7 @@ class SiteDataBuilder:
         """Partition open jobs into hash buckets."""
         buckets: dict[int, list[Job]] = {index: [] for index in range(self.hash_buckets)}
         for job in state.jobs.values():
-            if job.lifecycle.value not in {"open", "reopened"}:
+            if not is_public_job(job):
                 continue
             bucket = self.bucket_for_job(job.job_id, self.hash_buckets)
             buckets[bucket].append(job)

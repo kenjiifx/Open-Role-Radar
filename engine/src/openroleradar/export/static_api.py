@@ -9,6 +9,7 @@ from typing import Any
 import orjson
 
 from openroleradar.config import ProjectConfig, load_project_config
+from openroleradar.export.public_filter import is_public_job
 from openroleradar.export.site_data import SiteDataBuilder
 from openroleradar.models.job import Company, Job, Source
 from openroleradar.models.state import LiveState
@@ -44,10 +45,12 @@ class StaticApiExporter:
         path.write_bytes(orjson.dumps(payload, option=orjson.OPT_INDENT_2))
 
     def _export_meta(self, state: LiveState, api_dir: Path) -> None:
+        public_jobs = sum(1 for job in state.jobs.values() if is_public_job(job))
         meta = {
             "schema_version": state.schema_version,
             "generated_at": state.generated_at.isoformat(),
-            "job_count": len(state.jobs),
+            "job_count": public_jobs,
+            "tracked_job_count": len(state.jobs),
             "company_count": len(state.companies),
             "source_count": len(state.sources),
             "event_count": len(state.events),
@@ -75,7 +78,7 @@ class StaticApiExporter:
     def _export_jobs_index(self, state: LiveState, api_dir: Path) -> list[dict[str, str]]:
         index: list[dict[str, str]] = []
         for job in state.jobs.values():
-            if job.lifecycle.value not in {"open", "reopened"}:
+            if not is_public_job(job):
                 continue
             bucket = SiteDataBuilder.bucket_for_job(job.job_id, self._site_builder.hash_buckets)
             index.append(

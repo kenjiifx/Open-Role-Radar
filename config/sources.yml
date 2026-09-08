@@ -1,102 +1,123 @@
 # Seed sources — human-maintained first-party career boards.
-# PRs are validated automatically against SSRF and aggregator denylist rules.
+# Unique by (domain, adapter, tenant). Validated by scripts/validate-sources.py.
 
-- company: Stripe
-  domain: stripe.com
-  adapter: greenhouse
-  tenant: stripe
+# --- Core tech ---
+- { company: Stripe, domain: stripe.com, adapter: greenhouse, tenant: stripe }
+- { company: Figma, domain: figma.com, adapter: greenhouse, tenant: figma }
+- { company: Notion, domain: notion.so, adapter: greenhouse, tenant: notion }
+- { company: Cloudflare, domain: cloudflare.com, adapter: greenhouse, tenant: cloudflare }
+- { company: Datadog, domain: datadoghq.com, adapter: greenhouse, tenant: datadog }
+- { company: Plaid, domain: plaid.com, adapter: lever, tenant: plaid }
+- { company: Ramp, domain: ramp.com, adapter: ashby, tenant: ramp }
+- { company: Linear, domain: linear.app, adapter: ashby, tenant: linear }
+- { company: Vercel, domain: vercel.com, adapter: greenhouse, tenant: vercel }
+- { company: Supabase, domain: supabase.com, adapter: ashby, tenant: supabase }
+- { company: GitLab, domain: about.gitlab.com, adapter: greenhouse, tenant: gitlab }
+- { company: HashiCorp, domain: hashicorp.com, adapter: greenhouse, tenant: hashicorp }
+- { company: MongoDB, domain: mongodb.com, adapter: greenhouse, tenant: mongodb }
+- { company: Snowflake, domain: snowflake.com, adapter: greenhouse, tenant: snowflake }
+- { company: Databricks, domain: databricks.com, adapter: greenhouse, tenant: databricks }
+- { company: Robinhood, domain: robinhood.com, adapter: greenhouse, tenant: robinhood }
+- { company: Coinbase, domain: coinbase.com, adapter: greenhouse, tenant: coinbase }
+- { company: Shopify, domain: shopify.com, adapter: greenhouse, tenant: shopify }
+- { company: Spotify, domain: lifeatspotify.com, adapter: greenhouse, tenant: spotify }
+- { company: Reddit, domain: redditinc.com, adapter: greenhouse, tenant: reddit }
 
-- company: Figma
-  domain: figma.com
-  adapter: greenhouse
-  tenant: figma
+# --- Expanded tech ---
+- { company: Discord, domain: discord.com, adapter: greenhouse, tenant: discord }
+- { company: Dropbox, domain: dropbox.com, adapter: greenhouse, tenant: dropbox }
+- { company: Airbnb, domain: airbnb.com, adapter: greenhouse, tenant: airbnb }
+- { company: Twitch, domain: twitch.tv, adapter: greenhouse, tenant: twitch }
+- { company: Lyft, domain: lyft.com, adapter: greenhouse, tenant: lyft }
+- { company: DoorDash, domain: doordash.com, adapter: greenhouse, tenant: doordash }
+- { company: Instacart, domain: instacart.com, adapter: greenhouse, tenant: instacart }
+- { company: Affirm, domain: affirm.com, adapter: greenhouse, tenant: affirm }
+- { company: Block, domain: block.xyz, adapter: greenhouse, tenant: square }
+- { company: Twilio, domain: twilio.com, adapter: greenhouse, tenant: twilio }
+- { company: Asana, domain: asana.com, adapter: greenhouse, tenant: asana }
+- { company: HubSpot, domain: hubspot.com, adapter: greenhouse, tenant: hubspot }
+- { company: Duolingo, domain: duolingo.com, adapter: greenhouse, tenant: duolingo }
+- { company: Roblox, domain: roblox.com, adapter: greenhouse, tenant: roblox }
+- { company: Unity, domain: unity.com, adapter: greenhouse, tenant: unity3d }
+- { company: Elastic, domain: elastic.co, adapter: greenhouse, tenant: elastic }
+- { company: Grafana Labs, domain: grafana.com, adapter: greenhouse, tenant: grafanalabs }
+- { company: Sentry, domain: sentry.io, adapter: greenhouse, tenant: getsentry }
+- { company: Okta, domain: okta.com, adapter: greenhouse, tenant: okta }
+- { company: Auth0, domain: auth0.com, adapter: greenhouse, tenant: auth0 }
 
-- company: Notion
-  domain: notion.so
-  adapter: greenhouse
-  tenant: notion
+# --- Fintech / AI / defense tech ---
+- { company: Brex, domain: brex.com, adapter: greenhouse, tenant: brex }
+- { company: Chime, domain: chime.com, adapter: greenhouse, tenant: chime }
+- { company: SoFi, domain: sofi.com, adapter: greenhouse, tenant: sofi }
+- { company: Kraken, domain: kraken.com, adapter: greenhouse, tenant: kraken }
+- { company: Rippling, domain: rippling.com, adapter: ashby, tenant: rippling }
+- { company: Mercury, domain: mercury.com, adapter: ashby, tenant: mercury }
+- { company: Scale AI, domain: scale.com, adapter: ashby, tenant: scaleai }
+- { company: Anthropic, domain: anthropic.com, adapter: ashby, tenant: anthropic }
+- { company: OpenAI, domain: openai.com, adapter: ashby, tenant: openai }
+- { company: Anduril, domain: anduril.com, adapter: ashby, tenant: andurilindustries }
 
-- company: Cloudflare
-  domain: cloudflare.com
-  adapter: greenhouse
-  tenant: cloudflare
+# --- Data / platforms ---
+- { company: Fivetran, domain: fivetran.com, adapter: greenhouse, tenant: fivetran }
+- { company: dbt Labs, domain: getdbt.com, adapter: greenhouse, tenant: dbtlabs }
+- { company: Confluent, domain: confluent.io, adapter: greenhouse, tenant: confluent }
+- { company: Cockroach Labs, domain: cockroachlabs.com, adapter: greenhouse, tenant: cockroachlabs }
+- { company: PlanetScale, domain: planetscale.com, adapter: ashby, tenant: planetscale }
+- { company: Retool, domain: retool.com, adapter: ashby, tenant: retool }
+- { company: Postman, domain: postman.com, adapter: greenhouse, tenant: postman }
+- { company: BrowserStack, domain: browserstack.com, adapter: greenhouse, tenant: browserstack }
+- { company: Samsara, domain: samsara.com, adapter: greenhouse, tenant: samsara }
+- { company: Segment, domain: segment.com, adapter: greenhouse, tenant: segment }
+- { company: Amplitude, domain: amplitude.com, adapter: greenhouse, tenant: amplitude }
+- { company: Mixpanel, domain: mixpanel.com, adapter: greenhouse, tenant: mixpanel }
+- { company: PagerDuty, domain: pagerduty.com, adapter: greenhouse, tenant: pagerduty }
+- { company: Splunk, domain: splunk.com, adapter: greenhouse, tenant: splunk }
 
-- company: Datadog
-  domain: datadoghq.com
-  adapter: greenhouse
-  tenant: datadog
+# --- Autonomy / hardware-adjacent ---
+- { company: Rivian, domain: rivian.com, adapter: greenhouse, tenant: rivian }
+- { company: Cruise, domain: getcruise.com, adapter: greenhouse, tenant: cruise }
+- { company: Zoox, domain: zoox.com, adapter: greenhouse, tenant: zoox }
+- { company: Waymo, domain: waymo.com, adapter: greenhouse, tenant: waymo }
+- { company: Nuro, domain: nuro.ai, adapter: greenhouse, tenant: nuro }
+- { company: Applied Intuition, domain: appliedintuition.com, adapter: ashby, tenant: appliedintuition }
 
-- company: Plaid
-  domain: plaid.com
-  adapter: lever
-  tenant: plaid
+# --- Security ---
+- { company: CrowdStrike, domain: crowdstrike.com, adapter: greenhouse, tenant: crowdstrike }
+- { company: Palo Alto Networks, domain: paloaltonetworks.com, adapter: greenhouse, tenant: paloaltonetworks }
+- { company: Fastly, domain: fastly.com, adapter: greenhouse, tenant: fastly }
+- { company: Akamai, domain: akamai.com, adapter: greenhouse, tenant: akamai }
+- { company: 1Password, domain: 1password.com, adapter: greenhouse, tenant: 1password }
+- { company: Trail of Bits, domain: trailofbits.com, adapter: greenhouse, tenant: trailofbits }
 
-- company: Ramp
-  domain: ramp.com
-  adapter: ashby
-  tenant: ramp
+# --- Product / design tools ---
+- { company: Canva, domain: canva.com, adapter: greenhouse, tenant: canva }
+- { company: Miro, domain: miro.com, adapter: greenhouse, tenant: miro }
+- { company: Airtable, domain: airtable.com, adapter: greenhouse, tenant: airtable }
+- { company: Coda, domain: coda.io, adapter: greenhouse, tenant: coda }
+- { company: Loom, domain: loom.com, adapter: greenhouse, tenant: loom }
+- { company: Calendly, domain: calendly.com, adapter: greenhouse, tenant: calendly }
+- { company: Zapier, domain: zapier.com, adapter: greenhouse, tenant: zapier }
+- { company: Webflow, domain: webflow.com, adapter: greenhouse, tenant: webflow }
+- { company: Framer, domain: framer.com, adapter: ashby, tenant: framer }
 
-- company: Linear
-  domain: linear.app
-  adapter: ashby
-  tenant: linear
+# --- Canada / global ---
+- { company: Wealthsimple, domain: wealthsimple.com, adapter: greenhouse, tenant: wealthsimple }
+- { company: Hootsuite, domain: hootsuite.com, adapter: greenhouse, tenant: hootsuite }
+- { company: Lightspeed, domain: lightspeedhq.com, adapter: greenhouse, tenant: lightspeedhq }
+- { company: Ada, domain: ada.cx, adapter: greenhouse, tenant: ada }
+- { company: Nubank, domain: nubank.com.br, adapter: greenhouse, tenant: nubank }
+- { company: Revolut, domain: revolut.com, adapter: greenhouse, tenant: revolut }
+- { company: Wise, domain: wise.com, adapter: greenhouse, tenant: transferwise }
+- { company: Monzo, domain: monzo.com, adapter: greenhouse, tenant: monzo }
+- { company: Checkout.com, domain: checkout.com, adapter: greenhouse, tenant: checkout }
 
-- company: Vercel
-  domain: vercel.com
-  adapter: greenhouse
-  tenant: vercel
+# --- More Ashby ---
+- { company: Cursor, domain: cursor.com, adapter: ashby, tenant: cursor }
+- { company: Temporal, domain: temporal.io, adapter: ashby, tenant: temporal }
+- { company: Dagster, domain: dagster.io, adapter: ashby, tenant: dagster }
+- { company: Hex, domain: hex.tech, adapter: ashby, tenant: hex }
+- { company: Census, domain: getcensus.com, adapter: ashby, tenant: census }
 
-- company: Supabase
-  domain: supabase.com
-  adapter: ashby
-  tenant: supabase
-
-- company: GitLab
-  domain: about.gitlab.com
-  adapter: greenhouse
-  tenant: gitlab
-
-- company: HashiCorp
-  domain: hashicorp.com
-  adapter: greenhouse
-  tenant: hashicorp
-
-- company: MongoDB
-  domain: mongodb.com
-  adapter: greenhouse
-  tenant: mongodb
-
-- company: Snowflake
-  domain: snowflake.com
-  adapter: greenhouse
-  tenant: snowflake
-
-- company: Databricks
-  domain: databricks.com
-  adapter: greenhouse
-  tenant: databricks
-
-- company: Robinhood
-  domain: robinhood.com
-  adapter: greenhouse
-  tenant: robinhood
-
-- company: Coinbase
-  domain: coinbase.com
-  adapter: greenhouse
-  tenant: coinbase
-
-- company: Shopify
-  domain: shopify.com
-  adapter: greenhouse
-  tenant: shopify
-
-- company: Spotify
-  domain: lifeatspotify.com
-  adapter: greenhouse
-  tenant: spotify
-
-- company: Reddit
-  domain: redditinc.com
-  adapter: greenhouse
-  tenant: reddit
+# --- Lever ---
+- { company: Palantir, domain: palantir.com, adapter: lever, tenant: palantir }
+- { company: Netflix, domain: netflix.com, adapter: greenhouse, tenant: netflix }

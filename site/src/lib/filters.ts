@@ -14,7 +14,18 @@ const DEFAULT_PAGE_SIZE = 25;
 
 export const DEFAULT_FILTERS: FilterState = {
   q: '',
-  careerLevels: [],
+  careerLevels: [
+    'internship',
+    'co_op',
+    'new_grad',
+    'entry_level',
+    'apprenticeship',
+    'graduate_program',
+    'rotational_program',
+    'research_internship',
+    'fellowship',
+    'student_program',
+  ],
   disciplines: [],
   locations: [],
   workplaceTypes: [],
@@ -56,9 +67,26 @@ function serializeList(values: string[]): string | undefined {
   return values.join(',');
 }
 
+function arraysEqual(left: string[], right: string[]): boolean {
+  if (left.length !== right.length) return false;
+  const a = [...left].sort();
+  const b = [...right].sort();
+  return a.every((value, index) => value === b[index]);
+}
+
 export function parseFiltersFromUrl(search: string): FilterState {
   const params = new URLSearchParams(search);
-  const next: FilterState = { ...DEFAULT_FILTERS };
+  const next: FilterState = {
+    ...DEFAULT_FILTERS,
+    careerLevels: [...DEFAULT_FILTERS.careerLevels],
+    disciplines: [],
+    locations: [],
+    workplaceTypes: [],
+    remoteScopes: [],
+    academicTerms: [],
+    mobility: [],
+    eligibilityMatches: [],
+  };
 
   for (const key of Object.keys(DEFAULT_FILTERS) as (keyof FilterState)[]) {
     const raw = params.get(key);
@@ -108,8 +136,11 @@ export function serializeFiltersToUrl(filters: FilterState): string {
     const defaultValue = DEFAULT_FILTERS[key];
 
     if (ARRAY_KEYS.has(key)) {
-      const serialized = serializeList(value as string[]);
-      if (serialized) params.set(key, serialized);
+      const current = value as string[];
+      const defaults = defaultValue as string[];
+      if (!arraysEqual(current, defaults)) {
+        params.set(key, serializeList(current) ?? '');
+      }
       continue;
     }
 
@@ -150,7 +181,7 @@ export function filtersAreDefault(filters: FilterState): boolean {
 export function countActiveFilters(filters: FilterState): number {
   let count = 0;
   if (filters.q.trim()) count += 1;
-  if (filters.careerLevels.length) count += 1;
+  if (!arraysEqual(filters.careerLevels, DEFAULT_FILTERS.careerLevels)) count += 1;
   if (filters.disciplines.length) count += 1;
   if (filters.locations.length) count += 1;
   if (filters.workplaceTypes.length) count += 1;

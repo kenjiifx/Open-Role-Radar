@@ -13,6 +13,7 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 import orjson
 
 from openroleradar.config import ProjectConfig, load_project_config
+from openroleradar.export.public_filter import is_public_job
 from openroleradar.models.job import Job
 from openroleradar.models.state import LiveState
 
@@ -34,7 +35,7 @@ class FeedGenerator:
         self.max_items = int(self.config.feeds.get("max_items", 500))
 
     def _select_jobs(self, state: LiveState) -> list[Job]:
-        jobs = [job for job in state.jobs.values() if job.lifecycle.value in {"open", "reopened"}]
+        jobs = [job for job in state.jobs.values() if is_public_job(job)]
         jobs.sort(key=lambda job: job.first_seen_at, reverse=True)
         return jobs[: self.max_items]
 

@@ -47,10 +47,35 @@ class SyncOrchestrator:
         state.metadata["bootstrapped_at"] = now.isoformat()
         return state
 
+    def merge_seeds(self, state: LiveState) -> int:
+        """Ensure newly added seed sources appear in existing live state."""
+        now = datetime.now(UTC)
+        added = 0
+        for seed in load_seed_sources(self.root):
+            company = seed_to_company(seed, now=now)
+            source = seed_to_source(seed, now=now)
+            if company.company_id not in state.companies:
+                state.companies[company.company_id] = company
+            if source.source_id not in state.sources:
+                state.sources[source.source_id] = source
+                added += 1
+            else:
+                existing = state.sources[source.source_id]
+                # Keep health/schedule, but refresh identity fields from seeds.
+                existing.company_name = source.company_name
+                existing.company_domain = source.company_domain
+                existing.careers_url = source.careers_url
+                existing.adapter = source.adapter
+                existing.adapter_tenant = source.adapter_tenant
+                existing.enabled = True
+        return added
+
     def load_or_bootstrap(self) -> LiveState:
         self.store.ensure_directory()
         if self.store.exists():
-            return self.store.load()
+            state = self.store.load()
+            self.merge_seeds(state)
+            return state
         state = self.bootstrap_state()
         self.store.save(state)
         return state
@@ -208,17 +233,48 @@ class SyncOrchestrator:
     def build_exports(self) -> dict[str, Any]:
         """Generate static API, site data, and feeds."""
         state = self.store.load()
-        api_dir = self.root / "site" / "public" / "api" / "v1"
-        StaticApiExporter(self.config).export(state, api_dir)
+        site_root = self.root / "site"
+        StaticApiExporter(self.config).export(state, site_root)
 
-        data_dir = self.root / "site" / "public" / "data"
+        data_dir = site_root / "public" / "data"
         manifest = SiteDataBuilder(self.config).write(state, data_dir)
 
-        feeds_dir = self.root / "site" / "public" / "feeds"
+        feeds_dir = site_root / "public" / "feeds"
         FeedGenerator(self.config).write_all(state, feeds_dir)
 
+        public_jobs = manifest.total_jobs
         return {
-            "api_dir": str(api_dir),
+            "api_dir": str(site_root / "public" / "api" / "v1"),
             "data_shards": len(manifest.shards),
-            "total_jobs": manifest.total_jobs,
+            "total_jobs": public_jobs,
+            "tracked_jobs": len(state.jobs),
+            "sources": len(state.sources),
         }
+
+    def publish_live_state_release(self) -> dict[str, Any]:
+        """Publish durable live-state to the GitHub Release (requires GITHUB_TOKEN)."""
+        from openroleradar.storage.github_release import GitHubReleaseStore
+
+        state = self.store.load()
+        with GitHubReleaseStore(config=self.config) as release_store:
+            manifest = release_store.save(state)
+        return manifest.to_dict()
+
+    def restore_live_state_release(self) -> bool:
+        """Load live-state from GitHub Release when local cache is empty."""
+        from openroleradar.storage.github_release import GitHubReleaseStore
+
+        if self.store.exists():
+            return False
+        try:
+            with GitHubReleaseStore(config=self.config) as release_store:
+                state = release_store.load()
+        except Exception as exc:
+            logger.warning("Could not restore live-state release: %s", exc)
+            return False
+        if not state.sources and not state.jobs:
+            return False
+        self.store.ensure_directory()
+        self.merge_seeds(state)
+        self.store.save(state)
+        return True

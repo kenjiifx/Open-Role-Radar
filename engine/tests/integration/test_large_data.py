@@ -25,6 +25,7 @@ def _make_job(index: int) -> Job:
         job_url=f"https://boards.greenhouse.io/test/jobs/{index}",
         apply_url=f"https://boards.greenhouse.io/test/jobs/{index}",
         career_level=CareerLevel.INTERNSHIP,
+        career_level_confidence=0.9,
         disciplines=DisciplineClassification(primary="software"),
         first_seen_at=now,
         last_seen_at=now,
