@@ -232,7 +232,14 @@ class SyncOrchestrator:
 
     def build_exports(self) -> dict[str, Any]:
         """Generate static API, site data, and feeds."""
+        from openroleradar.classify.refresh import reclassify_state
+
         state = self.store.load()
+        reclassified = reclassify_state(state, root=self.root)
+        if reclassified:
+            state.generated_at = datetime.now(UTC)
+            self.store.save(state)
+
         site_root = self.root / "site"
         StaticApiExporter(self.config).export(state, site_root)
 
@@ -249,6 +256,7 @@ class SyncOrchestrator:
             "total_jobs": public_jobs,
             "tracked_jobs": len(state.jobs),
             "sources": len(state.sources),
+            "reclassified": reclassified,
         }
 
     def publish_live_state_release(self) -> dict[str, Any]:
