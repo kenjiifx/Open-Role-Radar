@@ -10,16 +10,16 @@ First-party early-career roles (internships, co-ops, new grad) scraped from publ
 <!-- GENERATED_STATS:START -->
 ## Live Statistics
 
-_Last updated: pending next sync_
+_Last updated: 2026-09-09 10:03 UTC_
 
 | Metric | Count |
 | --- | ---: |
-| Public early-career roles | — |
-| Total tracked roles | — |
-| Companies | — |
-| Sources | — |
-| Healthy sources | — |
-| ATS adapters | — |
+| Public early-career roles | 1,599 |
+| Total tracked roles | 47,904 |
+| Companies | 514 |
+| Sources | 595 |
+| Healthy sources | 491 |
+| ATS adapters | 5 |
 
 Published by [OpenRoleRadar](https://kenjiifx.github.io/Open-Role-Radar/).
 <!-- GENERATED_STATS:END -->
