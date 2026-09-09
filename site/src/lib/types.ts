@@ -199,7 +199,7 @@ export interface FilterState {
   q: string;
   careerLevels: CareerLevel[];
   disciplines: string[];
-  locations: string[];
+  regions: string[];
   workplaceTypes: WorkplaceType[];
   freshness: FreshnessFilter;
   mobility: MobilityFlag[];

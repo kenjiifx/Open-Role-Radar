@@ -1,5 +1,6 @@
 import { postedAt } from './dates';
 import type { FilterState } from './filters';
+import { jobMatchesRegions } from './labels';
 import { bucketForJobId } from './sha256';
 import type {
   CompanySummary,
@@ -239,12 +240,8 @@ export function filterJobs(
       return false;
     }
 
-    if (filters.locations.length > 0) {
-      const locationHaystack = entry.location_text;
-      const locationMatch = filters.locations.some((loc) =>
-        locationHaystack.includes(loc.toLowerCase()),
-      );
-      if (!locationMatch) return false;
+    if (filters.regions.length > 0 && !jobMatchesRegions(job, filters.regions)) {
+      return false;
     }
 
     if (
@@ -333,25 +330,17 @@ export function aggregateCompanies(jobs: Job[]): CompanySummary[] {
 
 export function collectFacetValues(jobs: Job[]): {
   disciplines: string[];
-  locations: string[];
 } {
   const disciplines = new Set<string>();
-  const locations = new Set<string>();
 
   for (const job of jobs) {
     if (job.disciplines.primary && job.disciplines.primary !== 'other') {
       disciplines.add(job.disciplines.primary);
     }
-    for (const loc of job.locations) {
-      for (const part of [loc.city, loc.region, loc.country]) {
-        if (part) locations.add(part);
-      }
-    }
   }
 
   return {
-    disciplines: [...disciplines].sort(),
-    locations: [...locations].sort((a, b) => a.localeCompare(b)),
+    disciplines: [...disciplines].sort((a, b) => a.localeCompare(b)),
   };
 }
 

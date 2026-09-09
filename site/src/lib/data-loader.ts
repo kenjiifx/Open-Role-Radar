@@ -3,18 +3,19 @@ import { bucketForJobId } from './sha256';
 
 declare const __SITE_BASE__: string;
 
-/** Instant-refresh feed published every sync (bypasses GitHub Pages CDN staleness). */
-const LIVE_FEED_BASE =
-  'https://raw.githubusercontent.com/kenjiifx/Open-Role-Radar/live-feed/';
-
-const PAGES_DATA_BASE = `${__SITE_BASE__}data/`;
+/** Prefer sources that update immediately after sync (bypass Pages CDN lag). */
+const FEED_BASES = [
+  'https://raw.githubusercontent.com/kenjiifx/Open-Role-Radar/live-feed/',
+  'https://cdn.jsdelivr.net/gh/kenjiifx/Open-Role-Radar@live-feed/',
+  `${__SITE_BASE__}data/`,
+] as const;
 
 const shardCache = new Map<string, Job[]>();
 const inflight = new Map<string, Promise<Job[]>>();
 
 let manifestPromise: Promise<DataManifest> | null = null;
 let manifestVersion = '';
-let activeDataBase = PAGES_DATA_BASE;
+let activeDataBase = FEED_BASES[2];
 
 export function getDataBaseUrl(): string {
   return activeDataBase;
@@ -27,30 +28,40 @@ async function fetchManifestFrom(base: string, bust: number): Promise<DataManife
       headers: { Accept: 'application/json' },
     });
     if (!response.ok) return null;
-    return (await response.json()) as DataManifest;
+    const manifest = (await response.json()) as DataManifest;
+    if (!manifest || !Array.isArray(manifest.shards)) return null;
+    return manifest;
   } catch {
     return null;
   }
+}
+
+function manifestTime(manifest: DataManifest): number {
+  const stamp = Date.parse(manifest.generated_at);
+  return Number.isNaN(stamp) ? 0 : stamp;
 }
 
 export async function loadManifest(): Promise<DataManifest> {
   if (!manifestPromise) {
     const bust = Date.now();
     manifestPromise = (async () => {
-      // Prefer live-feed branch so a hard refresh sees the newest sync immediately.
-      const live = await fetchManifestFrom(LIVE_FEED_BASE, bust);
-      if (live && Array.isArray(live.shards)) {
-        activeDataBase = LIVE_FEED_BASE;
-        manifestVersion = live.generated_at || String(bust);
-        return live;
+      const results = await Promise.all(
+        FEED_BASES.map(async (base) => {
+          const manifest = await fetchManifestFrom(base, bust);
+          return manifest ? { base, manifest } : null;
+        }),
+      );
+      const available = results.filter(
+        (item): item is { base: string; manifest: DataManifest } => item !== null,
+      );
+      if (available.length === 0) {
+        throw new Error('Failed to load job feed from live-feed, jsDelivr, or Pages');
       }
-      const pages = await fetchManifestFrom(PAGES_DATA_BASE, bust);
-      if (!pages) {
-        throw new Error('Failed to load job manifest from live-feed or Pages');
-      }
-      activeDataBase = PAGES_DATA_BASE;
-      manifestVersion = pages.generated_at || String(bust);
-      return pages;
+      available.sort((a, b) => manifestTime(b.manifest) - manifestTime(a.manifest));
+      const winner = available[0];
+      activeDataBase = winner.base;
+      manifestVersion = winner.manifest.generated_at || String(bust);
+      return winner.manifest;
     })().catch((error) => {
       manifestPromise = null;
       throw error;
@@ -62,7 +73,7 @@ export async function loadManifest(): Promise<DataManifest> {
 export function resetDataLoader(): void {
   manifestPromise = null;
   manifestVersion = '';
-  activeDataBase = PAGES_DATA_BASE;
+  activeDataBase = FEED_BASES[2];
   shardCache.clear();
   inflight.clear();
 }

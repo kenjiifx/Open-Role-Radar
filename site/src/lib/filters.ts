@@ -1,12 +1,12 @@
 import type {
   CareerLevel,
-  EligibilityMatch,
   FilterState,
   FreshnessFilter,
   MobilityFlag,
   SortMode,
   WorkplaceType,
 } from './types';
+import { CS_DISCIPLINES } from './labels';
 
 const DEFAULT_PAGE_SIZE = 40;
 
@@ -24,15 +24,15 @@ export const DEFAULT_FILTERS: FilterState = {
     'fellowship',
     'student_program',
   ],
-  disciplines: [],
-  locations: [],
+  disciplines: [...CS_DISCIPLINES],
+  regions: [],
   workplaceTypes: [],
   freshness: 'all',
   mobility: [],
   originCountry: '',
   showSavedOnly: false,
   hideDismissed: true,
-  sort: 'newest',
+  sort: 'diverse',
   page: 1,
   pageSize: DEFAULT_PAGE_SIZE,
   view: 'table',
@@ -41,7 +41,7 @@ export const DEFAULT_FILTERS: FilterState = {
 const ARRAY_KEYS = new Set([
   'careerLevels',
   'disciplines',
-  'locations',
+  'regions',
   'workplaceTypes',
   'mobility',
 ]);
@@ -72,28 +72,28 @@ export function parseFiltersFromUrl(search: string): FilterState {
   const next: FilterState = {
     ...DEFAULT_FILTERS,
     careerLevels: [...DEFAULT_FILTERS.careerLevels],
-    disciplines: [],
-    locations: [],
+    disciplines: [...DEFAULT_FILTERS.disciplines],
+    regions: [],
     workplaceTypes: [],
     mobility: [],
   };
 
   for (const key of Object.keys(DEFAULT_FILTERS) as (keyof FilterState)[]) {
-    const raw = params.get(key);
-    if (raw === null) continue;
+    const value = params.get(key);
+    if (value === null) continue;
 
     if (ARRAY_KEYS.has(key)) {
-      (next[key] as string[]) = parseList(raw);
+      (next[key] as string[]) = parseList(value);
       continue;
     }
 
     if (BOOL_KEYS.has(key)) {
-      (next[key] as boolean) = raw === '1' || raw === 'true';
+      (next[key] as boolean) = value === '1' || value === 'true';
       continue;
     }
 
     if (NUMBER_KEYS.has(key)) {
-      const num = Number.parseInt(raw, 10);
+      const num = Number.parseInt(value, 10);
       if (!Number.isNaN(num) && num > 0) {
         (next[key] as number) = num;
       }
@@ -101,7 +101,7 @@ export function parseFiltersFromUrl(search: string): FilterState {
     }
 
     if (key === 'freshness') {
-      next.freshness = raw as FreshnessFilter;
+      next.freshness = value as FreshnessFilter;
       continue;
     }
 
@@ -111,12 +111,12 @@ export function parseFiltersFromUrl(search: string): FilterState {
     }
 
     if (key === 'sort') {
-      next.sort = raw as SortMode;
+      next.sort = value as SortMode;
       continue;
     }
 
     if (key === 'q' || key === 'originCountry') {
-      next[key] = raw;
+      next[key] = value;
     }
   }
 
@@ -177,8 +177,8 @@ export function countActiveFilters(filters: FilterState): number {
   let count = 0;
   if (filters.q.trim()) count += 1;
   if (!arraysEqual(filters.careerLevels, DEFAULT_FILTERS.careerLevels)) count += 1;
-  if (filters.disciplines.length) count += 1;
-  if (filters.locations.length) count += 1;
+  if (!arraysEqual(filters.disciplines, DEFAULT_FILTERS.disciplines)) count += 1;
+  if (filters.regions.length) count += 1;
   if (filters.workplaceTypes.length) count += 1;
   if (filters.freshness !== 'all') count += 1;
   if (filters.mobility.length) count += 1;
@@ -192,13 +192,3 @@ export function toggleArrayValue<T extends string>(values: T[], value: T): T[] {
     ? values.filter((item) => item !== value)
     : [...values, value];
 }
-
-export type {
-  CareerLevel,
-  EligibilityMatch,
-  FilterState,
-  FreshnessFilter,
-  MobilityFlag,
-  SortMode,
-  WorkplaceType,
-};

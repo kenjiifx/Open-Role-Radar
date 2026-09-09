@@ -55,6 +55,16 @@
 - { company: Anthropic, domain: anthropic.com, adapter: ashby, tenant: anthropic }
 - { company: OpenAI, domain: openai.com, adapter: ashby, tenant: openai }
 - { company: Anduril, domain: anduril.com, adapter: ashby, tenant: andurilindustries }
+- { company: Perplexity, domain: perplexity.ai, adapter: ashby, tenant: perplexity }
+
+# --- Quant / trading (CS campus magnets) ---
+- { company: Jane Street, domain: janestreet.com, adapter: greenhouse, tenant: janestreet }
+- { company: DRW, domain: drw.com, adapter: greenhouse, tenant: drweng }
+- { company: IMC, domain: imc.com, adapter: greenhouse, tenant: imc }
+- { company: Tower Research, domain: tower-research.com, adapter: greenhouse, tenant: towerresearchcapital }
+- { company: Akuna Capital, domain: akunacapital.com, adapter: greenhouse, tenant: akunacapital }
+- { company: Virtu Financial, domain: virtu.com, adapter: greenhouse, tenant: virtu }
+- { company: Rubrik, domain: rubrik.com, adapter: greenhouse, tenant: rubrik }
 
 # --- Data / platforms ---
 - { company: Fivetran, domain: fivetran.com, adapter: greenhouse, tenant: fivetran }

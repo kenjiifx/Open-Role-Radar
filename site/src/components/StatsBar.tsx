@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { formatUpdatedLabel } from '../lib/dates';
+import { formatRelative, formatUpdatedLabel } from '../lib/dates';
 import type { SiteStats } from '../lib/types';
 
 interface StatsBarProps {
@@ -38,7 +38,16 @@ export default function StatsBar({ stats, loading }: StatsBarProps) {
   const roles = useCountUp(stats.totalJobs, !loading);
   const companies = useCountUp(stats.totalCompanies, !loading);
   const visa = useCountUp(stats.withVisa, !loading);
-  const updated = formatUpdatedLabel(stats.generatedAt);
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 15_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const updated = loading
+    ? 'Refreshing…'
+    : `Live · ${formatRelative(stats.generatedAt, now) || formatUpdatedLabel(stats.generatedAt, now)}`;
 
   return (
     <section className="stats-bar" aria-label="Live dataset summary" aria-busy={loading}>
@@ -59,7 +68,7 @@ export default function StatsBar({ stats, loading }: StatsBarProps) {
         <div className="stat">
           <span className="stat__label">Feed</span>
           <strong className="stat__value stat__value--text">
-            <time dateTime={stats.generatedAt}>{loading ? 'Refreshing…' : updated}</time>
+            <time dateTime={stats.generatedAt}>{updated}</time>
           </strong>
         </div>
       </div>

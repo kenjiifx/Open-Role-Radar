@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { formatDate, formatRelative, openedFreshness, postedAt } from '../lib/dates';
+import { formatDiscipline } from '../lib/labels';
 import { companyUrl } from '../lib/paths';
 import { cleanSummary, looksLikeReadableSummary } from '../lib/summary';
 import type { Job, MobilityFlag } from '../lib/types';
@@ -266,7 +267,7 @@ export default function JobRow({
                   ) : null}
                   {job.disciplines?.primary ? (
                     <li>
-                      Discipline <strong>{job.disciplines.primary}</strong>
+                      Discipline <strong>{formatDiscipline(job.disciplines.primary)}</strong>
                     </li>
                   ) : null}
                 </ul>

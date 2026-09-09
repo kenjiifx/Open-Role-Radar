@@ -47,3 +47,23 @@ def test_public_job_rejects_missing_apply_url() -> None:
         apply_url="",
     )
     assert is_public_job(job) is False
+
+
+def test_public_job_rejects_non_cs_retail() -> None:
+    job = sample_job(
+        title="Team Member - Guest Experience",
+        career_level=CareerLevel.INTERNSHIP,
+        career_level_confidence=0.9,
+        disciplines={"primary": "retail", "secondary": [], "confidence": 0.9},
+    )
+    assert is_public_job(job) is False
+
+
+def test_public_job_accepts_cs_by_title_when_discipline_other() -> None:
+    job = sample_job(
+        title="Software Engineering Intern",
+        career_level=CareerLevel.INTERNSHIP,
+        career_level_confidence=0.9,
+        disciplines={"primary": "other", "secondary": [], "confidence": 0.2},
+    )
+    assert is_public_job(job) is True

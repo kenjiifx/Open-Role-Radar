@@ -1,10 +1,13 @@
 import type { FilterState } from '../lib/filters';
 import { toggleArrayValue } from '../lib/filters';
-import type {
-  CareerLevel,
-  MobilityFlag,
-  WorkplaceType,
-} from '../lib/types';
+import {
+  CS_DISCIPLINES,
+  formatDiscipline,
+  REGION_LABELS,
+  REGION_OPTIONS,
+  type RegionId,
+} from '../lib/labels';
+import type { CareerLevel, MobilityFlag, WorkplaceType } from '../lib/types';
 import {
   CAREER_LEVEL_LABELS,
   MOBILITY_LABELS,
@@ -14,32 +17,10 @@ import {
 interface FilterPanelProps {
   filters: FilterState;
   disciplines: string[];
-  locations: string[];
   onChange: (next: FilterState) => void;
   onReset: () => void;
   activeCount: number;
 }
-
-const CANADA_LOCATIONS = [
-  'Canada',
-  'Toronto',
-  'Vancouver',
-  'Montreal',
-  'Montréal',
-  'Ottawa',
-  'Ontario',
-  'Quebec',
-  'Québec',
-  'Alberta',
-  'British Columbia',
-  'Calgary',
-  'Edmonton',
-  'Waterloo',
-  'Kitchener',
-  'Mississauga',
-  'Winnipeg',
-  'Halifax',
-];
 
 const CAREER_LEVELS = Object.keys(CAREER_LEVEL_LABELS) as CareerLevel[];
 const WORKPLACE_TYPES = Object.keys(WORKPLACE_LABELS) as WorkplaceType[];
@@ -85,7 +66,6 @@ function CheckboxGroup<T extends string>({
 export default function FilterPanel({
   filters,
   disciplines,
-  locations,
   onChange,
   onReset,
   activeCount,
@@ -93,6 +73,9 @@ export default function FilterPanel({
   const update = (partial: Partial<FilterState>) => {
     onChange({ ...filters, ...partial, page: 1 });
   };
+
+  const disciplineOptions =
+    disciplines.length > 0 ? disciplines : [...CS_DISCIPLINES];
 
   return (
     <aside className="filter-panel" aria-label="Job filters">
@@ -112,7 +95,7 @@ export default function FilterPanel({
           type="search"
           value={filters.q}
           onChange={(event) => update({ q: event.target.value })}
-          placeholder="Title, company, city…"
+          placeholder="Title, company, stack…"
           autoComplete="off"
         />
       </div>
@@ -121,26 +104,37 @@ export default function FilterPanel({
         <button
           type="button"
           className="btn btn--secondary btn--sm"
-          onClick={() =>
-            update({
-              locations: [...new Set([...filters.locations, ...CANADA_LOCATIONS])],
-            })
-          }
+          onClick={() => update({ disciplines: [...CS_DISCIPLINES] })}
         >
-          Canada roles
+          CS track
         </button>
         <button
           type="button"
           className="btn btn--ghost btn--sm"
-          onClick={() =>
-            update({
-              locations: filters.locations.filter(
-                (loc) => !CANADA_LOCATIONS.some((c) => c.toLowerCase() === loc.toLowerCase()),
-              ),
-            })
-          }
+          onClick={() => update({ regions: ['na'] })}
         >
-          Clear Canada
+          NA
+        </button>
+        <button
+          type="button"
+          className="btn btn--ghost btn--sm"
+          onClick={() => update({ regions: ['eu'] })}
+        >
+          EU
+        </button>
+        <button
+          type="button"
+          className="btn btn--ghost btn--sm"
+          onClick={() => update({ regions: ['asia'] })}
+        >
+          Asia
+        </button>
+        <button
+          type="button"
+          className="btn btn--ghost btn--sm"
+          onClick={() => update({ regions: ['remote'] })}
+        >
+          Remote
         </button>
       </div>
 
@@ -154,57 +148,53 @@ export default function FilterPanel({
         }
       />
 
-      {disciplines.length > 0 ? (
-        <fieldset className="filter-group">
-          <legend>Discipline</legend>
-          <div className="filter-group__options filter-group__options--scroll">
-            {disciplines.map((discipline) => {
-              const id = `discipline-${discipline}`;
-              return (
-                <label key={discipline} htmlFor={id} className="filter-checkbox">
-                  <input
-                    id={id}
-                    type="checkbox"
-                    checked={filters.disciplines.includes(discipline)}
-                    onChange={() =>
-                      update({
-                        disciplines: toggleArrayValue(filters.disciplines, discipline),
-                      })
-                    }
-                  />
-                  <span>{discipline}</span>
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
-      ) : null}
+      <fieldset className="filter-group">
+        <legend>Region</legend>
+        <div className="filter-group__options">
+          {REGION_OPTIONS.map((region) => {
+            const id = `region-${region}`;
+            return (
+              <label key={region} htmlFor={id} className="filter-checkbox">
+                <input
+                  id={id}
+                  type="checkbox"
+                  checked={filters.regions.includes(region)}
+                  onChange={() =>
+                    update({
+                      regions: toggleArrayValue(filters.regions, region as RegionId),
+                    })
+                  }
+                />
+                <span>{REGION_LABELS[region]}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
 
-      {locations.length > 0 ? (
-        <fieldset className="filter-group">
-          <legend>Location</legend>
-          <div className="filter-group__options filter-group__options--scroll">
-            {locations.slice(0, 50).map((location) => {
-              const id = `location-${location}`;
-              return (
-                <label key={location} htmlFor={id} className="filter-checkbox">
-                  <input
-                    id={id}
-                    type="checkbox"
-                    checked={filters.locations.includes(location)}
-                    onChange={() =>
-                      update({
-                        locations: toggleArrayValue(filters.locations, location),
-                      })
-                    }
-                  />
-                  <span>{location}</span>
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
-      ) : null}
+      <fieldset className="filter-group">
+        <legend>Discipline</legend>
+        <div className="filter-group__options filter-group__options--scroll">
+          {disciplineOptions.map((discipline) => {
+            const id = `discipline-${discipline}`;
+            return (
+              <label key={discipline} htmlFor={id} className="filter-checkbox">
+                <input
+                  id={id}
+                  type="checkbox"
+                  checked={filters.disciplines.includes(discipline)}
+                  onChange={() =>
+                    update({
+                      disciplines: toggleArrayValue(filters.disciplines, discipline),
+                    })
+                  }
+                />
+                <span>{formatDiscipline(discipline)}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
 
       <CheckboxGroup
         legend="Workplace"
@@ -258,9 +248,7 @@ export default function FilterPanel({
           onChange={(event) => update({ originCountry: event.target.value })}
           placeholder="e.g. CA, Canada, India, UK"
         />
-        <p className="filter-hint">
-          Matches ISO country codes in eligibility text (names like Canada map to CA).
-        </p>
+        <p className="filter-hint">Hides roles that explicitly exclude your country.</p>
       </fieldset>
 
       <fieldset className="filter-group">

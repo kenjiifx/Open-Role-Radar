@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { postedAt } from '../lib/dates';
+import { formatRelative, postedAt } from '../lib/dates';
 import { loadAllJobs, loadManifest, resetDataLoader } from '../lib/data-loader';
 import {
   countActiveFilters,
@@ -139,14 +139,14 @@ export default function JobSearch({
     const onVisible = () => {
       if (document.visibilityState === 'visible') reload(true);
     };
-    const onPageShow = (event: PageTransitionEvent) => {
-      // Always re-fetch after bfcache restores or any refresh.
-      if (event.persisted) reload(true);
+    const onPageShow = () => {
+      // Every return to this page (including hard refresh / bfcache) reloads the feed.
+      reload(true);
     };
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisible);
     window.addEventListener('pageshow', onPageShow);
-    const timer = window.setInterval(() => reload(true), 20_000);
+    const timer = window.setInterval(() => reload(true), 15_000);
     return () => {
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisible);
@@ -304,12 +304,12 @@ export default function JobSearch({
           <FilterPanel
             filters={filters}
             disciplines={facets.disciplines}
-            locations={facets.locations}
             activeCount={activeFilterCount}
             onChange={(next) => setFilters({ ...next, view: 'table' })}
             onReset={() =>
               setFilters({
                 ...DEFAULT_FILTERS,
+                disciplines: [...DEFAULT_FILTERS.disciplines],
                 originCountry: prefs.originCountry,
                 view: 'table',
               })
@@ -330,16 +330,16 @@ export default function JobSearch({
               </button>
               <p className="job-search__count" aria-live="polite">
                 {loading
-                  ? 'Syncing roles…'
-                  : `${filteredJobs.length.toLocaleString()} role${filteredJobs.length === 1 ? '' : 's'}`}
+                  ? 'Pulling live feed…'
+                  : `${filteredJobs.length.toLocaleString()} CS early-career role${filteredJobs.length === 1 ? '' : 's'}`}
               </p>
               <button
                 type="button"
                 className="btn btn--ghost btn--sm"
                 onClick={() => reload(false)}
-                title="Reload the latest published dataset"
+                title="Force-reload the newest published feed"
               >
-                Refresh data
+                Refresh now
               </button>
             </div>
             <div className="job-search__controls">
@@ -348,7 +348,7 @@ export default function JobSearch({
                 {lastGeneratedAt ? (
                   <>
                     {' '}
-                    · live feed
+                    · synced {formatRelative(lastGeneratedAt) || 'just now'}
                   </>
                 ) : null}
               </p>

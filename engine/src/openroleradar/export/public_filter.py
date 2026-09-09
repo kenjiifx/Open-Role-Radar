@@ -25,6 +25,47 @@ EARLY_CAREER_LEVELS: frozenset[CareerLevel] = frozenset(
     }
 )
 
+# CS / software-engineering oriented tracks for student-facing public feed.
+CS_DISCIPLINES: frozenset[str] = frozenset(
+    {
+        "software",
+        "frontend",
+        "backend",
+        "full_stack",
+        "mobile",
+        "systems",
+        "infrastructure",
+        "cloud",
+        "devops",
+        "sre",
+        "cybersecurity",
+        "networking",
+        "data_engineering",
+        "data_science",
+        "machine_learning",
+        "artificial_intelligence",
+        "quantitative_development",
+        "quantitative_research",
+        "hardware",
+        "embedded",
+        "firmware",
+        "robotics",
+        "qa_automation",
+        "product",
+    }
+)
+
+_CS_TITLE_RE = re.compile(
+    r"\b("
+    r"software|engineer|developer|swe|sde|programmer|full[\s-]?stack|"
+    r"front[\s-]?end|back[\s-]?end|mobile|ios|android|data|machine\s+learning|"
+    r"\bml\b|\bai\b|artificial\s+intelligence|cyber|security|devops|sre|"
+    r"platform|cloud|systems|infrastructure|quant|robotics|firmware|embedded|"
+    r"computer\s+science|informatics|site\s+reliability|research\s+intern"
+    r")\b",
+    re.I,
+)
+
 _CLOSED_APPLICATION_RE = re.compile(
     r"("
     r"no longer accepting(?: applications)?"
@@ -55,11 +96,19 @@ def _applications_open(job: Job) -> bool:
     return not bool(_CLOSED_APPLICATION_RE.search(blob))
 
 
+def is_cs_relevant(job: Job) -> bool:
+    """Prefer software/CS early-career roles over random retail/ops listings."""
+    primary = (job.disciplines.primary or "").lower()
+    if primary in CS_DISCIPLINES:
+        return True
+    return bool(_CS_TITLE_RE.search(job.title or ""))
+
+
 def is_public_job(job: Job, *, min_confidence: float | None = None) -> bool:
     """Return True when a job should appear on the public site/API/feeds.
 
-    Only open/reopened roles with working apply links and title-level early-career
-    signals are published. Confidence threshold comes from config/project.yml.
+    Only open/reopened CS-relevant early-career roles with working apply links
+    are published. Confidence threshold comes from config/project.yml.
     """
     threshold = _configured_min_confidence() if min_confidence is None else min_confidence
     if job.lifecycle not in {JobLifecycle.OPEN, JobLifecycle.REOPENED}:
@@ -68,4 +117,6 @@ def is_public_job(job: Job, *, min_confidence: float | None = None) -> bool:
         return False
     if job.career_level not in EARLY_CAREER_LEVELS:
         return False
-    return job.career_level_confidence >= threshold
+    if job.career_level_confidence < threshold:
+        return False
+    return is_cs_relevant(job)
