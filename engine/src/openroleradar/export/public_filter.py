@@ -66,6 +66,15 @@ _CS_TITLE_RE = re.compile(
     re.I,
 )
 
+_NOISE_TITLE_RE = re.compile(
+    r"\b("
+    r"technical support|support engineer|help[\s-]?desk|customer support|"
+    r"business enablement|guest experience|team member|sales associate|"
+    r"store associate|barista|cashier|retail"
+    r")\b",
+    re.I,
+)
+
 _CLOSED_APPLICATION_RE = re.compile(
     r"("
     r"no longer accepting(?: applications)?"
