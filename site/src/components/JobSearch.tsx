@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { postedAt } from '../lib/dates';
-import { loadAllJobs, loadManifest, resetDataLoader } from '../lib/data-loader';
+import { loadAllJobs, loadManifest, peekNewestManifest, resetDataLoader } from '../lib/data-loader';
 import {
   countActiveFilters,
   DEFAULT_FILTERS,
@@ -137,8 +137,13 @@ export default function JobSearch({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [reloadToken, setReloadToken] = useState(0);
-  const tableRef = useRef<HTMLDivElement>(null);
+  const [arrivedIds, setArrivedIds] = useState<Set<string>>(() => new Set());
+  const [liveNotice, setLiveNotice] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
   const silentRef = useRef(false);
+  const lastStampRef = useRef<string | null>(null);
+  const knownIdsRef = useRef<Set<string>>(new Set());
+  const pollInFlightRef = useRef(false);
 
   const reload = useCallback((silent = false) => {
     silentRef.current = silent;
@@ -149,7 +154,25 @@ export default function JobSearch({
     let cancelled = false;
 
     async function load() {
-      if (!silentRef.current) {
+      const silent = silentRef.current;
+
+      if (silent && lastStampRef.current) {
+        try {
+          const peek = await peekNewestManifest();
+          if (cancelled) return;
+          if (peek.generated_at === lastStampRef.current) {
+            silentRef.current = false;
+            pollInFlightRef.current = false;
+            return;
+          }
+          setSyncing(true);
+        } catch {
+          if (cancelled) return;
+          setSyncing(true);
+        }
+      }
+
+      if (!silent) {
         setLoading(true);
       }
       setError(null);
@@ -169,10 +192,29 @@ export default function JobSearch({
             )
           : allJobs;
 
-        setJobs(scopedJobs);
+        const nextIds = new Set(scopedJobs.map((job) => job.job_id));
+        if (silent && knownIdsRef.current.size > 0) {
+          const fresh = scopedJobs
+            .filter((job) => !knownIdsRef.current.has(job.job_id))
+            .map((job) => job.job_id);
+          if (fresh.length > 0) {
+            setArrivedIds(new Set(fresh));
+            setLiveNotice(
+              `${fresh.length.toLocaleString()} new role${fresh.length === 1 ? '' : 's'} just landed`,
+            );
+            window.setTimeout(() => setLiveNotice(null), 4500);
+            window.setTimeout(() => setArrivedIds(new Set()), 1600);
+          }
+        }
+        knownIdsRef.current = nextIds;
+        lastStampRef.current = manifest.generated_at;
+
         const stored = loadPreferences();
-        setPrefs(stored);
-        setStats(computeStats(scopedJobs, stored.lastVisit, manifest.generated_at));
+        startTransition(() => {
+          setJobs(scopedJobs);
+          setPrefs(stored);
+          setStats(computeStats(scopedJobs, stored.lastVisit, manifest.generated_at));
+        });
 
         if (stored.originCountry && !filters.originCountry) {
           setFilters((current) => ({
@@ -186,8 +228,12 @@ export default function JobSearch({
           setError(err instanceof Error ? err.message : 'Failed to load jobs');
         }
       } finally {
-        if (!cancelled) setLoading(false);
-        silentRef.current = false;
+        if (!cancelled) {
+          setLoading(false);
+          setSyncing(false);
+          silentRef.current = false;
+          pollInFlightRef.current = false;
+        }
       }
     }
 
@@ -199,19 +245,31 @@ export default function JobSearch({
   }, [companySlug, reloadToken]);
 
   useEffect(() => {
-    const onFocus = () => reload(true);
-    const onVisible = () => {
-      if (document.visibilityState === 'visible') reload(true);
-    };
-    const onPageShow = () => {
-      // Every return to this page (including hard refresh / bfcache) reloads the feed.
+    let armed = false;
+    const armTimer = window.setTimeout(() => {
+      armed = true;
+    }, 2500);
+
+    const peek = () => {
+      if (!armed || pollInFlightRef.current) return;
+      pollInFlightRef.current = true;
       reload(true);
     };
+
+    const onFocus = () => peek();
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') peek();
+    };
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) peek();
+    };
+
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisible);
     window.addEventListener('pageshow', onPageShow);
-    const timer = window.setInterval(() => reload(true), 15_000);
+    const timer = window.setInterval(peek, 5_000);
     return () => {
+      window.clearTimeout(armTimer);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisible);
       window.removeEventListener('pageshow', onPageShow);
@@ -241,20 +299,6 @@ export default function JobSearch({
       handleLeave();
     };
   }, []);
-
-  useEffect(() => {
-    const node = tableRef.current;
-    if (!node) return;
-
-    const onMove = (event: MouseEvent) => {
-      const rect = node.getBoundingClientRect();
-      node.style.setProperty('--spot-x', `${event.clientX - rect.left}px`);
-      node.style.setProperty('--spot-y', `${event.clientY - rect.top}px`);
-    };
-
-    node.addEventListener('mousemove', onMove);
-    return () => node.removeEventListener('mousemove', onMove);
-  }, [loading]);
 
   const index = useMemo(() => buildSearchIndex(jobs), [jobs]);
   const facets = useMemo(() => collectFacetValues(jobs), [jobs]);
@@ -366,9 +410,15 @@ export default function JobSearch({
           <FilterPanel
             filters={filters}
             facets={facets}
-            companies={facets.companies}
             activeCount={activeFilterCount}
-            onChange={(next) => setFilters({ ...next, view: 'table' })}
+            onChange={(next) => {
+              const apply = () => setFilters({ ...next, view: 'table' });
+              if (next.q !== filters.q) {
+                apply();
+                return;
+              }
+              startTransition(apply);
+            }}
             onReset={() =>
               setFilters({
                 ...DEFAULT_FILTERS,
@@ -386,7 +436,7 @@ export default function JobSearch({
 
         <div className="job-search__main">
           {showHero ? <HeroBanner /> : null}
-          {showStats ? <StatsBar stats={stats} loading={loading} /> : null}
+          {showStats ? <StatsBar stats={stats} loading={loading} syncing={syncing} /> : null}
 
           <section id="roles" className="job-search__results" aria-label="Job results">
             <div className="job-search__toolbar">
@@ -436,6 +486,12 @@ export default function JobSearch({
               </div>
             </div>
 
+            {liveNotice ? (
+              <p className="live-notice" role="status">
+                {liveNotice}
+              </p>
+            ) : null}
+
             {error ? (
               <div className="alert alert--error" role="alert">
                 {error}
@@ -450,7 +506,7 @@ export default function JobSearch({
             ) : null}
 
             {pageJobs.length > 0 ? (
-              <div ref={tableRef} className="job-list" role="list">
+              <div className="job-list" role="list">
                 {pageJobs.map((job, index) => (
                   <div key={job.job_id} role="listitem">
                     <JobRow
@@ -458,6 +514,7 @@ export default function JobSearch({
                       index={index}
                       saved={prefs.savedJobIds.includes(job.job_id)}
                       isNew={isNewJob(job)}
+                    justArrived={arrivedIds.has(job.job_id)}
                       expanded={expandedId === job.job_id}
                       selected={selectedId === job.job_id}
                       onToggle={(jobId) =>

@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { useMemo, useState } from 'react';
 import type { FilterState } from '../lib/filters';
 import { toggleArrayValue } from '../lib/filters';
 import {
@@ -11,7 +10,7 @@ import {
   type RegionId,
 } from '../lib/labels';
 import type { FacetCounts } from '../lib/search';
-import type { AcademicTerm, CareerLevel, CompanySummary, MobilityFlag, WorkplaceType } from '../lib/types';
+import type { AcademicTerm, CareerLevel, MobilityFlag, WorkplaceType } from '../lib/types';
 import {
   ACADEMIC_TERM_LABELS,
   CAREER_LEVEL_LABELS,
@@ -22,7 +21,6 @@ import {
 interface FilterPanelProps {
   filters: FilterState;
   facets: FacetCounts;
-  companies: CompanySummary[];
   onChange: (next: FilterState) => void;
   onReset: () => void;
   activeCount: number;
@@ -31,13 +29,6 @@ interface FilterPanelProps {
 const CAREER_LEVELS = Object.keys(CAREER_LEVEL_LABELS) as CareerLevel[];
 const WORKPLACE_TYPES = Object.keys(WORKPLACE_LABELS) as WorkplaceType[];
 const MOBILITY_FLAGS = Object.keys(MOBILITY_LABELS) as MobilityFlag[];
-
-function companyInitials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return '?';
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-}
 
 function FilterSection({
   title,
@@ -93,27 +84,16 @@ function CheckboxRow({
 export default function FilterPanel({
   filters,
   facets,
-  companies,
   onChange,
   onReset,
   activeCount,
 }: FilterPanelProps) {
-  const [companyQuery, setCompanyQuery] = useState('');
   const update = (partial: Partial<FilterState>) => {
     onChange({ ...filters, ...partial, page: 1 });
   };
 
   const disciplineOptions =
     facets.disciplines.length > 0 ? facets.disciplines : [...CS_DISCIPLINES];
-
-  const visibleCompanies = useMemo(() => {
-    const q = companyQuery.trim().toLowerCase();
-    const sorted = [...companies].sort((a, b) => b.job_count - a.job_count);
-    const filtered = q
-      ? sorted.filter((company) => company.name.toLowerCase().includes(q))
-      : sorted;
-    return filtered.slice(0, 18);
-  }, [companies, companyQuery]);
 
   return (
     <aside className="filter-panel" aria-label="Job filters">
@@ -205,43 +185,6 @@ export default function FilterPanel({
               onChange={() =>
                 update({
                   regions: toggleArrayValue(filters.regions, region as RegionId),
-                })
-              }
-            />
-          ))}
-        </div>
-      </FilterSection>
-
-      <FilterSection title="Company">
-        <div className="filter-search-field filter-search-field--nested">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-            <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-          <input
-            type="search"
-            value={companyQuery}
-            onChange={(event) => setCompanyQuery(event.target.value)}
-            placeholder="Search companies…"
-            aria-label="Search companies"
-          />
-        </div>
-        <div className="filter-group__options filter-group__options--scroll">
-          {visibleCompanies.map((company) => (
-            <CheckboxRow
-              key={company.company_id}
-              id={`company-${company.company_id}`}
-              label={company.name}
-              checked={filters.companyIds.includes(company.company_id)}
-              count={company.job_count}
-              leading={
-                <span className="filter-company-mark" aria-hidden="true">
-                  {companyInitials(company.name)}
-                </span>
-              }
-              onChange={() =>
-                update({
-                  companyIds: toggleArrayValue(filters.companyIds, company.company_id),
                 })
               }
             />

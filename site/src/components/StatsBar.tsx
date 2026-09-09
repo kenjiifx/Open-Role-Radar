@@ -1,28 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatRelative, formatUpdatedLabel } from '../lib/dates';
 import type { SiteStats } from '../lib/types';
 
 interface StatsBarProps {
   stats: SiteStats;
   loading?: boolean;
+  syncing?: boolean;
 }
 
 function useCountUp(target: number, enabled: boolean) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(target);
+  const valueRef = useRef(target);
 
   useEffect(() => {
-    if (!enabled) {
-      setValue(0);
-      return;
-    }
+    if (!enabled) return;
+    const from = valueRef.current;
+    if (from === target) return;
+
     let frame = 0;
     const start = performance.now();
-    const duration = 700;
+    const duration = 420;
+    const delta = target - from;
 
     const tick = (now: number) => {
       const progress = Math.min(1, (now - start) / duration);
       const eased = 1 - (1 - progress) ** 3;
-      setValue(Math.round(target * eased));
+      const next = Math.round(from + delta * eased);
+      valueRef.current = next;
+      setValue(next);
       if (progress < 1) frame = requestAnimationFrame(tick);
     };
 
@@ -33,14 +38,14 @@ function useCountUp(target: number, enabled: boolean) {
   return value;
 }
 
-export default function StatsBar({ stats, loading }: StatsBarProps) {
+export default function StatsBar({ stats, loading, syncing = false }: StatsBarProps) {
   const roles = useCountUp(stats.totalJobs, !loading);
   const companies = useCountUp(stats.totalCompanies, !loading);
   const visa = useCountUp(stats.withVisa, !loading);
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 15_000);
+    const timer = window.setInterval(() => setNow(Date.now()), 5_000);
     return () => window.clearInterval(timer);
   }, []);
 
@@ -102,11 +107,11 @@ export default function StatsBar({ stats, loading }: StatsBarProps) {
           <span className="stat__label">Visa signals</span>
         </div>
       </div>
-      <div className="stats-bar__live">
+      <div className={syncing ? 'stats-bar__live stats-bar__live--syncing' : 'stats-bar__live'}>
         <span className="stats-bar__pulse" aria-hidden="true" />
         <div>
           <strong className="stat__value stat__value--text">
-            Live · Updated {relative}
+            {syncing ? 'Live · Checking feed' : `Live · Updated ${relative}`}
           </strong>
           <span className="stat__label">
             <time dateTime={stats.generatedAt}>Last sync {syncClock}</time>

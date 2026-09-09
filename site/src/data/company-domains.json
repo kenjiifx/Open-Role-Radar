@@ -1,0 +1,2787 @@
+[
+  {
+    "company": "Stripe",
+    "domain": "stripe.com",
+    "tenant": "stripe"
+  },
+  {
+    "company": "Figma",
+    "domain": "figma.com",
+    "tenant": "figma"
+  },
+  {
+    "company": "Notion",
+    "domain": "notion.so",
+    "tenant": "notion"
+  },
+  {
+    "company": "Cloudflare",
+    "domain": "cloudflare.com",
+    "tenant": "cloudflare"
+  },
+  {
+    "company": "Datadog",
+    "domain": "datadoghq.com",
+    "tenant": "datadog"
+  },
+  {
+    "company": "Plaid",
+    "domain": "plaid.com",
+    "tenant": "plaid"
+  },
+  {
+    "company": "Ramp",
+    "domain": "ramp.com",
+    "tenant": "ramp"
+  },
+  {
+    "company": "Linear",
+    "domain": "linear.app",
+    "tenant": "linear"
+  },
+  {
+    "company": "Vercel",
+    "domain": "vercel.com",
+    "tenant": "vercel"
+  },
+  {
+    "company": "Supabase",
+    "domain": "supabase.com",
+    "tenant": "supabase"
+  },
+  {
+    "company": "GitLab",
+    "domain": "about.gitlab.com",
+    "tenant": "gitlab"
+  },
+  {
+    "company": "MongoDB",
+    "domain": "mongodb.com",
+    "tenant": "mongodb"
+  },
+  {
+    "company": "Snowflake",
+    "domain": "snowflake.com",
+    "tenant": "snowflake"
+  },
+  {
+    "company": "Databricks",
+    "domain": "databricks.com",
+    "tenant": "databricks"
+  },
+  {
+    "company": "Robinhood",
+    "domain": "robinhood.com",
+    "tenant": "robinhood"
+  },
+  {
+    "company": "Coinbase",
+    "domain": "coinbase.com",
+    "tenant": "coinbase"
+  },
+  {
+    "company": "Spotify",
+    "domain": "lifeatspotify.com",
+    "tenant": "spotify"
+  },
+  {
+    "company": "Reddit",
+    "domain": "redditinc.com",
+    "tenant": "reddit"
+  },
+  {
+    "company": "Discord",
+    "domain": "discord.com",
+    "tenant": "discord"
+  },
+  {
+    "company": "Dropbox",
+    "domain": "dropbox.com",
+    "tenant": "dropbox"
+  },
+  {
+    "company": "Airbnb",
+    "domain": "airbnb.com",
+    "tenant": "airbnb"
+  },
+  {
+    "company": "Twitch",
+    "domain": "twitch.tv",
+    "tenant": "twitch"
+  },
+  {
+    "company": "Lyft",
+    "domain": "lyft.com",
+    "tenant": "lyft"
+  },
+  {
+    "company": "DoorDash",
+    "domain": "doordash.com",
+    "tenant": "doordash"
+  },
+  {
+    "company": "Affirm",
+    "domain": "affirm.com",
+    "tenant": "affirm"
+  },
+  {
+    "company": "Block",
+    "domain": "block.xyz",
+    "tenant": "block"
+  },
+  {
+    "company": "Twilio",
+    "domain": "twilio.com",
+    "tenant": "twilio"
+  },
+  {
+    "company": "Asana",
+    "domain": "asana.com",
+    "tenant": "asana"
+  },
+  {
+    "company": "HubSpot",
+    "domain": "hubspot.com",
+    "tenant": "hubspot"
+  },
+  {
+    "company": "Duolingo",
+    "domain": "duolingo.com",
+    "tenant": "duolingo"
+  },
+  {
+    "company": "Roblox",
+    "domain": "roblox.com",
+    "tenant": "roblox"
+  },
+  {
+    "company": "Unity",
+    "domain": "unity.com",
+    "tenant": "unity3d"
+  },
+  {
+    "company": "Elastic",
+    "domain": "elastic.co",
+    "tenant": "elastic"
+  },
+  {
+    "company": "Grafana Labs",
+    "domain": "grafana.com",
+    "tenant": "grafanalabs"
+  },
+  {
+    "company": "Sentry",
+    "domain": "sentry.io",
+    "tenant": "getsentry"
+  },
+  {
+    "company": "Okta",
+    "domain": "okta.com",
+    "tenant": "okta"
+  },
+  {
+    "company": "Auth0",
+    "domain": "auth0.com",
+    "tenant": "auth0"
+  },
+  {
+    "company": "Brex",
+    "domain": "brex.com",
+    "tenant": "brex"
+  },
+  {
+    "company": "Chime",
+    "domain": "chime.com",
+    "tenant": "chime"
+  },
+  {
+    "company": "SoFi",
+    "domain": "sofi.com",
+    "tenant": "sofi"
+  },
+  {
+    "company": "Kraken",
+    "domain": "kraken.com",
+    "tenant": "kraken"
+  },
+  {
+    "company": "Rippling",
+    "domain": "rippling.com",
+    "tenant": "rippling"
+  },
+  {
+    "company": "Mercury",
+    "domain": "mercury.com",
+    "tenant": "mercury"
+  },
+  {
+    "company": "Scale AI",
+    "domain": "scale.com",
+    "tenant": "scaleai"
+  },
+  {
+    "company": "Anthropic",
+    "domain": "anthropic.com",
+    "tenant": "anthropic"
+  },
+  {
+    "company": "OpenAI",
+    "domain": "openai.com",
+    "tenant": "openai"
+  },
+  {
+    "company": "Anduril",
+    "domain": "anduril.com",
+    "tenant": "andurilindustries"
+  },
+  {
+    "company": "Perplexity",
+    "domain": "perplexity.ai",
+    "tenant": "perplexity"
+  },
+  {
+    "company": "Jane Street",
+    "domain": "janestreet.com",
+    "tenant": "janestreet"
+  },
+  {
+    "company": "DRW",
+    "domain": "drw.com",
+    "tenant": "drweng"
+  },
+  {
+    "company": "IMC",
+    "domain": "imc.com",
+    "tenant": "imc"
+  },
+  {
+    "company": "Tower Research",
+    "domain": "tower-research.com",
+    "tenant": "towerresearchcapital"
+  },
+  {
+    "company": "Akuna Capital",
+    "domain": "akunacapital.com",
+    "tenant": "akunacapital"
+  },
+  {
+    "company": "Rubrik",
+    "domain": "rubrik.com",
+    "tenant": "rubrik"
+  },
+  {
+    "company": "Y Combinator",
+    "domain": "ycombinator.com",
+    "tenant": "ycombinator"
+  },
+  {
+    "company": "Resend",
+    "domain": "resend.com",
+    "tenant": "resend"
+  },
+  {
+    "company": "PostHog",
+    "domain": "posthog.com",
+    "tenant": "posthog"
+  },
+  {
+    "company": "Railway",
+    "domain": "railway.app",
+    "tenant": "railway"
+  },
+  {
+    "company": "Render",
+    "domain": "render.com",
+    "tenant": "render"
+  },
+  {
+    "company": "Doppler",
+    "domain": "doppler.com",
+    "tenant": "doppler"
+  },
+  {
+    "company": "Inngest",
+    "domain": "inngest.com",
+    "tenant": "inngest"
+  },
+  {
+    "company": "Trigger.dev",
+    "domain": "trigger.dev",
+    "tenant": "triggerdev"
+  },
+  {
+    "company": "Nango",
+    "domain": "nango.dev",
+    "tenant": "nango"
+  },
+  {
+    "company": "Prefect",
+    "domain": "prefect.io",
+    "tenant": "prefect"
+  },
+  {
+    "company": "Airbyte",
+    "domain": "airbyte.com",
+    "tenant": "airbyte"
+  },
+  {
+    "company": "Hightouch",
+    "domain": "hightouch.com",
+    "tenant": "hightouch"
+  },
+  {
+    "company": "Metabase",
+    "domain": "metabase.com",
+    "tenant": "metabase"
+  },
+  {
+    "company": "Sanity",
+    "domain": "sanity.io",
+    "tenant": "sanity"
+  },
+  {
+    "company": "Mux",
+    "domain": "mux.com",
+    "tenant": "mux"
+  },
+  {
+    "company": "LiveKit",
+    "domain": "livekit.io",
+    "tenant": "livekit"
+  },
+  {
+    "company": "Docker",
+    "domain": "docker.com",
+    "tenant": "docker"
+  },
+  {
+    "company": "Orca Security",
+    "domain": "orca.security",
+    "tenant": "orca"
+  },
+  {
+    "company": "Drata",
+    "domain": "drata.com",
+    "tenant": "drata"
+  },
+  {
+    "company": "Secureframe",
+    "domain": "secureframe.com",
+    "tenant": "secureframe"
+  },
+  {
+    "company": "Material Security",
+    "domain": "material.security",
+    "tenant": "materialsecurity"
+  },
+  {
+    "company": "Replit",
+    "domain": "replit.com",
+    "tenant": "replit"
+  },
+  {
+    "company": "Attio",
+    "domain": "attio.com",
+    "tenant": "attio"
+  },
+  {
+    "company": "Plain",
+    "domain": "plain.com",
+    "tenant": "plain"
+  },
+  {
+    "company": "Incident.io",
+    "domain": "incident.io",
+    "tenant": "incident"
+  },
+  {
+    "company": "Apollo.io",
+    "domain": "apollo.io",
+    "tenant": "apolloio"
+  },
+  {
+    "company": "Fireworks AI",
+    "domain": "fireworks.ai",
+    "tenant": "fireworks"
+  },
+  {
+    "company": "Recraft",
+    "domain": "recraft.ai",
+    "tenant": "recraft"
+  },
+  {
+    "company": "Character.AI",
+    "domain": "character.ai",
+    "tenant": "character"
+  },
+  {
+    "company": "Decagon",
+    "domain": "decagon.ai",
+    "tenant": "decagon"
+  },
+  {
+    "company": "Poolside",
+    "domain": "poolside.ai",
+    "tenant": "poolside"
+  },
+  {
+    "company": "Mercor",
+    "domain": "mercor.com",
+    "tenant": "mercor"
+  },
+  {
+    "company": "Parallel",
+    "domain": "parallel.ai",
+    "tenant": "parallel"
+  },
+  {
+    "company": "Descript",
+    "domain": "descript.com",
+    "tenant": "descript"
+  },
+  {
+    "company": "Gamma",
+    "domain": "gamma.app",
+    "tenant": "gamma"
+  },
+  {
+    "company": "Elicit",
+    "domain": "elicit.com",
+    "tenant": "elicit"
+  },
+  {
+    "company": "Labelbox",
+    "domain": "labelbox.com",
+    "tenant": "labelbox"
+  },
+  {
+    "company": "Lightning AI",
+    "domain": "lightning.ai",
+    "tenant": "lightning"
+  },
+  {
+    "company": "Saronic",
+    "domain": "saronic.com",
+    "tenant": "saronic"
+  },
+  {
+    "company": "Nava",
+    "domain": "navapbc.com",
+    "tenant": "navapbc"
+  },
+  {
+    "company": "Astera Labs",
+    "domain": "asteralabs.com",
+    "tenant": "asteralabs"
+  },
+  {
+    "company": "IonQ",
+    "domain": "ionq.com",
+    "tenant": "ionq"
+  },
+  {
+    "company": "PathAI",
+    "domain": "pathai.com",
+    "tenant": "pathai"
+  },
+  {
+    "company": "Warp",
+    "domain": "warp.dev",
+    "tenant": "warp"
+  },
+  {
+    "company": "Figure",
+    "domain": "figure.ai",
+    "tenant": "figure"
+  },
+  {
+    "company": "Fivetran",
+    "domain": "fivetran.com",
+    "tenant": "fivetran"
+  },
+  {
+    "company": "dbt Labs",
+    "domain": "getdbt.com",
+    "tenant": "dbtlabs"
+  },
+  {
+    "company": "Confluent",
+    "domain": "confluent.io",
+    "tenant": "confluent"
+  },
+  {
+    "company": "Cockroach Labs",
+    "domain": "cockroachlabs.com",
+    "tenant": "cockroachlabs"
+  },
+  {
+    "company": "PlanetScale",
+    "domain": "planetscale.com",
+    "tenant": "planetscale"
+  },
+  {
+    "company": "Retool",
+    "domain": "retool.com",
+    "tenant": "retool"
+  },
+  {
+    "company": "Postman",
+    "domain": "postman.com",
+    "tenant": "postman"
+  },
+  {
+    "company": "BrowserStack",
+    "domain": "browserstack.com",
+    "tenant": "browserstack"
+  },
+  {
+    "company": "Samsara",
+    "domain": "samsara.com",
+    "tenant": "samsara"
+  },
+  {
+    "company": "Segment",
+    "domain": "segment.com",
+    "tenant": "segment"
+  },
+  {
+    "company": "Amplitude",
+    "domain": "amplitude.com",
+    "tenant": "amplitude"
+  },
+  {
+    "company": "Mixpanel",
+    "domain": "mixpanel.com",
+    "tenant": "mixpanel"
+  },
+  {
+    "company": "PagerDuty",
+    "domain": "pagerduty.com",
+    "tenant": "pagerduty"
+  },
+  {
+    "company": "Splunk",
+    "domain": "splunk.com",
+    "tenant": "splunk"
+  },
+  {
+    "company": "Rivian",
+    "domain": "rivian.com",
+    "tenant": "rivian"
+  },
+  {
+    "company": "Cruise",
+    "domain": "getcruise.com",
+    "tenant": "cruise"
+  },
+  {
+    "company": "Zoox",
+    "domain": "zoox.com",
+    "tenant": "zoox"
+  },
+  {
+    "company": "Waymo",
+    "domain": "waymo.com",
+    "tenant": "waymo"
+  },
+  {
+    "company": "Nuro",
+    "domain": "nuro.ai",
+    "tenant": "nuro"
+  },
+  {
+    "company": "Applied Intuition",
+    "domain": "appliedintuition.com",
+    "tenant": "appliedintuition"
+  },
+  {
+    "company": "CrowdStrike",
+    "domain": "crowdstrike.com",
+    "tenant": "crowdstrike"
+  },
+  {
+    "company": "Palo Alto Networks",
+    "domain": "paloaltonetworks.com",
+    "tenant": "paloaltonetworks"
+  },
+  {
+    "company": "Fastly",
+    "domain": "fastly.com",
+    "tenant": "fastly"
+  },
+  {
+    "company": "Akamai",
+    "domain": "akamai.com",
+    "tenant": "akamai"
+  },
+  {
+    "company": "Trail of Bits",
+    "domain": "trailofbits.com",
+    "tenant": "trailofbits"
+  },
+  {
+    "company": "Canva",
+    "domain": "canva.com",
+    "tenant": "canva"
+  },
+  {
+    "company": "Miro",
+    "domain": "miro.com",
+    "tenant": "miro"
+  },
+  {
+    "company": "Airtable",
+    "domain": "airtable.com",
+    "tenant": "airtable"
+  },
+  {
+    "company": "Coda",
+    "domain": "coda.io",
+    "tenant": "coda"
+  },
+  {
+    "company": "Loom",
+    "domain": "loom.com",
+    "tenant": "loom"
+  },
+  {
+    "company": "Calendly",
+    "domain": "calendly.com",
+    "tenant": "calendly"
+  },
+  {
+    "company": "Zapier",
+    "domain": "zapier.com",
+    "tenant": "zapier"
+  },
+  {
+    "company": "Webflow",
+    "domain": "webflow.com",
+    "tenant": "webflow"
+  },
+  {
+    "company": "Framer",
+    "domain": "framer.com",
+    "tenant": "framer"
+  },
+  {
+    "company": "Wealthsimple",
+    "domain": "wealthsimple.com",
+    "tenant": "wealthsimple"
+  },
+  {
+    "company": "1Password",
+    "domain": "1password.com",
+    "tenant": "1password"
+  },
+  {
+    "company": "Lightspeed",
+    "domain": "lightspeedhq.com",
+    "tenant": "lightspeedhq"
+  },
+  {
+    "company": "Cohere",
+    "domain": "cohere.com",
+    "tenant": "cohere"
+  },
+  {
+    "company": "Hopper",
+    "domain": "hopper.com",
+    "tenant": "hopper"
+  },
+  {
+    "company": "Loopio",
+    "domain": "loopio.com",
+    "tenant": "loopio"
+  },
+  {
+    "company": "Benevity",
+    "domain": "benevity.com",
+    "tenant": "benevity"
+  },
+  {
+    "company": "Clearco",
+    "domain": "clear.co",
+    "tenant": "clearco"
+  },
+  {
+    "company": "Thinkific",
+    "domain": "thinkific.com",
+    "tenant": "thinkific"
+  },
+  {
+    "company": "7shifts",
+    "domain": "7shifts.com",
+    "tenant": "7shifts"
+  },
+  {
+    "company": "Hootsuite",
+    "domain": "hootsuite.com",
+    "tenant": "hootsuite"
+  },
+  {
+    "company": "Faire",
+    "domain": "faire.com",
+    "tenant": "faire"
+  },
+  {
+    "company": "Ritual",
+    "domain": "ritual.co",
+    "tenant": "ritual"
+  },
+  {
+    "company": "Flipp",
+    "domain": "flipp.com",
+    "tenant": "flipp"
+  },
+  {
+    "company": "League",
+    "domain": "league.com",
+    "tenant": "leagueinc"
+  },
+  {
+    "company": "Instacart",
+    "domain": "instacart.com",
+    "tenant": "instacart"
+  },
+  {
+    "company": "Nubank",
+    "domain": "nubank.com.br",
+    "tenant": "nubank"
+  },
+  {
+    "company": "Revolut",
+    "domain": "revolut.com",
+    "tenant": "revolut"
+  },
+  {
+    "company": "Wise",
+    "domain": "wise.com",
+    "tenant": "transferwise"
+  },
+  {
+    "company": "Monzo",
+    "domain": "monzo.com",
+    "tenant": "monzo"
+  },
+  {
+    "company": "Checkout.com",
+    "domain": "checkout.com",
+    "tenant": "checkout"
+  },
+  {
+    "company": "Cursor",
+    "domain": "cursor.com",
+    "tenant": "cursor"
+  },
+  {
+    "company": "Temporal",
+    "domain": "temporal.io",
+    "tenant": "temporal"
+  },
+  {
+    "company": "Dagster",
+    "domain": "dagster.io",
+    "tenant": "dagster"
+  },
+  {
+    "company": "Hex",
+    "domain": "hex.tech",
+    "tenant": "hex"
+  },
+  {
+    "company": "Census",
+    "domain": "getcensus.com",
+    "tenant": "census"
+  },
+  {
+    "company": "Palantir",
+    "domain": "palantir.com",
+    "tenant": "palantir"
+  },
+  {
+    "company": "Gusto",
+    "domain": "gusto.com",
+    "tenant": "gusto"
+  },
+  {
+    "company": "Flexport",
+    "domain": "flexport.com",
+    "tenant": "flexport"
+  },
+  {
+    "company": "Coursera",
+    "domain": "coursera.org",
+    "tenant": "coursera"
+  },
+  {
+    "company": "Grammarly",
+    "domain": "grammarly.com",
+    "tenant": "grammarly"
+  },
+  {
+    "company": "Remitly",
+    "domain": "remitly.com",
+    "tenant": "remitly"
+  },
+  {
+    "company": "Toast",
+    "domain": "toasttab.com",
+    "tenant": "toast"
+  },
+  {
+    "company": "ServiceTitan",
+    "domain": "servicetitan.com",
+    "tenant": "servicetitan"
+  },
+  {
+    "company": "Benchling",
+    "domain": "benchling.com",
+    "tenant": "benchling"
+  },
+  {
+    "company": "Klarna",
+    "domain": "klarna.com",
+    "tenant": "klarna"
+  },
+  {
+    "company": "Thumbtack",
+    "domain": "thumbtack.com",
+    "tenant": "thumbtack"
+  },
+  {
+    "company": "Nextdoor",
+    "domain": "nextdoor.com",
+    "tenant": "nextdoor"
+  },
+  {
+    "company": "Pinterest",
+    "domain": "pinterest.com",
+    "tenant": "pinterest"
+  },
+  {
+    "company": "Snap",
+    "domain": "snap.com",
+    "tenant": "snapinc"
+  },
+  {
+    "company": "Etsy",
+    "domain": "etsy.com",
+    "tenant": "etsy"
+  },
+  {
+    "company": "Squarespace",
+    "domain": "squarespace.com",
+    "tenant": "squarespace"
+  },
+  {
+    "company": "Automattic",
+    "domain": "automattic.com",
+    "tenant": "automattic"
+  },
+  {
+    "company": "GitHub",
+    "domain": "github.com",
+    "tenant": "github"
+  },
+  {
+    "company": "Hugging Face",
+    "domain": "huggingface.co",
+    "tenant": "huggingface"
+  },
+  {
+    "company": "Weights & Biases",
+    "domain": "wandb.ai",
+    "tenant": "wandb"
+  },
+  {
+    "company": "LangChain",
+    "domain": "langchain.com",
+    "tenant": "langchain"
+  },
+  {
+    "company": "Replicate",
+    "domain": "replicate.com",
+    "tenant": "replicate"
+  },
+  {
+    "company": "Together AI",
+    "domain": "together.ai",
+    "tenant": "togetherai"
+  },
+  {
+    "company": "Anyscale",
+    "domain": "anyscale.com",
+    "tenant": "anyscale"
+  },
+  {
+    "company": "Modal",
+    "domain": "modal.com",
+    "tenant": "modal"
+  },
+  {
+    "company": "Neon",
+    "domain": "neon.tech",
+    "tenant": "neon"
+  },
+  {
+    "company": "ClickHouse",
+    "domain": "clickhouse.com",
+    "tenant": "clickhouse"
+  },
+  {
+    "company": "Materialize",
+    "domain": "materialize.com",
+    "tenant": "materialize"
+  },
+  {
+    "company": "Doximity",
+    "domain": "doximity.com",
+    "tenant": "doximity"
+  },
+  {
+    "company": "Color Health",
+    "domain": "color.com",
+    "tenant": "color"
+  },
+  {
+    "company": "Flatiron Health",
+    "domain": "flatiron.com",
+    "tenant": "flatironhealth"
+  },
+  {
+    "company": "Carta",
+    "domain": "carta.com",
+    "tenant": "carta"
+  },
+  {
+    "company": "Modern Treasury",
+    "domain": "moderntreasury.com",
+    "tenant": "moderntreasury"
+  },
+  {
+    "company": "Marqeta",
+    "domain": "marqeta.com",
+    "tenant": "marqeta"
+  },
+  {
+    "company": "Bill.com",
+    "domain": "bill.com",
+    "tenant": "billcom"
+  },
+  {
+    "company": "Navan",
+    "domain": "navan.com",
+    "tenant": "navan"
+  },
+  {
+    "company": "Deel",
+    "domain": "deel.com",
+    "tenant": "deel"
+  },
+  {
+    "company": "Remote",
+    "domain": "remote.com",
+    "tenant": "remote"
+  },
+  {
+    "company": "Lattice",
+    "domain": "lattice.com",
+    "tenant": "lattice"
+  },
+  {
+    "company": "Culture Amp",
+    "domain": "cultureamp.com",
+    "tenant": "cultureamp"
+  },
+  {
+    "company": "Box",
+    "domain": "box.com",
+    "tenant": "boxinc"
+  },
+  {
+    "company": "Atlassian",
+    "domain": "atlassian.com",
+    "tenant": "atlassian"
+  },
+  {
+    "company": "Smartsheet",
+    "domain": "smartsheet.com",
+    "tenant": "smartsheet"
+  },
+  {
+    "company": "Monday.com",
+    "domain": "monday.com",
+    "tenant": "monday"
+  },
+  {
+    "company": "Wix",
+    "domain": "wix.com",
+    "tenant": "wix"
+  },
+  {
+    "company": "BigCommerce",
+    "domain": "bigcommerce.com",
+    "tenant": "bigcommerce"
+  },
+  {
+    "company": "Chewy",
+    "domain": "chewy.com",
+    "tenant": "chewy"
+  },
+  {
+    "company": "Wayfair",
+    "domain": "wayfair.com",
+    "tenant": "wayfair"
+  },
+  {
+    "company": "Zillow",
+    "domain": "zillow.com",
+    "tenant": "zillow"
+  },
+  {
+    "company": "Redfin",
+    "domain": "redfin.com",
+    "tenant": "redfin"
+  },
+  {
+    "company": "Opendoor",
+    "domain": "opendoor.com",
+    "tenant": "opendoor"
+  },
+  {
+    "company": "Lucid Motors",
+    "domain": "lucidmotors.com",
+    "tenant": "lucidmotors"
+  },
+  {
+    "company": "Rocket Lab",
+    "domain": "rocketlabusa.com",
+    "tenant": "rocketlab"
+  },
+  {
+    "company": "Planet Labs",
+    "domain": "planet.com",
+    "tenant": "planetlabs"
+  },
+  {
+    "company": "Shield AI",
+    "domain": "shield.ai",
+    "tenant": "shieldai"
+  },
+  {
+    "company": "Helsing",
+    "domain": "helsing.ai",
+    "tenant": "helsing"
+  },
+  {
+    "company": "Aurora",
+    "domain": "aurora.tech",
+    "tenant": "aurora"
+  },
+  {
+    "company": "Kodiak Robotics",
+    "domain": "kodiak.ai",
+    "tenant": "kodiak"
+  },
+  {
+    "company": "Torc Robotics",
+    "domain": "torc.ai",
+    "tenant": "torc"
+  },
+  {
+    "company": "Celonis",
+    "domain": "celonis.com",
+    "tenant": "celonis"
+  },
+  {
+    "company": "UiPath",
+    "domain": "uipath.com",
+    "tenant": "uipath"
+  },
+  {
+    "company": "Workato",
+    "domain": "workato.com",
+    "tenant": "workato"
+  },
+  {
+    "company": "Starburst",
+    "domain": "starburst.io",
+    "tenant": "starburst"
+  },
+  {
+    "company": "10x Genomics",
+    "domain": "10xgenomics.com",
+    "tenant": "10xgenomics"
+  },
+  {
+    "company": "Recursion",
+    "domain": "recursion.com",
+    "tenant": "recursion"
+  },
+  {
+    "company": "Acquia",
+    "domain": "acquia.com",
+    "tenant": "acquia"
+  },
+  {
+    "company": "Adyen",
+    "domain": "adyen.com",
+    "tenant": "adyen"
+  },
+  {
+    "company": "Alarm.com",
+    "domain": "alarm.com",
+    "tenant": "alarmcom"
+  },
+  {
+    "company": "Algolia",
+    "domain": "algolia.com",
+    "tenant": "algolia"
+  },
+  {
+    "company": "Amperity",
+    "domain": "amperity.com",
+    "tenant": "amperity"
+  },
+  {
+    "company": "AppLovin",
+    "domain": "applovin.com",
+    "tenant": "applovin"
+  },
+  {
+    "company": "Attentive",
+    "domain": "attentive.com",
+    "tenant": "attentive"
+  },
+  {
+    "company": "Aviatrix",
+    "domain": "aviatrix.com",
+    "tenant": "aviatrix"
+  },
+  {
+    "company": "Axios",
+    "domain": "axios.com",
+    "tenant": "axios"
+  },
+  {
+    "company": "Backblaze",
+    "domain": "backblaze.com",
+    "tenant": "backblaze"
+  },
+  {
+    "company": "Betterment",
+    "domain": "betterment.com",
+    "tenant": "betterment"
+  },
+  {
+    "company": "BigID",
+    "domain": "bigid.com",
+    "tenant": "bigid"
+  },
+  {
+    "company": "Billtrust",
+    "domain": "billtrust.com",
+    "tenant": "billtrust"
+  },
+  {
+    "company": "Blend",
+    "domain": "blend.com",
+    "tenant": "blend"
+  },
+  {
+    "company": "Bloomreach",
+    "domain": "bloomreach.com",
+    "tenant": "bloomreach"
+  },
+  {
+    "company": "Braze",
+    "domain": "braze.com",
+    "tenant": "braze"
+  },
+  {
+    "company": "Buildkite",
+    "domain": "buildkite.com",
+    "tenant": "buildkite"
+  },
+  {
+    "company": "BuzzFeed",
+    "domain": "buzzfeed.com",
+    "tenant": "buzzfeed"
+  },
+  {
+    "company": "Candidly",
+    "domain": "candidly.com",
+    "tenant": "candidly"
+  },
+  {
+    "company": "CarGurus",
+    "domain": "cargurus.com",
+    "tenant": "cargurus"
+  },
+  {
+    "company": "Checkr",
+    "domain": "checkr.com",
+    "tenant": "checkr"
+  },
+  {
+    "company": "Cognite",
+    "domain": "cognite.com",
+    "tenant": "cognite"
+  },
+  {
+    "company": "Compass Pathways",
+    "domain": "compasspathways.com",
+    "tenant": "compasspathways"
+  },
+  {
+    "company": "Contentful",
+    "domain": "contentful.com",
+    "tenant": "contentful"
+  },
+  {
+    "company": "CoreWeave",
+    "domain": "coreweave.com",
+    "tenant": "coreweave"
+  },
+  {
+    "company": "Crossbeam",
+    "domain": "crossbeam.com",
+    "tenant": "crossbeam"
+  },
+  {
+    "company": "Current",
+    "domain": "current.com",
+    "tenant": "current"
+  },
+  {
+    "company": "Customer.io",
+    "domain": "customer.io",
+    "tenant": "customerio"
+  },
+  {
+    "company": "Dialpad",
+    "domain": "dialpad.com",
+    "tenant": "dialpad"
+  },
+  {
+    "company": "Dispatch",
+    "domain": "dispatch.me",
+    "tenant": "dispatch"
+  },
+  {
+    "company": "Earnest",
+    "domain": "earnest.com",
+    "tenant": "earnest"
+  },
+  {
+    "company": "Epic Games",
+    "domain": "epicgames.com",
+    "tenant": "epicgames"
+  },
+  {
+    "company": "Everlane",
+    "domain": "everlane.com",
+    "tenant": "everlane"
+  },
+  {
+    "company": "Fandom",
+    "domain": "fandom.com",
+    "tenant": "fandom"
+  },
+  {
+    "company": "FanDuel",
+    "domain": "fanduel.com",
+    "tenant": "fanduel"
+  },
+  {
+    "company": "Forter",
+    "domain": "forter.com",
+    "tenant": "forter"
+  },
+  {
+    "company": "Gather",
+    "domain": "gather.town",
+    "tenant": "gather"
+  },
+  {
+    "company": "Genesis",
+    "domain": "genesis.com",
+    "tenant": "genesis"
+  },
+  {
+    "company": "Genius",
+    "domain": "genius.com",
+    "tenant": "genius"
+  },
+  {
+    "company": "Ghost",
+    "domain": "ghost.org",
+    "tenant": "ghost"
+  },
+  {
+    "company": "Glossier",
+    "domain": "glossier.com",
+    "tenant": "glossier"
+  },
+  {
+    "company": "GoFundMe",
+    "domain": "gofundme.com",
+    "tenant": "gofundme"
+  },
+  {
+    "company": "Gong",
+    "domain": "gong.io",
+    "tenant": "gongio"
+  },
+  {
+    "company": "Greenhouse",
+    "domain": "greenhouse.io",
+    "tenant": "greenhouse"
+  },
+  {
+    "company": "Groupon",
+    "domain": "groupon.com",
+    "tenant": "groupon"
+  },
+  {
+    "company": "HackerRank",
+    "domain": "hackerrank.com",
+    "tenant": "hackerrank"
+  },
+  {
+    "company": "Happy Money",
+    "domain": "happymoney.com",
+    "tenant": "happymoney"
+  },
+  {
+    "company": "HelloFresh",
+    "domain": "hellofresh.com",
+    "tenant": "hellofresh"
+  },
+  {
+    "company": "Huntress",
+    "domain": "huntress.com",
+    "tenant": "huntress"
+  },
+  {
+    "company": "Imgur",
+    "domain": "imgur.com",
+    "tenant": "imgur"
+  },
+  {
+    "company": "Iterable",
+    "domain": "iterable.com",
+    "tenant": "iterable"
+  },
+  {
+    "company": "Justworks",
+    "domain": "justworks.com",
+    "tenant": "justworks"
+  },
+  {
+    "company": "Khan Academy",
+    "domain": "khanacademy.org",
+    "tenant": "khanacademy"
+  },
+  {
+    "company": "Klaviyo",
+    "domain": "klaviyo.com",
+    "tenant": "klaviyo"
+  },
+  {
+    "company": "LaunchDarkly",
+    "domain": "launchdarkly.com",
+    "tenant": "launchdarkly"
+  },
+  {
+    "company": "Liftoff",
+    "domain": "liftoff.io",
+    "tenant": "liftoff"
+  },
+  {
+    "company": "LinkedIn",
+    "domain": "linkedin.com",
+    "tenant": "linkedin"
+  },
+  {
+    "company": "Lithic",
+    "domain": "lithic.com",
+    "tenant": "lithic"
+  },
+  {
+    "company": "LivePerson",
+    "domain": "liveperson.com",
+    "tenant": "liveperson"
+  },
+  {
+    "company": "Lob",
+    "domain": "lob.com",
+    "tenant": "lob"
+  },
+  {
+    "company": "Lucidchart",
+    "domain": "lucid.co",
+    "tenant": "lucidsoftware"
+  },
+  {
+    "company": "Maven Clinic",
+    "domain": "mavenclinic.com",
+    "tenant": "mavenclinic"
+  },
+  {
+    "company": "Medium",
+    "domain": "medium.com",
+    "tenant": "medium"
+  },
+  {
+    "company": "Modern Health",
+    "domain": "modernhealth.com",
+    "tenant": "modernhealth"
+  },
+  {
+    "company": "N26",
+    "domain": "n26.com",
+    "tenant": "n26"
+  },
+  {
+    "company": "Netlify",
+    "domain": "netlify.com",
+    "tenant": "netlify"
+  },
+  {
+    "company": "New Relic",
+    "domain": "newrelic.com",
+    "tenant": "newrelic"
+  },
+  {
+    "company": "Newsela",
+    "domain": "newsela.com",
+    "tenant": "newsela"
+  },
+  {
+    "company": "OneTrust",
+    "domain": "onetrust.com",
+    "tenant": "onetrust"
+  },
+  {
+    "company": "Optiver",
+    "domain": "optiver.com",
+    "tenant": "optiver"
+  },
+  {
+    "company": "Oscar Health",
+    "domain": "hioscar.com",
+    "tenant": "oscar"
+  },
+  {
+    "company": "Otter.ai",
+    "domain": "otter.ai",
+    "tenant": "otterai"
+  },
+  {
+    "company": "Payoneer",
+    "domain": "payoneer.com",
+    "tenant": "payoneer"
+  },
+  {
+    "company": "Peloton",
+    "domain": "onepeloton.com",
+    "tenant": "peloton"
+  },
+  {
+    "company": "Pendo",
+    "domain": "pendo.io",
+    "tenant": "pendo"
+  },
+  {
+    "company": "Prisma",
+    "domain": "prisma.io",
+    "tenant": "prisma"
+  },
+  {
+    "company": "PubNub",
+    "domain": "pubnub.com",
+    "tenant": "pubnub"
+  },
+  {
+    "company": "Riot Games",
+    "domain": "riotgames.com",
+    "tenant": "riotgames"
+  },
+  {
+    "company": "Roku",
+    "domain": "roku.com",
+    "tenant": "roku"
+  },
+  {
+    "company": "Sauce Labs",
+    "domain": "saucelabs.com",
+    "tenant": "saucelabs"
+  },
+  {
+    "company": "SolarWinds",
+    "domain": "solarwinds.com",
+    "tenant": "solarwinds"
+  },
+  {
+    "company": "SpaceX",
+    "domain": "spacex.com",
+    "tenant": "spacex"
+  },
+  {
+    "company": "SpotHero",
+    "domain": "spothero.com",
+    "tenant": "spothero"
+  },
+  {
+    "company": "Stash",
+    "domain": "stash.com",
+    "tenant": "stashinvest"
+  },
+  {
+    "company": "Stitch Fix",
+    "domain": "stitchfix.com",
+    "tenant": "stitchfix"
+  },
+  {
+    "company": "StockX",
+    "domain": "stockx.com",
+    "tenant": "stockx"
+  },
+  {
+    "company": "Sumo Logic",
+    "domain": "sumologic.com",
+    "tenant": "sumologic"
+  },
+  {
+    "company": "SurveyMonkey",
+    "domain": "surveymonkey.com",
+    "tenant": "surveymonkey"
+  },
+  {
+    "company": "Sweetgreen",
+    "domain": "sweetgreen.com",
+    "tenant": "sweetgreen"
+  },
+  {
+    "company": "Tanium",
+    "domain": "tanium.com",
+    "tenant": "tanium"
+  },
+  {
+    "company": "TaskRabbit",
+    "domain": "taskrabbit.com",
+    "tenant": "taskrabbit"
+  },
+  {
+    "company": "The Trade Desk",
+    "domain": "thetradedesk.com",
+    "tenant": "thetradedesk"
+  },
+  {
+    "company": "Tide",
+    "domain": "tide.co",
+    "tenant": "tide"
+  },
+  {
+    "company": "TripAdvisor",
+    "domain": "tripadvisor.com",
+    "tenant": "tripadvisor"
+  },
+  {
+    "company": "Truebill",
+    "domain": "rocketmoney.com",
+    "tenant": "truebill"
+  },
+  {
+    "company": "Trustpilot",
+    "domain": "trustpilot.com",
+    "tenant": "trustpilot"
+  },
+  {
+    "company": "Typeform",
+    "domain": "typeform.com",
+    "tenant": "typeform"
+  },
+  {
+    "company": "Udacity",
+    "domain": "udacity.com",
+    "tenant": "udacity"
+  },
+  {
+    "company": "Udemy",
+    "domain": "udemy.com",
+    "tenant": "udemy"
+  },
+  {
+    "company": "Upstart",
+    "domain": "upstart.com",
+    "tenant": "upstart"
+  },
+  {
+    "company": "Upwork",
+    "domain": "upwork.com",
+    "tenant": "upwork"
+  },
+  {
+    "company": "Veriff",
+    "domain": "veriff.com",
+    "tenant": "veriff"
+  },
+  {
+    "company": "Vox Media",
+    "domain": "voxmedia.com",
+    "tenant": "voxmedia"
+  },
+  {
+    "company": "Wikimedia",
+    "domain": "wikimediafoundation.org",
+    "tenant": "wikimedia"
+  },
+  {
+    "company": "Wolt",
+    "domain": "wolt.com",
+    "tenant": "wolt"
+  },
+  {
+    "company": "Yext",
+    "domain": "yext.com",
+    "tenant": "yext"
+  },
+  {
+    "company": "ZipRecruiter",
+    "domain": "ziprecruiter.com",
+    "tenant": "ziprecruiter"
+  },
+  {
+    "company": "ZoomInfo",
+    "domain": "zoominfo.com",
+    "tenant": "zoominfo"
+  },
+  {
+    "company": "Zscaler",
+    "domain": "zscaler.com",
+    "tenant": "zscaler"
+  },
+  {
+    "company": "Abridge",
+    "domain": "abridge.com",
+    "tenant": "abridge"
+  },
+  {
+    "company": "Ashby",
+    "domain": "ashbyhq.com",
+    "tenant": "ashby"
+  },
+  {
+    "company": "ElevenLabs",
+    "domain": "elevenlabs.io",
+    "tenant": "elevenlabs"
+  },
+  {
+    "company": "Vanta",
+    "domain": "vanta.com",
+    "tenant": "vanta"
+  },
+  {
+    "company": "Clerk",
+    "domain": "clerk.com",
+    "tenant": "clerk"
+  },
+  {
+    "company": "Harvey",
+    "domain": "harvey.ai",
+    "tenant": "harvey"
+  },
+  {
+    "company": "Lovable",
+    "domain": "lovable.dev",
+    "tenant": "lovable"
+  },
+  {
+    "company": "n8n",
+    "domain": "n8n.io",
+    "tenant": "n8n"
+  },
+  {
+    "company": "Pika",
+    "domain": "pika.art",
+    "tenant": "pika"
+  },
+  {
+    "company": "Reflection AI",
+    "domain": "reflection.ai",
+    "tenant": "reflectionai"
+  },
+  {
+    "company": "Sierra",
+    "domain": "sierra.ai",
+    "tenant": "sierra"
+  },
+  {
+    "company": "Stytch",
+    "domain": "stytch.com",
+    "tenant": "stytch"
+  },
+  {
+    "company": "Tldraw",
+    "domain": "tldraw.com",
+    "tenant": "tldraw"
+  },
+  {
+    "company": "Writer",
+    "domain": "writer.com",
+    "tenant": "writer"
+  },
+  {
+    "company": "A24",
+    "domain": "a24films.com",
+    "tenant": "a24"
+  },
+  {
+    "company": "Abnormal Security",
+    "domain": "abnormalsecurity.com",
+    "tenant": "abnormalsecurity"
+  },
+  {
+    "company": "Anaplan",
+    "domain": "anaplan.com",
+    "tenant": "anaplan"
+  },
+  {
+    "company": "AppleCart",
+    "domain": "applecart.co",
+    "tenant": "applecart"
+  },
+  {
+    "company": "Bird",
+    "domain": "bird.co",
+    "tenant": "bird"
+  },
+  {
+    "company": "Branch",
+    "domain": "branch.io",
+    "tenant": "branchmetrics"
+  },
+  {
+    "company": "Cohere Health",
+    "domain": "coherehealth.com",
+    "tenant": "coherehealth"
+  },
+  {
+    "company": "Crunchyroll",
+    "domain": "crunchyroll.com",
+    "tenant": "crunchyroll"
+  },
+  {
+    "company": "Earnin",
+    "domain": "earnin.com",
+    "tenant": "earnin"
+  },
+  {
+    "company": "GoDaddy",
+    "domain": "godaddy.com",
+    "tenant": "godaddy"
+  },
+  {
+    "company": "Indeed",
+    "domain": "indeed.com",
+    "tenant": "indeed"
+  },
+  {
+    "company": "Intercom",
+    "domain": "intercom.com",
+    "tenant": "intercom"
+  },
+  {
+    "company": "Mejuri",
+    "domain": "mejuri.com",
+    "tenant": "mejuri"
+  },
+  {
+    "company": "Mozilla",
+    "domain": "mozilla.org",
+    "tenant": "mozilla"
+  },
+  {
+    "company": "Alchemy",
+    "domain": "alchemy.com",
+    "tenant": "alchemy"
+  },
+  {
+    "company": "Baseten",
+    "domain": "baseten.co",
+    "tenant": "baseten"
+  },
+  {
+    "company": "Braintrust",
+    "domain": "braintrustdata.com",
+    "tenant": "braintrust"
+  },
+  {
+    "company": "Browserbase",
+    "domain": "browserbase.com",
+    "tenant": "browserbase"
+  },
+  {
+    "company": "Cognition",
+    "domain": "cognition.ai",
+    "tenant": "cognition"
+  },
+  {
+    "company": "Deepgram",
+    "domain": "deepgram.com",
+    "tenant": "deepgram"
+  },
+  {
+    "company": "Factory",
+    "domain": "factory.ai",
+    "tenant": "factory"
+  },
+  {
+    "company": "Granola",
+    "domain": "granola.ai",
+    "tenant": "granola"
+  },
+  {
+    "company": "Ideogram",
+    "domain": "ideogram.ai",
+    "tenant": "ideogram"
+  },
+  {
+    "company": "Midjourney",
+    "domain": "midjourney.com",
+    "tenant": "midjourney"
+  },
+  {
+    "company": "Pinecone",
+    "domain": "pinecone.io",
+    "tenant": "pinecone"
+  },
+  {
+    "company": "Suno",
+    "domain": "suno.com",
+    "tenant": "suno"
+  },
+  {
+    "company": "Synthesia",
+    "domain": "synthesia.io",
+    "tenant": "synthesia"
+  },
+  {
+    "company": "Aghanim",
+    "domain": "aghanim.com",
+    "tenant": "aghanim"
+  },
+  {
+    "company": "Exa",
+    "domain": "exa.com",
+    "tenant": "exa"
+  },
+  {
+    "company": "Netic",
+    "domain": "netic.com",
+    "tenant": "netic"
+  },
+  {
+    "company": "Quora",
+    "domain": "quora.com",
+    "tenant": "quora"
+  },
+  {
+    "company": "10Alabs",
+    "domain": "10alabs.com",
+    "tenant": "10alabs"
+  },
+  {
+    "company": "2Uedx",
+    "domain": "2uedx.com",
+    "tenant": "2uedx"
+  },
+  {
+    "company": "8451University",
+    "domain": "8451university.com",
+    "tenant": "8451university"
+  },
+  {
+    "company": "Able",
+    "domain": "able.com",
+    "tenant": "able"
+  },
+  {
+    "company": "Addepar1",
+    "domain": "addepar1.com",
+    "tenant": "addepar1"
+  },
+  {
+    "company": "Agilisys",
+    "domain": "agilisys.com",
+    "tenant": "agilisys"
+  },
+  {
+    "company": "Allencontrolsystems",
+    "domain": "allencontrolsystems.com",
+    "tenant": "allencontrolsystems"
+  },
+  {
+    "company": "Aloyoga",
+    "domain": "aloyoga.com",
+    "tenant": "aloyoga"
+  },
+  {
+    "company": "Alpaca",
+    "domain": "alpaca.com",
+    "tenant": "alpaca"
+  },
+  {
+    "company": "Alphagrepsecurities",
+    "domain": "alphagrepsecurities.com",
+    "tenant": "alphagrepsecurities"
+  },
+  {
+    "company": "Andurilindustries",
+    "domain": "andurilindustries.com",
+    "tenant": "andurilindustries"
+  },
+  {
+    "company": "Appsflyer",
+    "domain": "appsflyer.com",
+    "tenant": "appsflyer"
+  },
+  {
+    "company": "Apptronik",
+    "domain": "apptronik.com",
+    "tenant": "apptronik"
+  },
+  {
+    "company": "Aquaticcapitalmanagement",
+    "domain": "aquaticcapitalmanagement.com",
+    "tenant": "aquaticcapitalmanagement"
+  },
+  {
+    "company": "Archer56",
+    "domain": "archer56.com",
+    "tenant": "archer56"
+  },
+  {
+    "company": "Arionkoder",
+    "domain": "arionkoder.com",
+    "tenant": "arionkoder"
+  },
+  {
+    "company": "Arizeai",
+    "domain": "arizeai.com",
+    "tenant": "arizeai"
+  },
+  {
+    "company": "Artefactlinkedin",
+    "domain": "artefactlinkedin.com",
+    "tenant": "artefactlinkedin"
+  },
+  {
+    "company": "Astranis",
+    "domain": "astranis.com",
+    "tenant": "astranis"
+  },
+  {
+    "company": "Athinkingape",
+    "domain": "athinkingape.com",
+    "tenant": "athinkingape"
+  },
+  {
+    "company": "Axle",
+    "domain": "axle.com",
+    "tenant": "axle"
+  },
+  {
+    "company": "Axon",
+    "domain": "axon.com",
+    "tenant": "axon"
+  },
+  {
+    "company": "B12",
+    "domain": "b12.com",
+    "tenant": "b12"
+  },
+  {
+    "company": "Bosapropertiesinc",
+    "domain": "bosapropertiesinc.com",
+    "tenant": "bosapropertiesinc"
+  },
+  {
+    "company": "Boundlessbio",
+    "domain": "boundlessbio.com",
+    "tenant": "boundlessbio"
+  },
+  {
+    "company": "Breezecash",
+    "domain": "breezecash.com",
+    "tenant": "breezecash"
+  },
+  {
+    "company": "Bridgewater89",
+    "domain": "bridgewater89.com",
+    "tenant": "bridgewater89"
+  },
+  {
+    "company": "Buildops",
+    "domain": "buildops.com",
+    "tenant": "buildops"
+  },
+  {
+    "company": "C3Ascend",
+    "domain": "c3ascend.com",
+    "tenant": "c3ascend"
+  },
+  {
+    "company": "C6Bank",
+    "domain": "c6bank.com",
+    "tenant": "c6bank"
+  },
+  {
+    "company": "Canonical",
+    "domain": "canonical.com",
+    "tenant": "canonical"
+  },
+  {
+    "company": "Capco",
+    "domain": "capco.com",
+    "tenant": "capco"
+  },
+  {
+    "company": "Carbonchain",
+    "domain": "carbonchain.com",
+    "tenant": "carbonchain"
+  },
+  {
+    "company": "Celerocommunicationsinc",
+    "domain": "celerocommunicationsinc.com",
+    "tenant": "celerocommunicationsinc"
+  },
+  {
+    "company": "Charliehealth",
+    "domain": "charliehealth.com",
+    "tenant": "charliehealth"
+  },
+  {
+    "company": "Chowbus",
+    "domain": "chowbus.com",
+    "tenant": "chowbus"
+  },
+  {
+    "company": "Civisanalytics",
+    "domain": "civisanalytics.com",
+    "tenant": "civisanalytics"
+  },
+  {
+    "company": "Cloudbeds",
+    "domain": "cloudbeds.com",
+    "tenant": "cloudbeds"
+  },
+  {
+    "company": "Cloudbedsthirdpartyboard",
+    "domain": "cloudbedsthirdpartyboard.com",
+    "tenant": "cloudbedsthirdpartyboard"
+  },
+  {
+    "company": "Company",
+    "domain": "company.com",
+    "tenant": "company"
+  },
+  {
+    "company": "Consensys",
+    "domain": "consensys.com",
+    "tenant": "consensys"
+  },
+  {
+    "company": "Cortica",
+    "domain": "cortica.com",
+    "tenant": "cortica"
+  },
+  {
+    "company": "Coupang",
+    "domain": "coupang.com",
+    "tenant": "coupang"
+  },
+  {
+    "company": "Cresta",
+    "domain": "cresta.com",
+    "tenant": "cresta"
+  },
+  {
+    "company": "Cribl",
+    "domain": "cribl.com",
+    "tenant": "cribl"
+  },
+  {
+    "company": "Ctccampusboard",
+    "domain": "ctccampusboard.com",
+    "tenant": "ctccampusboard"
+  },
+  {
+    "company": "Dagsterlabs",
+    "domain": "dagsterlabs.com",
+    "tenant": "dagsterlabs"
+  },
+  {
+    "company": "Ddome",
+    "domain": "ddome.com",
+    "tenant": "ddome"
+  },
+  {
+    "company": "Dfinity",
+    "domain": "dfinity.com",
+    "tenant": "dfinity"
+  },
+  {
+    "company": "Dianthustherapeutics",
+    "domain": "dianthustherapeutics.com",
+    "tenant": "dianthustherapeutics"
+  },
+  {
+    "company": "Didi",
+    "domain": "didi.com",
+    "tenant": "didi"
+  },
+  {
+    "company": "Diligentrobotics",
+    "domain": "diligentrobotics.com",
+    "tenant": "diligentrobotics"
+  },
+  {
+    "company": "Doitintl",
+    "domain": "doitintl.com",
+    "tenant": "doitintl"
+  },
+  {
+    "company": "Drweng",
+    "domain": "drweng.com",
+    "tenant": "drweng"
+  },
+  {
+    "company": "Ebanx",
+    "domain": "ebanx.com",
+    "tenant": "ebanx"
+  },
+  {
+    "company": "Eleventhhourgames",
+    "domain": "eleventhhourgames.com",
+    "tenant": "eleventhhourgames"
+  },
+  {
+    "company": "Emarketer",
+    "domain": "emarketer.com",
+    "tenant": "emarketer"
+  },
+  {
+    "company": "Encora10",
+    "domain": "encora10.com",
+    "tenant": "encora10"
+  },
+  {
+    "company": "Enova",
+    "domain": "enova.com",
+    "tenant": "enova"
+  },
+  {
+    "company": "Eulerity",
+    "domain": "eulerity.com",
+    "tenant": "eulerity"
+  },
+  {
+    "company": "Evolutioniq",
+    "domain": "evolutioniq.com",
+    "tenant": "evolutioniq"
+  },
+  {
+    "company": "Example",
+    "domain": "example.com",
+    "tenant": "example"
+  },
+  {
+    "company": "Figureai",
+    "domain": "figureai.com",
+    "tenant": "figureai"
+  },
+  {
+    "company": "Finyard",
+    "domain": "finyard.com",
+    "tenant": "finyard"
+  },
+  {
+    "company": "Fiveringsllc",
+    "domain": "fiveringsllc.com",
+    "tenant": "fiveringsllc"
+  },
+  {
+    "company": "Flagshippioneeringinc",
+    "domain": "flagshippioneeringinc.com",
+    "tenant": "flagshippioneeringinc"
+  },
+  {
+    "company": "Flex",
+    "domain": "flex.com",
+    "tenant": "flex"
+  },
+  {
+    "company": "Flowtraders",
+    "domain": "flowtraders.com",
+    "tenant": "flowtraders"
+  },
+  {
+    "company": "Forbes",
+    "domain": "forbes.com",
+    "tenant": "forbes"
+  },
+  {
+    "company": "Formic",
+    "domain": "formic.com",
+    "tenant": "formic"
+  },
+  {
+    "company": "Freeformfuturecorp",
+    "domain": "freeformfuturecorp.com",
+    "tenant": "freeformfuturecorp"
+  },
+  {
+    "company": "Generalassembly",
+    "domain": "generalassembly.com",
+    "tenant": "generalassembly"
+  },
+  {
+    "company": "Generalmatter",
+    "domain": "generalmatter.com",
+    "tenant": "generalmatter"
+  },
+  {
+    "company": "Geniussports",
+    "domain": "geniussports.com",
+    "tenant": "geniussports"
+  },
+  {
+    "company": "Geotab",
+    "domain": "geotab.com",
+    "tenant": "geotab"
+  },
+  {
+    "company": "Gleanwork",
+    "domain": "gleanwork.com",
+    "tenant": "gleanwork"
+  },
+  {
+    "company": "Goodman",
+    "domain": "goodman.com",
+    "tenant": "goodman"
+  },
+  {
+    "company": "Gradle",
+    "domain": "gradle.com",
+    "tenant": "gradle"
+  },
+  {
+    "company": "Groww",
+    "domain": "groww.com",
+    "tenant": "groww"
+  },
+  {
+    "company": "Guardsquare",
+    "domain": "guardsquare.com",
+    "tenant": "guardsquare"
+  },
+  {
+    "company": "Gympass",
+    "domain": "gympass.com",
+    "tenant": "gympass"
+  },
+  {
+    "company": "Hearst",
+    "domain": "hearst.com",
+    "tenant": "hearst"
+  },
+  {
+    "company": "Hiro",
+    "domain": "hiro.com",
+    "tenant": "hiro"
+  },
+  {
+    "company": "Horizonsurgicalsystems",
+    "domain": "horizonsurgicalsystems.com",
+    "tenant": "horizonsurgicalsystems"
+  },
+  {
+    "company": "Hudl",
+    "domain": "hudl.com",
+    "tenant": "hudl"
+  },
+  {
+    "company": "Hyannisportresearch",
+    "domain": "hyannisportresearch.com",
+    "tenant": "hyannisportresearch"
+  },
+  {
+    "company": "Inmobi",
+    "domain": "inmobi.com",
+    "tenant": "inmobi"
+  },
+  {
+    "company": "Instabase",
+    "domain": "instabase.com",
+    "tenant": "instabase"
+  },
+  {
+    "company": "Inter",
+    "domain": "inter.com",
+    "tenant": "inter"
+  },
+  {
+    "company": "Internshiplist2000",
+    "domain": "internshiplist2000.com",
+    "tenant": "internshiplist2000"
+  },
+  {
+    "company": "Ivalua",
+    "domain": "ivalua.com",
+    "tenant": "ivalua"
+  },
+  {
+    "company": "Jumptrading",
+    "domain": "jumptrading.com",
+    "tenant": "jumptrading"
+  },
+  {
+    "company": "Jwp",
+    "domain": "jwp.com",
+    "tenant": "jwp"
+  },
+  {
+    "company": "Kivaorg",
+    "domain": "kivaorg.com",
+    "tenant": "kivaorg"
+  },
+  {
+    "company": "Kodiak",
+    "domain": "kodiak.com",
+    "tenant": "kodiak"
+  },
+  {
+    "company": "Komodohealth",
+    "domain": "komodohealth.com",
+    "tenant": "komodohealth"
+  },
+  {
+    "company": "Konradgroup",
+    "domain": "konradgroup.com",
+    "tenant": "konradgroup"
+  },
+  {
+    "company": "Later",
+    "domain": "later.com",
+    "tenant": "later"
+  },
+  {
+    "company": "Layerzerolabs",
+    "domain": "layerzerolabs.com",
+    "tenant": "layerzerolabs"
+  },
+  {
+    "company": "Metron",
+    "domain": "metron.com",
+    "tenant": "metron"
+  },
+  {
+    "company": "Mochihealth",
+    "domain": "mochihealth.com",
+    "tenant": "mochihealth"
+  },
+  {
+    "company": "Morsecorpcoop",
+    "domain": "morsecorpcoop.com",
+    "tenant": "morsecorpcoop"
+  },
+  {
+    "company": "Nationalpublicradioinc",
+    "domain": "nationalpublicradioinc.com",
+    "tenant": "nationalpublicradioinc"
+  },
+  {
+    "company": "Neuralink",
+    "domain": "neuralink.com",
+    "tenant": "neuralink"
+  },
+  {
+    "company": "Neweratech",
+    "domain": "neweratech.com",
+    "tenant": "neweratech"
+  },
+  {
+    "company": "Newsbreak",
+    "domain": "newsbreak.com",
+    "tenant": "newsbreak"
+  },
+  {
+    "company": "Nice",
+    "domain": "nice.com",
+    "tenant": "nice"
+  },
+  {
+    "company": "Okx",
+    "domain": "okx.com",
+    "tenant": "okx"
+  },
+  {
+    "company": "Omadahealth",
+    "domain": "omadahealth.com",
+    "tenant": "omadahealth"
+  },
+  {
+    "company": "Onboardmeetings",
+    "domain": "onboardmeetings.com",
+    "tenant": "onboardmeetings"
+  },
+  {
+    "company": "Openeye",
+    "domain": "openeye.com",
+    "tenant": "openeye"
+  },
+  {
+    "company": "Opentable",
+    "domain": "opentable.com",
+    "tenant": "opentable"
+  },
+  {
+    "company": "Oura",
+    "domain": "oura.com",
+    "tenant": "oura"
+  },
+  {
+    "company": "Pagarme",
+    "domain": "pagarme.com",
+    "tenant": "pagarme"
+  },
+  {
+    "company": "Pdtpartners",
+    "domain": "pdtpartners.com",
+    "tenant": "pdtpartners"
+  },
+  {
+    "company": "Polyai",
+    "domain": "polyai.com",
+    "tenant": "polyai"
+  },
+  {
+    "company": "Postscript",
+    "domain": "postscript.com",
+    "tenant": "postscript"
+  },
+  {
+    "company": "Processstreet",
+    "domain": "processstreet.com",
+    "tenant": "processstreet"
+  },
+  {
+    "company": "Quinnevansarchitects",
+    "domain": "quinnevansarchitects.com",
+    "tenant": "quinnevansarchitects"
+  },
+  {
+    "company": "Razorpaysoftwareprivatelimited",
+    "domain": "razorpaysoftwareprivatelimited.com",
+    "tenant": "razorpaysoftwareprivatelimited"
+  },
+  {
+    "company": "Recordedfuture",
+    "domain": "recordedfuture.com",
+    "tenant": "recordedfuture"
+  },
+  {
+    "company": "Relationalai",
+    "domain": "relationalai.com",
+    "tenant": "relationalai"
+  },
+  {
+    "company": "Relativity",
+    "domain": "relativity.com",
+    "tenant": "relativity"
+  },
+  {
+    "company": "Remotecom",
+    "domain": "remotecom.com",
+    "tenant": "remotecom"
+  },
+  {
+    "company": "Sesai",
+    "domain": "sesai.com",
+    "tenant": "sesai"
+  },
+  {
+    "company": "Sightlinemediagroup",
+    "domain": "sightlinemediagroup.com",
+    "tenant": "sightlinemediagroup"
+  },
+  {
+    "company": "Sigmacomputing",
+    "domain": "sigmacomputing.com",
+    "tenant": "sigmacomputing"
+  },
+  {
+    "company": "Siliconranch",
+    "domain": "siliconranch.com",
+    "tenant": "siliconranch"
+  },
+  {
+    "company": "Singlestore",
+    "domain": "singlestore.com",
+    "tenant": "singlestore"
+  },
+  {
+    "company": "Sonyinteractiveentertainmentglobal",
+    "domain": "sonyinteractiveentertainmentglobal.com",
+    "tenant": "sonyinteractiveentertainmentglobal"
+  },
+  {
+    "company": "Sourcegraph91",
+    "domain": "sourcegraph91.com",
+    "tenant": "sourcegraph91"
+  },
+  {
+    "company": "Sparksoftcorporation",
+    "domain": "sparksoftcorporation.com",
+    "tenant": "sparksoftcorporation"
+  },
+  {
+    "company": "Specterops",
+    "domain": "specterops.com",
+    "tenant": "specterops"
+  },
+  {
+    "company": "Splitero",
+    "domain": "splitero.com",
+    "tenant": "splitero"
+  },
+  {
+    "company": "Sponsorsforeducationalopportunity",
+    "domain": "sponsorsforeducationalopportunity.com",
+    "tenant": "sponsorsforeducationalopportunity"
+  },
+  {
+    "company": "Stone",
+    "domain": "stone.com",
+    "tenant": "stone"
+  },
+  {
+    "company": "Supernal",
+    "domain": "supernal.com",
+    "tenant": "supernal"
+  },
+  {
+    "company": "Tailscale",
+    "domain": "tailscale.com",
+    "tenant": "tailscale"
+  },
+  {
+    "company": "Tebra",
+    "domain": "tebra.com",
+    "tenant": "tebra"
+  },
+  {
+    "company": "Tenableinc",
+    "domain": "tenableinc.com",
+    "tenant": "tenableinc"
+  },
+  {
+    "company": "Tenstorrent",
+    "domain": "tenstorrent.com",
+    "tenant": "tenstorrent"
+  },
+  {
+    "company": "Test",
+    "domain": "test.com",
+    "tenant": "test"
+  },
+  {
+    "company": "Testlio",
+    "domain": "testlio.com",
+    "tenant": "testlio"
+  },
+  {
+    "company": "Thealleninstitute",
+    "domain": "thealleninstitute.com",
+    "tenant": "thealleninstitute"
+  },
+  {
+    "company": "Thenuclearcompany",
+    "domain": "thenuclearcompany.com",
+    "tenant": "thenuclearcompany"
+  },
+  {
+    "company": "Thesciongroupllc",
+    "domain": "thesciongroupllc.com",
+    "tenant": "thesciongroupllc"
+  },
+  {
+    "company": "Thirdlove",
+    "domain": "thirdlove.com",
+    "tenant": "thirdlove"
+  },
+  {
+    "company": "Threatlocker",
+    "domain": "threatlocker.com",
+    "tenant": "threatlocker"
+  },
+  {
+    "company": "Thrivemarket",
+    "domain": "thrivemarket.com",
+    "tenant": "thrivemarket"
+  },
+  {
+    "company": "Togetherai",
+    "domain": "togetherai.com",
+    "tenant": "togetherai"
+  },
+  {
+    "company": "Torcrobotics",
+    "domain": "torcrobotics.com",
+    "tenant": "torcrobotics"
+  },
+  {
+    "company": "Twochairs",
+    "domain": "twochairs.com",
+    "tenant": "twochairs"
+  },
+  {
+    "company": "Twosixtechnologies",
+    "domain": "twosixtechnologies.com",
+    "tenant": "twosixtechnologies"
+  },
+  {
+    "company": "Uniteus",
+    "domain": "uniteus.com",
+    "tenant": "uniteus"
+  },
+  {
+    "company": "Venncity",
+    "domain": "venncity.com",
+    "tenant": "venncity"
+  },
+  {
+    "company": "Virtu",
+    "domain": "virtu.com",
+    "tenant": "virtu"
+  },
+  {
+    "company": "Visiersolutionsinc",
+    "domain": "visiersolutionsinc.com",
+    "tenant": "visiersolutionsinc"
+  },
+  {
+    "company": "Walleyecapital External Students",
+    "domain": "walleyecapital-external-students.com",
+    "tenant": "walleyecapital-external-students"
+  },
+  {
+    "company": "Warp",
+    "domain": "warp.com",
+    "tenant": "warp"
+  },
+  {
+    "company": "Workleap",
+    "domain": "workleap.com",
+    "tenant": "workleap"
+  },
+  {
+    "company": "Xai",
+    "domain": "xai.com",
+    "tenant": "xai"
+  },
+  {
+    "company": "Xantium",
+    "domain": "xantium.com",
+    "tenant": "xantium"
+  },
+  {
+    "company": "Xendit",
+    "domain": "xendit.com",
+    "tenant": "xendit"
+  },
+  {
+    "company": "Xpengmotors",
+    "domain": "xpengmotors.com",
+    "tenant": "xpengmotors"
+  },
+  {
+    "company": "Certik",
+    "domain": "certik.com",
+    "tenant": "certik"
+  },
+  {
+    "company": "Cred",
+    "domain": "cred.com",
+    "tenant": "cred"
+  },
+  {
+    "company": "Meesho",
+    "domain": "meesho.com",
+    "tenant": "meesho"
+  },
+  {
+    "company": "Woven By Toyota",
+    "domain": "woven-by-toyota.com",
+    "tenant": "woven-by-toyota"
+  },
+  {
+    "company": "NVIDIA",
+    "domain": "nvidia.com",
+    "tenant": "nvidia.wd5.myworkdayjobs.com/nvidiaexternalcareersite"
+  },
+  {
+    "company": "Salesforce",
+    "domain": "salesforce.com",
+    "tenant": "salesforce.wd12.myworkdayjobs.com/salesforce/external_career_site"
+  },
+  {
+    "company": "Adobe",
+    "domain": "adobe.com",
+    "tenant": "adobe.wd5.myworkdayjobs.com/external_experienced"
+  },
+  {
+    "company": "Disney",
+    "domain": "disney.com",
+    "tenant": "disney.wd5.myworkdayjobs.com/disneycareer"
+  },
+  {
+    "company": "Target",
+    "domain": "target.com",
+    "tenant": "target.wd5.myworkdayjobs.com/targetcareers"
+  },
+  {
+    "company": "Cisco",
+    "domain": "cisco.com",
+    "tenant": "cisco.wd5.myworkdayjobs.com/cisco_careers"
+  },
+  {
+    "company": "Intel",
+    "domain": "intel.com",
+    "tenant": "intel.wd1.myworkdayjobs.com/external"
+  },
+  {
+    "company": "Workday",
+    "domain": "workday.com",
+    "tenant": "workday.wd5.myworkdayjobs.com/workday"
+  },
+  {
+    "company": "HP",
+    "domain": "hp.com",
+    "tenant": "hp.wd5.myworkdayjobs.com/externalcareersite"
+  },
+  {
+    "company": "GE Aerospace",
+    "domain": "geaerospace.com",
+    "tenant": "geaerospace.wd5.myworkdayjobs.com/ge_externalsite"
+  },
+  {
+    "company": "BMO",
+    "domain": "bmo.com",
+    "tenant": "bmo.wd3.myworkdayjobs.com/external"
+  }
+]

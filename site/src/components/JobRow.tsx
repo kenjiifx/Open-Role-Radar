@@ -1,5 +1,6 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { formatDate, formatRelative, openedFreshness, postedAt } from '../lib/dates';
+import { companyDomain, companyInitials, companyLogoUrls } from '../lib/company';
 import { formatDiscipline, isStartupCompany } from '../lib/labels';
 import { companyUrl } from '../lib/paths';
 import { cleanSummary, looksLikeReadableSummary } from '../lib/summary';
@@ -19,6 +20,7 @@ interface JobRowProps {
   job: Job;
   saved: boolean;
   isNew: boolean;
+  justArrived?: boolean;
   expanded: boolean;
   selected: boolean;
   index: number;
@@ -29,11 +31,38 @@ interface JobRowProps {
   onEvidence: (job: Job, flag: MobilityFlag) => void;
 }
 
-function companyInitials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return '?';
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+function CompanyLogo({ job, priority = false }: { job: Job; priority?: boolean }) {
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const domain = companyDomain(job);
+  const sources = domain ? companyLogoUrls(domain) : [];
+  const src = sources[sourceIndex];
+  const initials = companyInitials(job.company_name);
+  const showImage = Boolean(src);
+
+  return (
+    <div
+      className={showImage && loaded ? 'job-card__logo job-card__logo--image' : 'job-card__logo'}
+      aria-hidden="true"
+    >
+      {showImage ? (
+        <img
+          key={src}
+          src={src}
+          alt=""
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          referrerPolicy="no-referrer"
+          onLoad={() => setLoaded(true)}
+          onError={() => {
+            setLoaded(false);
+            setSourceIndex((current) => current + 1);
+          }}
+        />
+      ) : null}
+      {!loaded ? <span className="job-card__logo-fallback">{initials}</span> : null}
+    </div>
+  );
 }
 
 function MobilityBadges({
@@ -98,6 +127,7 @@ export default function JobRow({
   job,
   saved,
   isNew,
+  justArrived = false,
   expanded,
   selected,
   index,
@@ -132,10 +162,11 @@ export default function JobRow({
         expanded ? 'job-card--expanded' : '',
         selected ? 'job-card--selected' : '',
         saved ? 'job-card--saved' : '',
+        justArrived ? 'job-card--arrive' : '',
       ]
         .filter(Boolean)
         .join(' ')}
-      style={{ animationDelay: `${Math.min(index, 18) * 28}ms` }}
+      style={justArrived ? { animationDelay: `${Math.min(index, 8) * 40}ms` } : undefined}
       data-job-id={job.job_id}
     >
       <div
@@ -156,9 +187,7 @@ export default function JobRow({
           }
         }}
       >
-        <div className="job-card__logo" aria-hidden="true">
-          {companyInitials(job.company_name)}
-        </div>
+        <CompanyLogo job={job} priority={index < 8} />
 
         <div className="job-card__identity">
           <a

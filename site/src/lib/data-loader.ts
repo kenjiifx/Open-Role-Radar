@@ -81,6 +81,25 @@ export function resetDataLoader(): void {
   inflight.clear();
 }
 
+/** Fetch the newest manifest without clearing the in-memory shard cache. */
+export async function peekNewestManifest(): Promise<DataManifest> {
+  const bust = Date.now();
+  const results = await Promise.all(
+    FEED_BASES.map(async (base) => {
+      const manifest = await fetchManifestFrom(base, bust);
+      return manifest ? { base, manifest } : null;
+    }),
+  );
+  const available = results.filter(
+    (item): item is { base: FeedBase; manifest: DataManifest } => item !== null,
+  );
+  if (available.length === 0) {
+    throw new Error('Failed to load job feed from live-feed, jsDelivr, or Pages');
+  }
+  available.sort((a, b) => manifestTime(b.manifest) - manifestTime(a.manifest));
+  return available[0].manifest;
+}
+
 export async function loadShard(filename: string): Promise<Job[]> {
   const cacheKey = `${activeDataBase}::${filename}::${manifestVersion}`;
   const cached = shardCache.get(cacheKey);
