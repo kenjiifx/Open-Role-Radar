@@ -7,23 +7,6 @@ First-party early-career roles (internships, co-ops, new grad) scraped from publ
 
 **Live:** https://kenjiifx.github.io/Open-Role-Radar/
 
-<!-- GENERATED_STATS:START -->
-## Live Statistics
-
-_Last updated: 2026-09-09 10:03 UTC_
-
-| Metric | Count |
-| --- | ---: |
-| Public early-career roles | 1,599 |
-| Total tracked roles | 47,904 |
-| Companies | 514 |
-| Sources | 595 |
-| Healthy sources | 491 |
-| ATS adapters | 5 |
-
-Published by [OpenRoleRadar](https://kenjiifx.github.io/Open-Role-Radar/).
-<!-- GENERATED_STATS:END -->
-
 ## What it does
 
 - Polls **public** Greenhouse, Lever, Ashby, Workday, Workable, and SmartRecruiters boards on a GitHub Actions schedule
@@ -94,3 +77,4 @@ Then open a PR. See [CONTRIBUTING.md](CONTRIBUTING.md).
 MIT — see [LICENSE](LICENSE). Published data: [DATA_LICENSE.md](DATA_LICENSE.md).
 
 OpenRoleRadar is not affiliated with any employer or ATS. Verify details on the official careers page before applying.
+
