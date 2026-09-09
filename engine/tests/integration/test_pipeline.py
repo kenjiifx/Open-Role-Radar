@@ -89,7 +89,7 @@ def test_full_export_pipeline(tmp_path: Path, pipeline_state: LiveState) -> None
     )
     readme_gen = ReadmeGenerator()
     content = readme_gen.update_readme(readme_path, loaded)
-    assert "Open roles" in content
+    assert "Public early-career roles" in content
     assert "GENERATED_STATS:START" in content
 
 
