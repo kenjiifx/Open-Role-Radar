@@ -65,6 +65,54 @@
 - { company: Akuna Capital, domain: akunacapital.com, adapter: greenhouse, tenant: akunacapital }
 - { company: Rubrik, domain: rubrik.com, adapter: greenhouse, tenant: rubrik }
 
+# --- YC / a16z / startup ecosystem (verified live ATS boards) ---
+# First-party Greenhouse/Ashby/Lever only — not Work at a Startup / Wellfound aggregators.
+- { company: Y Combinator, domain: ycombinator.com, adapter: ashby, tenant: ycombinator }
+- { company: Resend, domain: resend.com, adapter: ashby, tenant: resend }
+- { company: PostHog, domain: posthog.com, adapter: ashby, tenant: posthog }
+- { company: Railway, domain: railway.app, adapter: ashby, tenant: railway }
+- { company: Render, domain: render.com, adapter: ashby, tenant: render }
+- { company: Doppler, domain: doppler.com, adapter: ashby, tenant: doppler }
+- { company: Inngest, domain: inngest.com, adapter: ashby, tenant: inngest }
+- { company: Trigger.dev, domain: trigger.dev, adapter: ashby, tenant: triggerdev }
+- { company: Nango, domain: nango.dev, adapter: ashby, tenant: nango }
+- { company: Prefect, domain: prefect.io, adapter: ashby, tenant: prefect }
+- { company: Airbyte, domain: airbyte.com, adapter: ashby, tenant: airbyte }
+- { company: Hightouch, domain: hightouch.com, adapter: ashby, tenant: hightouch }
+- { company: Metabase, domain: metabase.com, adapter: lever, tenant: metabase }
+- { company: Sanity, domain: sanity.io, adapter: ashby, tenant: sanity }
+- { company: Mux, domain: mux.com, adapter: ashby, tenant: mux }
+- { company: LiveKit, domain: livekit.io, adapter: ashby, tenant: livekit }
+- { company: Docker, domain: docker.com, adapter: ashby, tenant: docker }
+- { company: Orca Security, domain: orca.security, adapter: ashby, tenant: orca }
+- { company: Drata, domain: drata.com, adapter: ashby, tenant: drata }
+- { company: Secureframe, domain: secureframe.com, adapter: ashby, tenant: secureframe }
+- { company: Material Security, domain: material.security, adapter: ashby, tenant: materialsecurity }
+- { company: Replit, domain: replit.com, adapter: ashby, tenant: replit }
+- { company: Attio, domain: attio.com, adapter: ashby, tenant: attio }
+- { company: Plain, domain: plain.com, adapter: ashby, tenant: plain }
+- { company: Incident.io, domain: incident.io, adapter: ashby, tenant: incident }
+- { company: Apollo.io, domain: apollo.io, adapter: greenhouse, tenant: apolloio }
+- { company: Fireworks AI, domain: fireworks.ai, adapter: ashby, tenant: fireworks }
+- { company: Recraft, domain: recraft.ai, adapter: ashby, tenant: recraft }
+- { company: Character.AI, domain: character.ai, adapter: ashby, tenant: character }
+- { company: Decagon, domain: decagon.ai, adapter: ashby, tenant: decagon }
+- { company: Poolside, domain: poolside.ai, adapter: ashby, tenant: poolside }
+- { company: Mercor, domain: mercor.com, adapter: ashby, tenant: mercor }
+- { company: Parallel, domain: parallel.ai, adapter: ashby, tenant: parallel }
+- { company: Descript, domain: descript.com, adapter: greenhouse, tenant: descript }
+- { company: Gamma, domain: gamma.app, adapter: ashby, tenant: gamma }
+- { company: Elicit, domain: elicit.com, adapter: ashby, tenant: elicit }
+- { company: Labelbox, domain: labelbox.com, adapter: greenhouse, tenant: labelbox }
+- { company: Lightning AI, domain: lightning.ai, adapter: ashby, tenant: lightning }
+- { company: Saronic, domain: saronic.com, adapter: ashby, tenant: saronic }
+- { company: Nava, domain: navapbc.com, adapter: greenhouse, tenant: navapbc }
+- { company: Astera Labs, domain: asteralabs.com, adapter: greenhouse, tenant: asteralabs }
+- { company: IonQ, domain: ionq.com, adapter: greenhouse, tenant: ionq }
+- { company: PathAI, domain: pathai.com, adapter: greenhouse, tenant: pathai }
+- { company: Warp, domain: warp.dev, adapter: ashby, tenant: warp }
+- { company: Figure, domain: figure.ai, adapter: greenhouse, tenant: figure }
+
 # --- Data / platforms ---
 - { company: Fivetran, domain: fivetran.com, adapter: greenhouse, tenant: fivetran }
 - { company: dbt Labs, domain: getdbt.com, adapter: greenhouse, tenant: dbtlabs }
