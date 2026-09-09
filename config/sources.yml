@@ -63,7 +63,6 @@
 - { company: IMC, domain: imc.com, adapter: greenhouse, tenant: imc }
 - { company: Tower Research, domain: tower-research.com, adapter: greenhouse, tenant: towerresearchcapital }
 - { company: Akuna Capital, domain: akunacapital.com, adapter: greenhouse, tenant: akunacapital }
-- { company: Virtu Financial, domain: virtu.com, adapter: greenhouse, tenant: virtu }
 - { company: Rubrik, domain: rubrik.com, adapter: greenhouse, tenant: rubrik }
 
 # --- Data / platforms ---
