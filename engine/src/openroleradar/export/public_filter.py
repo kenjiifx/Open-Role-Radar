@@ -98,10 +98,13 @@ def _applications_open(job: Job) -> bool:
 
 def is_cs_relevant(job: Job) -> bool:
     """Prefer software/CS early-career roles over random retail/ops listings."""
+    title = job.title or ""
+    if _NOISE_TITLE_RE.search(title):
+        return False
     primary = (job.disciplines.primary or "").lower()
     if primary in CS_DISCIPLINES:
         return True
-    return bool(_CS_TITLE_RE.search(job.title or ""))
+    return bool(_CS_TITLE_RE.search(title))
 
 
 def is_public_job(job: Job, *, min_confidence: float | None = None) -> bool:

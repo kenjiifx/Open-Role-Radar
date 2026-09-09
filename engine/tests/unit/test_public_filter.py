@@ -67,3 +67,13 @@ def test_public_job_accepts_cs_by_title_when_discipline_other() -> None:
         disciplines={"primary": "other", "secondary": [], "confidence": 0.2},
     )
     assert is_public_job(job) is True
+
+
+def test_public_job_rejects_support_noise_even_if_discipline_matches() -> None:
+    job = sample_job(
+        title="Technical Support Engineer I",
+        career_level=CareerLevel.ENTRY_LEVEL,
+        career_level_confidence=0.9,
+        disciplines={"primary": "software", "secondary": [], "confidence": 0.9},
+    )
+    assert is_public_job(job) is False
