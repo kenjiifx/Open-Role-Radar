@@ -202,6 +202,7 @@ export interface FilterState {
   regions: string[];
   workplaceTypes: WorkplaceType[];
   academicTerms: AcademicTerm[];
+  companyIds: string[];
   startupsOnly: boolean;
   freshness: FreshnessFilter;
   mobility: MobilityFlag[];

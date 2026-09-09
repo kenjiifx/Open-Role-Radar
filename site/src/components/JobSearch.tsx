@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { formatRelative, postedAt } from '../lib/dates';
+import { postedAt } from '../lib/dates';
 import { loadAllJobs, loadManifest, resetDataLoader } from '../lib/data-loader';
 import {
   countActiveFilters,
@@ -34,6 +34,7 @@ interface JobSearchProps {
   initialStats?: SiteStats;
   companySlug?: string;
   showStats?: boolean;
+  showHero?: boolean;
 }
 
 interface EvidenceState {
@@ -51,10 +52,83 @@ const EMPTY_STATS: SiteStats = {
   generatedAt: new Date().toISOString(),
 };
 
+function HeroBanner() {
+  return (
+    <section className="hero">
+      <div className="hero__copy">
+        <p className="hero__eyebrow">First-party · CS track · Live feed</p>
+        <h1 className="hero__brand">
+          OpenRole<span>Radar</span>
+        </h1>
+        <p className="hero__lead">
+          Real software internships and new-grad roles. Live from company career pages and public
+          ATS boards.
+        </p>
+        <div className="hero__actions">
+          <a className="btn btn--primary" href="#roles">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+              <path
+                d="M20 20l-3.5-3.5"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+            Browse roles
+          </a>
+          <a className="btn btn--ghost" href="#roles">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M13 3l7 9h-5l2 9-8-10h5L13 3z"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Live feed
+          </a>
+          <a
+            className="btn btn--ghost"
+            href="https://github.com/kenjiifx/Open-Role-Radar"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View on GitHub
+          </a>
+        </div>
+      </div>
+      <aside className="hero__panel" aria-label="Why OpenRoleRadar">
+        <div className="hero__radar" aria-hidden="true" />
+        <h2>Fresh opportunities. No noise.</h2>
+        <ul>
+          <li>
+            <span className="hero__check" aria-hidden="true" />
+            Direct from company career pages
+          </li>
+          <li>
+            <span className="hero__check" aria-hidden="true" />
+            Updated automatically from public ATS boards
+          </li>
+          <li>
+            <span className="hero__check" aria-hidden="true" />
+            Season, startup, and region filters
+          </li>
+          <li>
+            <span className="hero__check" aria-hidden="true" />
+            Built for CS students hunting early-career roles
+          </li>
+        </ul>
+      </aside>
+    </section>
+  );
+}
+
 export default function JobSearch({
   initialStats,
   companySlug,
   showStats = true,
+  showHero = false,
 }: JobSearchProps) {
   const [filters, setFilters] = useState<FilterState>(() => {
     if (typeof window === 'undefined') return DEFAULT_FILTERS;
@@ -71,7 +145,6 @@ export default function JobSearch({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [reloadToken, setReloadToken] = useState(0);
-  const [lastGeneratedAt, setLastGeneratedAt] = useState<string | null>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   const silentRef = useRef(false);
 
@@ -108,7 +181,6 @@ export default function JobSearch({
         const stored = loadPreferences();
         setPrefs(stored);
         setStats(computeStats(scopedJobs, stored.lastVisit, manifest.generated_at));
-        setLastGeneratedAt(manifest.generated_at);
 
         if (stored.originCountry && !filters.originCountry) {
           setFilters((current) => ({
@@ -297,13 +369,12 @@ export default function JobSearch({
 
   return (
     <div className="job-search">
-      {showStats ? <StatsBar stats={stats} loading={loading} /> : null}
-
       <div className="job-search__layout">
         <div className={filtersOpen ? 'filter-shell filter-shell--open' : 'filter-shell'}>
           <FilterPanel
             filters={filters}
             facets={facets}
+            companies={facets.companies}
             activeCount={activeFilterCount}
             onChange={(next) => setFilters({ ...next, view: 'table' })}
             onReset={() =>
@@ -312,6 +383,7 @@ export default function JobSearch({
                 careerLevels: [...DEFAULT_FILTERS.careerLevels],
                 disciplines: [...DEFAULT_FILTERS.disciplines],
                 academicTerms: [],
+                companyIds: [],
                 startupsOnly: false,
                 originCountry: prefs.originCountry,
                 view: 'table',
@@ -320,128 +392,132 @@ export default function JobSearch({
           />
         </div>
 
-        <section id="roles" className="job-search__results" aria-label="Job results">
-          <div className="job-search__toolbar">
-            <div className="job-search__toolbar-left">
-              <button
-                type="button"
-                className="btn btn--secondary btn--sm filter-toggle"
-                onClick={() => setFiltersOpen((open) => !open)}
-                aria-expanded={filtersOpen}
-              >
-                Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
-              </button>
-              <p className="job-search__count" aria-live="polite">
-                {loading
-                  ? 'Pulling live feed…'
-                  : `${filteredJobs.length.toLocaleString()} CS early-career role${filteredJobs.length === 1 ? '' : 's'}`}
-              </p>
-              <button
-                type="button"
-                className="btn btn--ghost btn--sm"
-                onClick={() => reload(false)}
-                title="Force-reload the newest published feed"
-              >
-                Refresh now
-              </button>
+        <div className="job-search__main">
+          {showHero ? <HeroBanner /> : null}
+          {showStats ? <StatsBar stats={stats} loading={loading} /> : null}
+
+          <section id="roles" className="job-search__results" aria-label="Job results">
+            <div className="job-search__toolbar">
+              <div className="job-search__toolbar-left">
+                <button
+                  type="button"
+                  className="btn btn--secondary btn--sm filter-toggle"
+                  onClick={() => setFiltersOpen((open) => !open)}
+                  aria-expanded={filtersOpen}
+                >
+                  Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+                </button>
+                <p className="job-search__count" aria-live="polite">
+                  {loading
+                    ? 'Pulling live feed…'
+                    : `${filteredJobs.length.toLocaleString()} CS early-career role${filteredJobs.length === 1 ? '' : 's'}`}
+                </p>
+              </div>
+              <div className="job-search__controls">
+                <label className="job-search__sort">
+                  <span className="sr-only">Sort by</span>
+                  <select
+                    value={filters.sort}
+                    onChange={(event) =>
+                      setFilters((current) => ({
+                        ...current,
+                        sort: event.target.value as SortMode,
+                        page: 1,
+                        view: 'table',
+                      }))
+                    }
+                  >
+                    <option value="newest">Newest first</option>
+                    <option value="diverse">Mixed companies</option>
+                    <option value="company">Company A–Z</option>
+                    <option value="title">Title A–Z</option>
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  className="btn btn--ghost btn--sm"
+                  onClick={() => reload(false)}
+                  title="Force-reload the newest published feed"
+                >
+                  Refresh
+                </button>
+              </div>
             </div>
-            <div className="job-search__controls">
-              <p className="job-search__hint" title="Keyboard shortcuts">
-                <kbd>j</kbd>/<kbd>k</kbd> move · <kbd>Enter</kbd> expand · <kbd>s</kbd> save
-                {lastGeneratedAt ? (
-                  <>
-                    {' '}
-                    · synced {formatRelative(lastGeneratedAt) || 'just now'}
-                  </>
-                ) : null}
-              </p>
-              <label className="job-search__sort">
-                <span className="sr-only">Sort by</span>
-                <select
-                  value={filters.sort}
-                  onChange={(event) =>
+
+            {error ? (
+              <div className="alert alert--error" role="alert">
+                {error}
+              </div>
+            ) : null}
+
+            {!loading && filteredJobs.length === 0 ? (
+              <div className="empty-state">
+                <h3>No roles match</h3>
+                <p>Loosen filters or check back after the next sync.</p>
+              </div>
+            ) : null}
+
+            {pageJobs.length > 0 ? (
+              <div ref={tableRef} className="job-list" role="list">
+                {pageJobs.map((job, index) => (
+                  <div key={job.job_id} role="listitem">
+                    <JobRow
+                      job={job}
+                      index={index}
+                      saved={prefs.savedJobIds.includes(job.job_id)}
+                      isNew={isNewJob(job)}
+                      expanded={expandedId === job.job_id}
+                      selected={selectedId === job.job_id}
+                      onToggle={(jobId) =>
+                        setExpandedId((current) => (current === jobId ? null : jobId))
+                      }
+                      onSelect={setSelectedId}
+                      onSave={handleSave}
+                      onDismiss={handleDismiss}
+                      onEvidence={handleEvidence}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {filteredJobs.length > 0 ? (
+              <nav className="pagination" aria-label="Results pagination">
+                <button
+                  type="button"
+                  className="btn btn--secondary"
+                  disabled={filters.page <= 1}
+                  onClick={() =>
                     setFilters((current) => ({
                       ...current,
-                      sort: event.target.value as SortMode,
-                      page: 1,
+                      page: current.page - 1,
                       view: 'table',
                     }))
                   }
                 >
-                  <option value="diverse">Mixed companies</option>
-                  <option value="newest">Newest first</option>
-                  <option value="company">Company A–Z</option>
-                  <option value="title">Title A–Z</option>
-                </select>
-              </label>
-            </div>
-          </div>
-
-          {error ? (
-            <div className="alert alert--error" role="alert">
-              {error}
-            </div>
-          ) : null}
-
-          {!loading && filteredJobs.length === 0 ? (
-            <div className="empty-state">
-              <h3>No roles match</h3>
-              <p>Loosen filters or check back after the next sync.</p>
-            </div>
-          ) : null}
-
-          {pageJobs.length > 0 ? (
-            <div ref={tableRef} className="job-list" role="list">
-              {pageJobs.map((job, index) => (
-                <div key={job.job_id} role="listitem">
-                  <JobRow
-                    job={job}
-                    index={index}
-                    saved={prefs.savedJobIds.includes(job.job_id)}
-                    isNew={isNewJob(job)}
-                    expanded={expandedId === job.job_id}
-                    selected={selectedId === job.job_id}
-                    onToggle={(jobId) =>
-                      setExpandedId((current) => (current === jobId ? null : jobId))
-                    }
-                    onSelect={setSelectedId}
-                    onSave={handleSave}
-                    onDismiss={handleDismiss}
-                    onEvidence={handleEvidence}
-                  />
-                </div>
-              ))}
-            </div>
-          ) : null}
-
-          {filteredJobs.length > 0 ? (
-            <nav className="pagination" aria-label="Results pagination">
-              <button
-                type="button"
-                className="btn btn--secondary"
-                disabled={filters.page <= 1}
-                onClick={() =>
-                  setFilters((current) => ({ ...current, page: current.page - 1, view: 'table' }))
-                }
-              >
-                Previous
-              </button>
-              <span className="pagination__status">
-                Page {filters.page} of {pages}
-              </span>
-              <button
-                type="button"
-                className="btn btn--secondary"
-                disabled={filters.page >= pages}
-                onClick={() =>
-                  setFilters((current) => ({ ...current, page: current.page + 1, view: 'table' }))
-                }
-              >
-                Next
-              </button>
-            </nav>
-          ) : null}
-        </section>
+                  Previous
+                </button>
+                <span className="pagination__status">
+                  Page {filters.page} of {pages}
+                </span>
+                <button
+                  type="button"
+                  className="btn btn--secondary"
+                  disabled={filters.page >= pages}
+                  onClick={() =>
+                    setFilters((current) => ({
+                      ...current,
+                      page: current.page + 1,
+                      view: 'table',
+                    }))
+                  }
+                >
+                  Next
+                </button>
+              </nav>
+            ) : null}
+          </section>
+        </div>
       </div>
 
       {filtersOpen ? (

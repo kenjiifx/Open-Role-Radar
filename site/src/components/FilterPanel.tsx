@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useMemo, useState } from 'react';
 import type { FilterState } from '../lib/filters';
 import { toggleArrayValue } from '../lib/filters';
 import {
@@ -10,7 +11,7 @@ import {
   type RegionId,
 } from '../lib/labels';
 import type { FacetCounts } from '../lib/search';
-import type { AcademicTerm, CareerLevel, MobilityFlag, WorkplaceType } from '../lib/types';
+import type { AcademicTerm, CareerLevel, CompanySummary, MobilityFlag, WorkplaceType } from '../lib/types';
 import {
   ACADEMIC_TERM_LABELS,
   CAREER_LEVEL_LABELS,
@@ -21,6 +22,7 @@ import {
 interface FilterPanelProps {
   filters: FilterState;
   facets: FacetCounts;
+  companies: CompanySummary[];
   onChange: (next: FilterState) => void;
   onReset: () => void;
   activeCount: number;
@@ -29,6 +31,13 @@ interface FilterPanelProps {
 const CAREER_LEVELS = Object.keys(CAREER_LEVEL_LABELS) as CareerLevel[];
 const WORKPLACE_TYPES = Object.keys(WORKPLACE_LABELS) as WorkplaceType[];
 const MOBILITY_FLAGS = Object.keys(MOBILITY_LABELS) as MobilityFlag[];
+
+function companyInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+}
 
 function FilterSection({
   title,
@@ -43,21 +52,8 @@ function FilterSection({
     <details className="filter-section" open={defaultOpen}>
       <summary className="filter-section__summary">
         <span>{title}</span>
-        <svg
-          className="filter-section__chevron"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M6 9l6 6 6-6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+        <svg className="filter-section__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </summary>
       <div className="filter-section__body">{children}</div>
@@ -70,18 +66,21 @@ function CheckboxRow({
   label,
   checked,
   count,
+  leading,
   onChange,
 }: {
   id: string;
   label: string;
   checked: boolean;
   count?: number;
+  leading?: ReactNode;
   onChange: () => void;
 }) {
   return (
     <label htmlFor={id} className="filter-checkbox">
       <span className="filter-checkbox__main">
         <input id={id} type="checkbox" checked={checked} onChange={onChange} />
+        {leading}
         <span>{label}</span>
       </span>
       {typeof count === 'number' ? (
@@ -94,10 +93,12 @@ function CheckboxRow({
 export default function FilterPanel({
   filters,
   facets,
+  companies,
   onChange,
   onReset,
   activeCount,
 }: FilterPanelProps) {
+  const [companyQuery, setCompanyQuery] = useState('');
   const update = (partial: Partial<FilterState>) => {
     onChange({ ...filters, ...partial, page: 1 });
   };
@@ -105,12 +106,21 @@ export default function FilterPanel({
   const disciplineOptions =
     facets.disciplines.length > 0 ? facets.disciplines : [...CS_DISCIPLINES];
 
+  const visibleCompanies = useMemo(() => {
+    const q = companyQuery.trim().toLowerCase();
+    const sorted = [...companies].sort((a, b) => b.job_count - a.job_count);
+    const filtered = q
+      ? sorted.filter((company) => company.name.toLowerCase().includes(q))
+      : sorted;
+    return filtered.slice(0, 18);
+  }, [companies, companyQuery]);
+
   return (
     <aside className="filter-panel" aria-label="Job filters">
       <div className="filter-panel__header">
         <h2>Filters</h2>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={onReset}>
-          {activeCount > 0 ? `Reset all (${activeCount})` : 'Reset all'}
+        <button type="button" className="btn-text" onClick={onReset}>
+          Reset all
         </button>
       </div>
 
@@ -132,37 +142,6 @@ export default function FilterPanel({
             autoComplete="off"
           />
         </div>
-      </div>
-
-      <div className="filter-quick">
-        <button
-          type="button"
-          className="btn btn--secondary btn--sm"
-          onClick={() => update({ disciplines: [...CS_DISCIPLINES] })}
-        >
-          CS track
-        </button>
-        <button
-          type="button"
-          className={`btn btn--sm ${filters.startupsOnly ? 'btn--primary' : 'btn--ghost'}`}
-          onClick={() => update({ startupsOnly: !filters.startupsOnly })}
-        >
-          Startups{facets.startups ? ` ${facets.startups}` : ''}
-        </button>
-        <button
-          type="button"
-          className="btn btn--ghost btn--sm"
-          onClick={() => update({ regions: ['na'] })}
-        >
-          NA
-        </button>
-        <button
-          type="button"
-          className="btn btn--ghost btn--sm"
-          onClick={() => update({ regions: ['remote'] })}
-        >
-          Remote
-        </button>
       </div>
 
       <FilterSection title="Role type">
@@ -201,29 +180,17 @@ export default function FilterPanel({
               }
             />
           ))}
-          <CheckboxRow
-            id="season-rolling"
-            label={ACADEMIC_TERM_LABELS.rolling}
-            checked={filters.academicTerms.includes('rolling')}
-            count={facets.academicTerms.rolling ?? 0}
-            onChange={() =>
-              update({ academicTerms: toggleArrayValue(filters.academicTerms, 'rolling') })
-            }
-          />
         </div>
       </FilterSection>
 
       <FilterSection title="Company type">
-        <div className="filter-group__options">
-          <CheckboxRow
-            id="startup-only"
-            label="Startups"
-            checked={filters.startupsOnly}
-            count={facets.startups}
-            onChange={() => update({ startupsOnly: !filters.startupsOnly })}
-          />
-        </div>
-        <p className="filter-hint">YC / a16z-style boards and similar early-stage companies.</p>
+        <CheckboxRow
+          id="startup-only"
+          label="Startups"
+          checked={filters.startupsOnly}
+          count={facets.startups}
+          onChange={() => update({ startupsOnly: !filters.startupsOnly })}
+        />
       </FilterSection>
 
       <FilterSection title="Location">
@@ -238,6 +205,43 @@ export default function FilterPanel({
               onChange={() =>
                 update({
                   regions: toggleArrayValue(filters.regions, region as RegionId),
+                })
+              }
+            />
+          ))}
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Company">
+        <div className="filter-search-field filter-search-field--nested">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+            <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <input
+            type="search"
+            value={companyQuery}
+            onChange={(event) => setCompanyQuery(event.target.value)}
+            placeholder="Search companies…"
+            aria-label="Search companies"
+          />
+        </div>
+        <div className="filter-group__options filter-group__options--scroll">
+          {visibleCompanies.map((company) => (
+            <CheckboxRow
+              key={company.company_id}
+              id={`company-${company.company_id}`}
+              label={company.name}
+              checked={filters.companyIds.includes(company.company_id)}
+              count={company.job_count}
+              leading={
+                <span className="filter-company-mark" aria-hidden="true">
+                  {companyInitials(company.name)}
+                </span>
+              }
+              onChange={() =>
+                update({
+                  companyIds: toggleArrayValue(filters.companyIds, company.company_id),
                 })
               }
             />
@@ -286,9 +290,6 @@ export default function FilterPanel({
       </FilterSection>
 
       <FilterSection title="Posted" defaultOpen={false}>
-        <label htmlFor="freshness" className="sr-only">
-          Posted date filter
-        </label>
         <select
           id="freshness"
           value={filters.freshness}
@@ -320,36 +321,9 @@ export default function FilterPanel({
         </div>
       </FilterSection>
 
-      <FilterSection title="Your country" defaultOpen={false}>
-        <label htmlFor="origin-country" className="sr-only">
-          Your origin country
-        </label>
-        <input
-          id="origin-country"
-          type="text"
-          value={filters.originCountry}
-          onChange={(event) => update({ originCountry: event.target.value })}
-          placeholder="e.g. CA, Canada, India, UK"
-        />
-        <p className="filter-hint">Hides roles that explicitly exclude your country.</p>
-      </FilterSection>
-
-      <FilterSection title="Saved" defaultOpen={false}>
-        <div className="filter-group__options">
-          <CheckboxRow
-            id="saved-only"
-            label="Saved only"
-            checked={filters.showSavedOnly}
-            onChange={() => update({ showSavedOnly: !filters.showSavedOnly })}
-          />
-          <CheckboxRow
-            id="hide-dismissed"
-            label="Hide dismissed"
-            checked={filters.hideDismissed}
-            onChange={() => update({ hideDismissed: !filters.hideDismissed })}
-          />
-        </div>
-      </FilterSection>
+      {activeCount > 0 ? (
+        <p className="filter-active-hint">{activeCount} active filter{activeCount === 1 ? '' : 's'}</p>
+      ) : null}
     </aside>
   );
 }

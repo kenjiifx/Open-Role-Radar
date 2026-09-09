@@ -261,6 +261,13 @@ export function filterJobs(
       return false;
     }
 
+    if (
+      (filters.companyIds?.length ?? 0) > 0 &&
+      !filters.companyIds.includes(job.company_id)
+    ) {
+      return false;
+    }
+
     if (filters.startupsOnly && !isStartupCompany(job.company_name)) {
       return false;
     }
@@ -349,6 +356,7 @@ export interface FacetCounts {
   workplaceTypes: Partial<Record<WorkplaceType, number>>;
   academicTerms: Partial<Record<AcademicTerm, number>>;
   startups: number;
+  companies: CompanySummary[];
 }
 
 export function collectFacetValues(jobs: Job[]): FacetCounts {
@@ -381,6 +389,7 @@ export function collectFacetValues(jobs: Job[]): FacetCounts {
     workplaceTypes,
     academicTerms,
     startups,
+    companies: aggregateCompanies(jobs),
   };
 }
 

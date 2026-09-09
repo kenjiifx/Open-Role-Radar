@@ -23,13 +23,14 @@ export const DEFAULT_FILTERS: FilterState = {
   regions: [],
   workplaceTypes: [],
   academicTerms: [],
+  companyIds: [],
   startupsOnly: false,
   freshness: 'all',
   mobility: [],
   originCountry: '',
   showSavedOnly: false,
   hideDismissed: true,
-  sort: 'diverse',
+  sort: 'newest',
   page: 1,
   pageSize: DEFAULT_PAGE_SIZE,
   view: 'table',
@@ -41,6 +42,7 @@ const ARRAY_KEYS = new Set([
   'regions',
   'workplaceTypes',
   'academicTerms',
+  'companyIds',
   'mobility',
 ]);
 
@@ -74,6 +76,7 @@ export function parseFiltersFromUrl(search: string): FilterState {
     regions: [],
     workplaceTypes: [],
     academicTerms: [],
+    companyIds: [],
     mobility: [],
   };
 
@@ -180,6 +183,7 @@ export function countActiveFilters(filters: FilterState): number {
   if (filters.regions.length) count += 1;
   if (filters.workplaceTypes.length) count += 1;
   if (filters.academicTerms.length) count += 1;
+  if (filters.companyIds.length) count += 1;
   if (filters.startupsOnly) count += 1;
   if (filters.freshness !== 'all') count += 1;
   if (filters.mobility.length) count += 1;

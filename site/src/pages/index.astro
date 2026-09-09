@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import JobSearch from '../components/JobSearch';
-
-const siteBase = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
@@ -10,62 +8,5 @@ const siteBase = import.meta.env.BASE_URL;
   description="Internships, co-ops, and new-grad software roles scraped from employer ATS boards — refreshed on every reload."
   canonicalPath=""
 >
-  <section class="hero">
-    <div class="hero__copy">
-      <div class="hero__pills" aria-label="Product tags">
-        <span>First-party</span>
-        <span>CS track</span>
-        <span>Live feed</span>
-      </div>
-      <h1 class="hero__brand">OpenRole<span>Radar</span>.</h1>
-      <p class="hero__lead">
-        Real software internships and new-grad roles. Live from company career pages and public ATS
-        boards — no aggregator noise.
-      </p>
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="#roles">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
-            <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-          </svg>
-          Browse roles
-        </a>
-        <a class="btn btn--secondary" href="#roles">Live feed</a>
-        <a
-          class="btn btn--ghost"
-          href="https://github.com/kenjiifx/Open-Role-Radar"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          View on GitHub
-        </a>
-      </div>
-    </div>
-
-    <aside class="hero__panel" aria-label="Why OpenRoleRadar">
-      <div class="hero__radar" aria-hidden="true"></div>
-      <h2>Fresh opportunities. No noise.</h2>
-      <ul>
-        <li>
-          <span class="hero__check" aria-hidden="true"></span>
-          Direct from company career pages
-        </li>
-        <li>
-          <span class="hero__check" aria-hidden="true"></span>
-          Internships, co-ops, and new-grad only
-        </li>
-        <li>
-          <span class="hero__check" aria-hidden="true"></span>
-          Season filters + startup boards
-        </li>
-        <li>
-          <span class="hero__check" aria-hidden="true"></span>
-          Visa / relocation signals when posted
-        </li>
-      </ul>
-      <a class="hero__panel-link" href={`${siteBase}status`}>Check feed status →</a>
-    </aside>
-  </section>
-
-  <JobSearch client:load showStats />
+  <JobSearch client:load showStats showHero />
 </BaseLayout>
