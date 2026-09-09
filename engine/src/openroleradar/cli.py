@@ -180,12 +180,12 @@ def discover(
             counts["github_candidates"] = len(candidates)
             state.discovery.github_cursor = cursor
             state.discovery.last_github_run = datetime.now(UTC)
-            for candidate in candidates:
+            for gh_candidate in candidates:
                 _handle_candidate(
-                    url=candidate.url,
-                    platform=candidate.platform,
-                    tenant=candidate.tenant,
-                    confidence=candidate.confidence,
+                    url=gh_candidate.url,
+                    platform=gh_candidate.platform,
+                    tenant=gh_candidate.tenant,
+                    confidence=gh_candidate.confidence,
                     discovered_via="github",
                 )
 
@@ -197,12 +197,12 @@ def discover(
             counts["common_crawl_candidates"] = len(crawl_candidates)
             state.discovery.common_crawl_index = crawl_index
             state.discovery.last_common_crawl_run = datetime.now(UTC)
-            for candidate in crawl_candidates:
+            for crawl_candidate in crawl_candidates:
                 _handle_candidate(
-                    url=candidate.url,
-                    platform=candidate.platform,
-                    tenant=candidate.tenant,
-                    confidence=candidate.confidence,
+                    url=crawl_candidate.url,
+                    platform=crawl_candidate.platform,
+                    tenant=crawl_candidate.tenant,
+                    confidence=crawl_candidate.confidence,
                     discovered_via="common_crawl",
                 )
 

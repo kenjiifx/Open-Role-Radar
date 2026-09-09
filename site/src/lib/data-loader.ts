@@ -10,12 +10,14 @@ const FEED_BASES = [
   `${__SITE_BASE__}data/`,
 ] as const;
 
+type FeedBase = (typeof FEED_BASES)[number];
+
 const shardCache = new Map<string, Job[]>();
 const inflight = new Map<string, Promise<Job[]>>();
 
 let manifestPromise: Promise<DataManifest> | null = null;
 let manifestVersion = '';
-let activeDataBase = FEED_BASES[2];
+let activeDataBase: string = FEED_BASES[2];
 
 export function getDataBaseUrl(): string {
   return activeDataBase;
@@ -51,9 +53,10 @@ export async function loadManifest(): Promise<DataManifest> {
           return manifest ? { base, manifest } : null;
         }),
       );
-      const available = results.filter(
-        (item): item is { base: string; manifest: DataManifest } => item !== null,
-      );
+      const available: { base: FeedBase; manifest: DataManifest }[] = [];
+      for (const item of results) {
+        if (item) available.push(item);
+      }
       if (available.length === 0) {
         throw new Error('Failed to load job feed from live-feed, jsDelivr, or Pages');
       }

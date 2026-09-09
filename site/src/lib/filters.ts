@@ -1,6 +1,8 @@
 import type { FilterState, FreshnessFilter, SortMode } from './types';
 import { CS_DISCIPLINES } from './labels';
 
+export type { FilterState };
+
 const DEFAULT_PAGE_SIZE = 40;
 
 export const DEFAULT_FILTERS: FilterState = {
