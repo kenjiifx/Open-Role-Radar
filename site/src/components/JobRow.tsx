@@ -160,110 +160,105 @@ export default function JobRow({
           {companyInitials(job.company_name)}
         </div>
 
-        <div className="job-card__body">
-          <div className="job-card__top">
-            <div className="job-card__identity">
-              <a
-                href={companyUrl(slugifyCompany(job.company_name))}
-                className="job-card__company"
-                onClick={(event) => event.stopPropagation()}
-              >
-                {job.company_name}
-                {job.provenance.first_party_verified ? (
-                  <span className="job-card__verified" title="First-party verified">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <circle cx="12" cy="12" r="10" fill="#3b82f6" />
-                      <path
-                        d="M8 12.5l2.5 2.5L16 9.5"
-                        stroke="#fff"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                ) : null}
-              </a>
-              <h3 className="job-card__title">{job.title}</h3>
-              <p className="job-card__location">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <div className="job-card__identity">
+          <a
+            href={companyUrl(slugifyCompany(job.company_name))}
+            className="job-card__company"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {job.company_name}
+            {job.provenance.first_party_verified ? (
+              <span className="job-card__verified" title="First-party verified">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" fill="#3b82f6" />
                   <path
-                    d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"
-                    stroke="currentColor"
+                    d="M8 12.5l2.5 2.5L16 9.5"
+                    stroke="#fff"
                     strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                  <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="2" />
                 </svg>
-                {location}
-              </p>
-            </div>
-
-            <div className="job-card__meta">
-              <time className="job-card__time" dateTime={posted} title={postedLabel}>
-                {postedRelative}
-              </time>
-              <div className="job-card__actions" onClick={(event) => event.stopPropagation()}>
-                <a
-                  href={job.apply_url}
-                  className="btn btn--primary btn--sm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Apply
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path
-                      d="M7 17L17 7M17 7H9M17 7v8"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </a>
-                <button
-                  type="button"
-                  className={saved ? 'icon-btn icon-btn--active' : 'icon-btn'}
-                  onClick={() => onSave(job.job_id)}
-                  aria-pressed={saved}
-                  aria-label={saved ? 'Remove from saved jobs' : 'Save job'}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path
-                      d="M6 4h12v17l-6-3.5L6 21V4z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      fill={saved ? 'currentColor' : 'none'}
-                    />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className="icon-btn"
-                  onClick={() => onDismiss(job.job_id)}
-                  aria-label="Dismiss job"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <circle cx="5" cy="12" r="1.6" fill="currentColor" />
-                    <circle cx="12" cy="12" r="1.6" fill="currentColor" />
-                    <circle cx="19" cy="12" r="1.6" fill="currentColor" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="job-card__tags">
-            <span className="chip chip--quiet">{WORKPLACE_LABELS[job.workplace_type]}</span>
-            <span className="chip chip--level">{CAREER_LEVEL_LABELS[job.career_level]}</span>
-            {term ? <span className="chip chip--season">{term}</span> : null}
-            {startup ? <span className="chip chip--startup">Startup</span> : null}
-            {freshness.tier === 'hot' ? (
-              <span className="chip chip--hot">{freshness.label}</span>
+              </span>
             ) : null}
-            {freshness.tier !== 'hot' && isNew ? <span className="chip chip--new">New</span> : null}
-            {saved ? <span className="chip chip--saved">Saved</span> : null}
-            <MobilityBadges job={job} onEvidence={onEvidence} />
-          </div>
+          </a>
+          <h3 className="job-card__title">{job.title}</h3>
+          <p className="job-card__location">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="2" />
+            </svg>
+            {location}
+          </p>
+        </div>
+
+        <div className="job-card__tags">
+          <span className="chip chip--quiet">{WORKPLACE_LABELS[job.workplace_type]}</span>
+          <span className="chip chip--level">{CAREER_LEVEL_LABELS[job.career_level]}</span>
+          {term ? <span className="chip chip--season">{term}</span> : null}
+          {startup ? <span className="chip chip--startup">Startup</span> : null}
+          {freshness.tier === 'hot' ? (
+            <span className="chip chip--hot">{freshness.label}</span>
+          ) : null}
+          {freshness.tier !== 'hot' && isNew ? <span className="chip chip--new">New</span> : null}
+          {saved ? <span className="chip chip--saved">Saved</span> : null}
+          <MobilityBadges job={job} onEvidence={onEvidence} />
+        </div>
+
+        <time className="job-card__time" dateTime={posted} title={postedLabel}>
+          {postedRelative}
+        </time>
+
+        <div className="job-card__actions" onClick={(event) => event.stopPropagation()}>
+          <a
+            href={job.apply_url}
+            className="btn btn--primary btn--sm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Apply
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M7 17L17 7M17 7H9M17 7v8"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+          <button
+            type="button"
+            className={saved ? 'icon-btn icon-btn--active' : 'icon-btn'}
+            onClick={() => onSave(job.job_id)}
+            aria-pressed={saved}
+            aria-label={saved ? 'Remove from saved jobs' : 'Save job'}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M6 4h12v17l-6-3.5L6 21V4z"
+                stroke="currentColor"
+                strokeWidth="2"
+                fill={saved ? 'currentColor' : 'none'}
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="icon-btn"
+            onClick={() => onDismiss(job.job_id)}
+            aria-label="Dismiss job"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="5" cy="12" r="1.6" fill="currentColor" />
+              <circle cx="12" cy="12" r="1.6" fill="currentColor" />
+              <circle cx="19" cy="12" r="1.6" fill="currentColor" />
+            </svg>
+          </button>
         </div>
       </div>
 

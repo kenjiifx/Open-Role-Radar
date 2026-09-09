@@ -78,14 +78,6 @@ function HeroBanner() {
             Browse roles
           </a>
           <a className="btn btn--ghost" href="#roles">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                d="M13 3l7 9h-5l2 9-8-10h5L13 3z"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinejoin="round"
-              />
-            </svg>
             Live feed
           </a>
           <a

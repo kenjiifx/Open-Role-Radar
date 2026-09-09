@@ -13,7 +13,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   dismissedJobIds: [],
   lastVisit: null,
   originCountry: '',
-  theme: 'system',
+  theme: 'dark',
 };
 
 function storageKey(key: keyof UserPreferences): string {
