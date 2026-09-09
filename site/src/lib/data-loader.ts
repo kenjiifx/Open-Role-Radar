@@ -3,34 +3,58 @@ import { bucketForJobId } from './sha256';
 
 declare const __SITE_BASE__: string;
 
-const DATA_BASE = `${__SITE_BASE__}data/`;
+/** Instant-refresh feed published every sync (bypasses GitHub Pages CDN staleness). */
+const LIVE_FEED_BASE =
+  'https://raw.githubusercontent.com/kenjiifx/Open-Role-Radar/live-feed/';
+
+const PAGES_DATA_BASE = `${__SITE_BASE__}data/`;
 
 const shardCache = new Map<string, Job[]>();
 const inflight = new Map<string, Promise<Job[]>>();
 
 let manifestPromise: Promise<DataManifest> | null = null;
 let manifestVersion = '';
+let activeDataBase = PAGES_DATA_BASE;
 
 export function getDataBaseUrl(): string {
-  return DATA_BASE;
+  return activeDataBase;
+}
+
+async function fetchManifestFrom(base: string, bust: number): Promise<DataManifest | null> {
+  try {
+    const response = await fetch(`${base}manifest.json?t=${bust}`, {
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) return null;
+    return (await response.json()) as DataManifest;
+  } catch {
+    return null;
+  }
 }
 
 export async function loadManifest(): Promise<DataManifest> {
   if (!manifestPromise) {
     const bust = Date.now();
-    manifestPromise = fetch(`${DATA_BASE}manifest.json?t=${bust}`, { cache: 'no-store' })
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to load manifest: ${response.status}`);
-        }
-        const manifest = (await response.json()) as DataManifest;
-        manifestVersion = manifest.generated_at || String(bust);
-        return manifest;
-      })
-      .catch((error) => {
-        manifestPromise = null;
-        throw error;
-      });
+    manifestPromise = (async () => {
+      // Prefer live-feed branch so a hard refresh sees the newest sync immediately.
+      const live = await fetchManifestFrom(LIVE_FEED_BASE, bust);
+      if (live && Array.isArray(live.shards)) {
+        activeDataBase = LIVE_FEED_BASE;
+        manifestVersion = live.generated_at || String(bust);
+        return live;
+      }
+      const pages = await fetchManifestFrom(PAGES_DATA_BASE, bust);
+      if (!pages) {
+        throw new Error('Failed to load job manifest from live-feed or Pages');
+      }
+      activeDataBase = PAGES_DATA_BASE;
+      manifestVersion = pages.generated_at || String(bust);
+      return pages;
+    })().catch((error) => {
+      manifestPromise = null;
+      throw error;
+    });
   }
   return manifestPromise;
 }
@@ -38,12 +62,13 @@ export async function loadManifest(): Promise<DataManifest> {
 export function resetDataLoader(): void {
   manifestPromise = null;
   manifestVersion = '';
+  activeDataBase = PAGES_DATA_BASE;
   shardCache.clear();
   inflight.clear();
 }
 
 export async function loadShard(filename: string): Promise<Job[]> {
-  const cacheKey = `${filename}::${manifestVersion}`;
+  const cacheKey = `${activeDataBase}::${filename}::${manifestVersion}`;
   const cached = shardCache.get(cacheKey);
   if (cached) return cached;
 
@@ -51,7 +76,11 @@ export async function loadShard(filename: string): Promise<Job[]> {
   if (pending) return pending;
 
   const version = encodeURIComponent(manifestVersion || String(Date.now()));
-  const promise = fetch(`${DATA_BASE}${filename}?v=${version}`, { cache: 'no-store' })
+  const bust = Date.now();
+  const promise = fetch(`${activeDataBase}${filename}?v=${version}&t=${bust}`, {
+    cache: 'no-store',
+    headers: { Accept: 'application/json' },
+  })
     .then(async (response) => {
       if (!response.ok) {
         throw new Error(`Failed to load shard ${filename}: ${response.status}`);

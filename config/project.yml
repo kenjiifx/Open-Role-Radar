@@ -32,16 +32,16 @@ polling:
     warm_minutes: 3
     cold_minutes: 10
     dormant_minutes: 30
-  max_sources_per_sync: 500
-  max_sync_runtime_minutes: 45
+  max_sources_per_sync: 2000
+  max_sync_runtime_minutes: 55
 
 http:
   timeout_seconds: 30
   max_redirects: 5
   # Large Ashby/Greenhouse boards exceed 10MB; keep headroom for full payloads.
   max_response_bytes: 33554432
-  global_concurrency: 20
-  per_host_concurrency: 3
+  global_concurrency: 32
+  per_host_concurrency: 4
   retry_max_attempts: 3
   retry_base_delay_seconds: 1.0
   retry_max_delay_seconds: 60.0
@@ -63,10 +63,10 @@ feeds:
   max_items: 500
 
 discovery:
-  github_search_per_run: 30
-  common_crawl_per_run: 100
-  quarantine_retry_hours: 72
-  promotion_min_confidence: 0.75
+  github_search_per_run: 100
+  common_crawl_per_run: 150
+  quarantine_retry_hours: 48
+  promotion_min_confidence: 0.55
 
 health:
   adapter_failure_threshold: 0.5

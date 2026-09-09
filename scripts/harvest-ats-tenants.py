@@ -1,0 +1,192 @@
+"""Harvest Greenhouse/Lever/Ashby tenants from GitHub code search and append verified seeds."""
+
+from __future__ import annotations
+
+import asyncio
+import os
+import re
+from pathlib import Path
+
+import httpx
+import yaml
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCES = ROOT / "config" / "sources.yml"
+
+PATTERNS = {
+    "greenhouse": [
+        r"boards(?:-api)?\.greenhouse\.io/(?:v1/boards/)?([a-z0-9][a-z0-9_-]{1,64})",
+        r"job-boards\.greenhouse\.io/([a-z0-9][a-z0-9_-]{1,64})",
+    ],
+    "lever": [
+        r"(?:jobs|api)\.lever\.co/(?:v0/postings/)?([a-z0-9][a-z0-9_-]{1,64})",
+    ],
+    "ashby": [
+        r"(?:jobs|api)\.ashbyhq\.com/(?:posting-api/job-board/)?([a-z0-9][a-z0-9_-]{1,64})",
+    ],
+}
+
+QUERIES = [
+    "boards.greenhouse.io",
+    "boards-api.greenhouse.io/v1/boards",
+    "jobs.lever.co",
+    "jobs.ashbyhq.com",
+    "api.ashbyhq.com/posting-api/job-board",
+]
+
+API = {
+    "greenhouse": "https://boards-api.greenhouse.io/v1/boards/{tenant}/jobs",
+    "lever": "https://api.lever.co/v0/postings/{tenant}?mode=json",
+    "ashby": "https://api.ashbyhq.com/posting-api/job-board/{tenant}",
+}
+
+
+def load_existing() -> set[tuple[str, str]]:
+    data = yaml.safe_load(SOURCES.read_text(encoding="utf-8")) or []
+    keys: set[tuple[str, str]] = set()
+    for entry in data:
+        if not isinstance(entry, dict):
+            continue
+        adapter = str(entry.get("adapter", "")).lower()
+        tenant = str(entry.get("tenant", "")).lower()
+        if adapter and tenant:
+            keys.add((adapter, tenant))
+    return keys
+
+
+def extract_candidates(text: str) -> set[tuple[str, str]]:
+    found: set[tuple[str, str]] = set()
+    lowered = text.lower()
+    for adapter, patterns in PATTERNS.items():
+        for pattern in patterns:
+            for match in re.finditer(pattern, lowered, flags=re.I):
+                tenant = match.group(1).strip("-_").lower()
+                if tenant in {"v1", "v0", "boards", "postings", "job-board", "api", "www"}:
+                    continue
+                if len(tenant) < 2:
+                    continue
+                found.add((adapter, tenant))
+    return found
+
+
+async def github_harvest(token: str | None) -> set[tuple[str, str]]:
+    headers = {
+        "Accept": "application/vnd.github.text-match+json",
+        "User-Agent": "OpenRoleRadar-harvest",
+    }
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    found: set[tuple[str, str]] = set()
+    async with httpx.AsyncClient(timeout=30.0, headers=headers) as client:
+        for query in QUERIES:
+            for page in range(1, 6):
+                response = await client.get(
+                    "https://api.github.com/search/code",
+                    params={"q": f'"{query}" in:file', "per_page": 100, "page": page},
+                )
+                if response.status_code in {403, 422}:
+                    break
+                response.raise_for_status()
+                payload = response.json()
+                items = payload.get("items", []) if isinstance(payload, dict) else []
+                if not items:
+                    break
+                for item in items:
+                    blob = " ".join(
+                        [
+                            str(item.get("html_url", "")),
+                            str(item.get("path", "")),
+                            str(item.get("name", "")),
+                        ]
+                    )
+                    # text_matches may include snippets with board URLs
+                    matches = item.get("text_matches") or []
+                    if isinstance(matches, list):
+                        for match in matches:
+                            if isinstance(match, dict):
+                                blob += " " + str(match.get("fragment", ""))
+                    found |= extract_candidates(blob)
+                if len(items) < 100:
+                    break
+                await asyncio.sleep(1.2)
+    return found
+
+
+async def verify(candidates: set[tuple[str, str]]) -> list[dict[str, str]]:
+    sem = asyncio.Semaphore(20)
+    verified: list[dict[str, str]] = []
+
+    async with httpx.AsyncClient(timeout=20.0, follow_redirects=True) as client:
+
+        async def check(adapter: str, tenant: str) -> None:
+            url = API[adapter].format(tenant=tenant)
+            async with sem:
+                try:
+                    response = await client.get(url)
+                except httpx.HTTPError:
+                    return
+            if response.status_code != 200:
+                return
+            # Reject empty / tiny error pages.
+            if len(response.content) < 20:
+                return
+            company = tenant.replace("-", " ").replace("_", " ").title()
+            domain = f"{tenant.replace('_', '-')}.com"
+            verified.append(
+                {
+                    "company": company,
+                    "domain": domain,
+                    "adapter": adapter,
+                    "tenant": tenant,
+                }
+            )
+
+        await asyncio.gather(*(check(adapter, tenant) for adapter, tenant in sorted(candidates)))
+    return verified
+
+
+def append_sources(entries: list[dict[str, str]]) -> int:
+    if not entries:
+        return 0
+    existing = load_existing()
+    lines = ["", "# --- Harvested GitHub ATS boards ---"]
+    added = 0
+    for entry in sorted(entries, key=lambda item: (item["adapter"], item["tenant"])):
+        key = (entry["adapter"], entry["tenant"])
+        if key in existing:
+            continue
+        existing.add(key)
+        lines.append(
+            "- { company: "
+            + entry["company"]
+            + ", domain: "
+            + entry["domain"]
+            + ", adapter: "
+            + entry["adapter"]
+            + ", tenant: "
+            + entry["tenant"]
+            + " }"
+        )
+        added += 1
+    if added:
+        SOURCES.write_text(
+            SOURCES.read_text(encoding="utf-8").rstrip() + "\n" + "\n".join(lines) + "\n",
+            encoding="utf-8",
+        )
+    return added
+
+
+async def main() -> None:
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    existing = load_existing()
+    harvested = await github_harvest(token)
+    fresh = {item for item in harvested if item not in existing}
+    print(f"harvested={len(harvested)} fresh={len(fresh)}")
+    verified = await verify(fresh)
+    print(f"verified={len(verified)}")
+    added = append_sources(verified)
+    print(f"added={added} total~={len(existing) + added}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

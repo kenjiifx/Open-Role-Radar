@@ -50,6 +50,12 @@ jobs:
           restore-keys: |
             live-state-
 
+      - name: Discover and promote new ATS boards
+        working-directory: engine
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run openroleradar discover --github --no-common-crawl --publish
+
       - name: Run sync
         working-directory: engine
         env:
@@ -70,6 +76,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: uv run openroleradar publish-state
+
+      - name: Publish live-feed branch (fresh on every browser refresh)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          WORK="$(mktemp -d)"
+          cp -R site/public/data/. "$WORK/"
+          cd "$WORK"
+          git init
+          git checkout -b live-feed
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          printf '%s\n' '# Live job feed — force-pushed every sync' > README.md
+          git add -A
+          git commit -m "live-feed $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push -f origin live-feed
 
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0

@@ -139,12 +139,18 @@ export default function JobSearch({
     const onVisible = () => {
       if (document.visibilityState === 'visible') reload(true);
     };
+    const onPageShow = (event: PageTransitionEvent) => {
+      // Always re-fetch after bfcache restores or any refresh.
+      if (event.persisted) reload(true);
+    };
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisible);
-    const timer = window.setInterval(() => reload(true), 30_000);
+    window.addEventListener('pageshow', onPageShow);
+    const timer = window.setInterval(() => reload(true), 20_000);
     return () => {
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('pageshow', onPageShow);
       window.clearInterval(timer);
     };
   }, [reload]);
