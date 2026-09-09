@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   formatDiscipline,
+  isStartupCompany,
   jobMatchesRegions,
   regionsForJob,
 } from '../src/lib/labels';
@@ -44,5 +45,10 @@ describe('labels', () => {
     expect(jobMatchesRegions(toronto, [])).toBe(true);
     expect(jobMatchesRegions(toronto, ['na'])).toBe(true);
     expect(jobMatchesRegions(toronto, ['eu'])).toBe(false);
+  });
+
+  it('recognizes curated startup companies', () => {
+    expect(isStartupCompany('PostHog')).toBe(true);
+    expect(isStartupCompany('NVIDIA')).toBe(false);
   });
 });

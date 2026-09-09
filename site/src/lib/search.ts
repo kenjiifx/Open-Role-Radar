@@ -1,8 +1,10 @@
 import { postedAt } from './dates';
 import type { FilterState } from './filters';
-import { jobMatchesRegions } from './labels';
+import { isStartupCompany, jobMatchesRegions, regionsForJob, type RegionId } from './labels';
 import { bucketForJobId } from './sha256';
 import type {
+  AcademicTerm,
+  CareerLevel,
   CompanySummary,
   Job,
   MobilityBenefits,
@@ -10,6 +12,7 @@ import type {
   SearchIndexEntry,
   SiteStats,
   SortMode,
+  WorkplaceType,
 } from './types';
 import {
   getMobilityFlags,
@@ -251,6 +254,17 @@ export function filterJobs(
       return false;
     }
 
+    if (
+      filters.academicTerms.length > 0 &&
+      !filters.academicTerms.includes(job.academic_term)
+    ) {
+      return false;
+    }
+
+    if (filters.startupsOnly && !isStartupCompany(job.company_name)) {
+      return false;
+    }
+
     if (!matchesFreshness(entry.posted_at, filters.freshness, options.lastVisit ?? null)) {
       return false;
     }
@@ -328,19 +342,45 @@ export function aggregateCompanies(jobs: Job[]): CompanySummary[] {
   return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export function collectFacetValues(jobs: Job[]): {
+export interface FacetCounts {
   disciplines: string[];
-} {
+  careerLevels: Partial<Record<CareerLevel, number>>;
+  regions: Partial<Record<RegionId, number>>;
+  workplaceTypes: Partial<Record<WorkplaceType, number>>;
+  academicTerms: Partial<Record<AcademicTerm, number>>;
+  startups: number;
+}
+
+export function collectFacetValues(jobs: Job[]): FacetCounts {
   const disciplines = new Set<string>();
+  const careerLevels: Partial<Record<CareerLevel, number>> = {};
+  const regions: Partial<Record<RegionId, number>> = {};
+  const workplaceTypes: Partial<Record<WorkplaceType, number>> = {};
+  const academicTerms: Partial<Record<AcademicTerm, number>> = {};
+  let startups = 0;
 
   for (const job of jobs) {
     if (job.disciplines.primary && job.disciplines.primary !== 'other') {
       disciplines.add(job.disciplines.primary);
     }
+    careerLevels[job.career_level] = (careerLevels[job.career_level] ?? 0) + 1;
+    workplaceTypes[job.workplace_type] = (workplaceTypes[job.workplace_type] ?? 0) + 1;
+    if (job.academic_term && job.academic_term !== 'unknown') {
+      academicTerms[job.academic_term] = (academicTerms[job.academic_term] ?? 0) + 1;
+    }
+    for (const region of regionsForJob(job)) {
+      regions[region] = (regions[region] ?? 0) + 1;
+    }
+    if (isStartupCompany(job.company_name)) startups += 1;
   }
 
   return {
     disciplines: [...disciplines].sort((a, b) => a.localeCompare(b)),
+    careerLevels,
+    regions,
+    workplaceTypes,
+    academicTerms,
+    startups,
   };
 }
 

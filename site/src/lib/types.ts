@@ -201,6 +201,8 @@ export interface FilterState {
   disciplines: string[];
   regions: string[];
   workplaceTypes: WorkplaceType[];
+  academicTerms: AcademicTerm[];
+  startupsOnly: boolean;
   freshness: FreshnessFilter;
   mobility: MobilityFlag[];
   originCountry: string;

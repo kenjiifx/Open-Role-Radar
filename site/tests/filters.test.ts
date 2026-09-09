@@ -41,8 +41,10 @@ describe('filters URL serialization', () => {
       ...DEFAULT_FILTERS,
       q: 'data',
       careerLevels: ['internship'],
+      academicTerms: ['summer'],
+      startupsOnly: true,
       originCountry: 'Canada',
     });
-    expect(count).toBe(3);
+    expect(count).toBe(5);
   });
 });

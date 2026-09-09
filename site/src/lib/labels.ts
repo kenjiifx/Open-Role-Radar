@@ -1,5 +1,8 @@
 /** Region + discipline display helpers for CS-student-facing filters. */
 
+import { slugifyCompany } from './types';
+import type { AcademicTerm } from './types';
+
 export type RegionId = 'na' | 'eu' | 'asia' | 'remote';
 
 export const REGION_LABELS: Record<RegionId, string> = {
@@ -10,6 +13,90 @@ export const REGION_LABELS: Record<RegionId, string> = {
 };
 
 export const REGION_OPTIONS = Object.keys(REGION_LABELS) as RegionId[];
+
+/** Season / academic-term filters students usually care about. */
+export const SEASON_TERMS = [
+  'summer',
+  'fall',
+  'winter',
+  'spring',
+] as const satisfies readonly AcademicTerm[];
+
+export type SeasonTerm = (typeof SEASON_TERMS)[number];
+
+/**
+ * Curated startup ecosystem companies from config/sources.yml
+ * (YC / a16z / early-stage section). Matched by company-name slug.
+ */
+const STARTUP_COMPANY_NAMES = [
+  'Y Combinator',
+  'Resend',
+  'PostHog',
+  'Railway',
+  'Render',
+  'Doppler',
+  'Inngest',
+  'Trigger.dev',
+  'Nango',
+  'Prefect',
+  'Airbyte',
+  'Hightouch',
+  'Metabase',
+  'Sanity',
+  'Mux',
+  'LiveKit',
+  'Docker',
+  'Orca Security',
+  'Drata',
+  'Secureframe',
+  'Material Security',
+  'Replit',
+  'Attio',
+  'Plain',
+  'Incident.io',
+  'Apollo.io',
+  'Fireworks AI',
+  'Recraft',
+  'Character.AI',
+  'Decagon',
+  'Poolside',
+  'Mercor',
+  'Parallel',
+  'Descript',
+  'Gamma',
+  'Elicit',
+  'Labelbox',
+  'Lightning AI',
+  'Saronic',
+  'Nava',
+  'Astera Labs',
+  'IonQ',
+  'PathAI',
+  'Warp',
+  'Figure',
+  'Linear',
+  'Vercel',
+  'Supabase',
+  'Ramp',
+  'Notion',
+  'Plaid',
+  'Anthropic',
+  'Perplexity',
+  'Scale AI',
+  'Mercury',
+  'Brex',
+  'Rippling',
+  'PlanetScale',
+  'Retool',
+] as const;
+
+export const STARTUP_COMPANY_SLUGS = new Set(
+  STARTUP_COMPANY_NAMES.map((name) => slugifyCompany(name)),
+);
+
+export function isStartupCompany(companyName: string): boolean {
+  return STARTUP_COMPANY_SLUGS.has(slugifyCompany(companyName));
+}
 
 export const DISCIPLINE_LABELS: Record<string, string> = {
   software: 'Software Engineering',

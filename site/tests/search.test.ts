@@ -90,6 +90,8 @@ describe('search utilities', () => {
         disciplines: [],
         regions: [],
         workplaceTypes: [],
+        academicTerms: [],
+        startupsOnly: false,
         freshness: 'all',
         mobility: ['visa'],
         originCountry: 'Canada',
@@ -136,6 +138,8 @@ describe('search utilities', () => {
         disciplines: [],
         regions: [],
         workplaceTypes: [],
+        academicTerms: [],
+        startupsOnly: false,
         freshness: 'all',
         mobility: [],
         originCountry: '',
@@ -167,6 +171,8 @@ describe('search utilities', () => {
         disciplines: [],
         regions: [],
         workplaceTypes: [],
+        academicTerms: [],
+        startupsOnly: false,
         freshness: 'all',
         mobility: [],
         originCountry: '',
@@ -180,6 +186,66 @@ describe('search utilities', () => {
       {},
     );
     expect(filtered.map((job) => job.job_id)).toEqual(['b1', 'a1', 'a2']);
+  });
+
+  it('filters by academic season and startups', () => {
+    const summerStartup = makeJob({
+      job_id: 'summer-startup',
+      company_name: 'PostHog',
+      company_id: 'posthog',
+      academic_term: 'summer',
+    });
+    const fallBigCo = makeJob({
+      job_id: 'fall-big',
+      company_name: 'NVIDIA',
+      company_id: 'nvidia',
+      academic_term: 'fall',
+      title: 'Fall Intern',
+    });
+    const jobs = [summerStartup, fallBigCo];
+    const index = buildSearchIndex(jobs);
+
+    const bySeason = filterJobs(jobs, index, {
+      ...{
+        q: '',
+        careerLevels: [],
+        disciplines: [],
+        regions: [],
+        workplaceTypes: [],
+        academicTerms: ['summer'],
+        startupsOnly: false,
+        freshness: 'all' as const,
+        mobility: [],
+        originCountry: '',
+        showSavedOnly: false,
+        hideDismissed: true,
+        sort: 'newest' as const,
+        page: 1,
+        pageSize: 25,
+        view: 'table' as const,
+      },
+    });
+    expect(bySeason.map((job) => job.job_id)).toEqual(['summer-startup']);
+
+    const startups = filterJobs(jobs, index, {
+      q: '',
+      careerLevels: [],
+      disciplines: [],
+      regions: [],
+      workplaceTypes: [],
+      academicTerms: [],
+      startupsOnly: true,
+      freshness: 'all',
+      mobility: [],
+      originCountry: '',
+      showSavedOnly: false,
+      hideDismissed: true,
+      sort: 'newest',
+      page: 1,
+      pageSize: 25,
+      view: 'table',
+    });
+    expect(startups.map((job) => job.job_id)).toEqual(['summer-startup']);
   });
 
   it('normalizes origin country aliases to ISO codes', () => {

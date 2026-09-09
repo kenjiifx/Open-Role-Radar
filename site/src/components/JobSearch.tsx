@@ -303,13 +303,16 @@ export default function JobSearch({
         <div className={filtersOpen ? 'filter-shell filter-shell--open' : 'filter-shell'}>
           <FilterPanel
             filters={filters}
-            disciplines={facets.disciplines}
+            facets={facets}
             activeCount={activeFilterCount}
             onChange={(next) => setFilters({ ...next, view: 'table' })}
             onReset={() =>
               setFilters({
                 ...DEFAULT_FILTERS,
+                careerLevels: [...DEFAULT_FILTERS.careerLevels],
                 disciplines: [...DEFAULT_FILTERS.disciplines],
+                academicTerms: [],
+                startupsOnly: false,
                 originCountry: prefs.originCountry,
                 view: 'table',
               })
@@ -317,7 +320,7 @@ export default function JobSearch({
           />
         </div>
 
-        <section className="job-search__results" aria-label="Job results">
+        <section id="roles" className="job-search__results" aria-label="Job results">
           <div className="job-search__toolbar">
             <div className="job-search__toolbar-left">
               <button
@@ -366,7 +369,7 @@ export default function JobSearch({
                   }
                 >
                   <option value="diverse">Mixed companies</option>
-                  <option value="newest">Newest posted</option>
+                  <option value="newest">Newest first</option>
                   <option value="company">Company A–Z</option>
                   <option value="title">Title A–Z</option>
                 </select>
@@ -388,44 +391,26 @@ export default function JobSearch({
           ) : null}
 
           {pageJobs.length > 0 ? (
-            <div ref={tableRef} className="table-wrap table-wrap--spotlight">
-              <table className="job-table">
-                <caption className="sr-only">Early-career job listings</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Company</th>
-                    <th scope="col">Role</th>
-                    <th scope="col">Location</th>
-                    <th scope="col">Workplace</th>
-                    <th scope="col">Level</th>
-                    <th scope="col">Mobility</th>
-                    <th scope="col">Posted</th>
-                    <th scope="col">
-                      <span className="sr-only">Actions</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pageJobs.map((job, index) => (
-                    <JobRow
-                      key={job.job_id}
-                      job={job}
-                      index={index}
-                      saved={prefs.savedJobIds.includes(job.job_id)}
-                      isNew={isNewJob(job)}
-                      expanded={expandedId === job.job_id}
-                      selected={selectedId === job.job_id}
-                      onToggle={(jobId) =>
-                        setExpandedId((current) => (current === jobId ? null : jobId))
-                      }
-                      onSelect={setSelectedId}
-                      onSave={handleSave}
-                      onDismiss={handleDismiss}
-                      onEvidence={handleEvidence}
-                    />
-                  ))}
-                </tbody>
-              </table>
+            <div ref={tableRef} className="job-list" role="list">
+              {pageJobs.map((job, index) => (
+                <div key={job.job_id} role="listitem">
+                  <JobRow
+                    job={job}
+                    index={index}
+                    saved={prefs.savedJobIds.includes(job.job_id)}
+                    isNew={isNewJob(job)}
+                    expanded={expandedId === job.job_id}
+                    selected={selectedId === job.job_id}
+                    onToggle={(jobId) =>
+                      setExpandedId((current) => (current === jobId ? null : jobId))
+                    }
+                    onSelect={setSelectedId}
+                    onSave={handleSave}
+                    onDismiss={handleDismiss}
+                    onEvidence={handleEvidence}
+                  />
+                </div>
+              ))}
             </div>
           ) : null}
 
