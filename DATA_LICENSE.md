@@ -18,7 +18,7 @@ Job facts originate from first-party ATS boards and career pages operated by emp
 OpenRoleRadar:
 
 - Links every job to its canonical `job_url` and `apply_url`
-- Stores only short `summary` text (≤1000 characters) and ≤500 character evidence excerpts
+- Stores only short `summary` text (≤2000 characters) and ≤500 character evidence excerpts
 - Encourages users to read official postings before applying
 
 ## License grant

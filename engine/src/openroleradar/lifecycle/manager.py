@@ -134,6 +134,9 @@ class LifecycleManager:
         existing.disciplines = updated.disciplines
         existing.eligibility = updated.eligibility
         existing.mobility = updated.mobility
+        if updated.summary and updated.summary != existing.summary:
+            changed.append("summary")
+            existing.summary = updated.summary
         if updated.source_posted_at is not None:
             existing.source_posted_at = updated.source_posted_at
             existing.provenance.source_posted_at = updated.source_posted_at
@@ -146,7 +149,7 @@ class LifecycleManager:
 
         preserve_first = existing.first_seen_at
         preserve_opened = existing.provenance.first_seen_at
-        for field_name in ("title", "summary", "compensation", "locations"):
+        for field_name in ("title", "compensation", "locations"):
             if getattr(existing, field_name) != getattr(updated, field_name):
                 changed.append(field_name)
 

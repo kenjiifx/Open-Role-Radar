@@ -62,7 +62,7 @@
     },
     "summary": {
       "type": ["string", "null"],
-      "maxLength": 1000
+      "maxLength": 2000
     },
     "career_level": {
       "type": "string",

@@ -28,10 +28,10 @@ live_state:
 
 polling:
   tiers:
-    hot_minutes: 5
-    warm_minutes: 5
-    cold_minutes: 15
-    dormant_minutes: 60
+    hot_minutes: 3
+    warm_minutes: 3
+    cold_minutes: 10
+    dormant_minutes: 30
   max_sources_per_sync: 500
   max_sync_runtime_minutes: 45
 

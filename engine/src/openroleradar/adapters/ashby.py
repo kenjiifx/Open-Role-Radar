@@ -13,6 +13,7 @@ from openroleradar.adapters.base import AdapterFetchResult, register_adapter
 from openroleradar.http.client import SafeHTTPClient
 from openroleradar.http.url import build_url
 from openroleradar.models.job import RawJob, Source
+from openroleradar.normalize.text import html_to_plaintext
 
 ASHBY_HOSTS = frozenset({"jobs.ashbyhq.com", "api.ashbyhq.com"})
 
@@ -93,7 +94,9 @@ class AshbyAdapter:
                 locations = [str(name)]
 
         description = item.get("descriptionPlain") or item.get("descriptionHtml")
-        description_text = description.strip() or None if isinstance(description, str) else None
+        description_text = (
+            html_to_plaintext(description) or None if isinstance(description, str) else None
+        )
 
         employment_type = item.get("employmentType")
         department = item.get("department")
@@ -109,7 +112,7 @@ class AshbyAdapter:
             apply_url=str(apply_url),
             locations_raw=locations,
             description_text=description_text,
-            summary=(description_text[:1000] if description_text else None),
+            summary=None,
             employment_type=str(employment_type) if employment_type else None,
             department=str(department) if department else None,
             posted_at=_parse_datetime(item.get("publishedAt")),

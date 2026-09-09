@@ -19,7 +19,12 @@ from openroleradar.models.enums import EmploymentType, JobLifecycle
 from openroleradar.models.job import Compensation, Job, Provenance, RawJob
 from openroleradar.normalize.compensation import parse_compensation
 from openroleradar.normalize.location import parse_locations, parse_remote_info
-from openroleradar.normalize.text import canonicalize_text, normalize_whitespace, strip_html
+from openroleradar.normalize.text import (
+    canonicalize_text,
+    html_to_plaintext,
+    normalize_whitespace,
+    truncate_summary,
+)
 
 _EMPLOYMENT_MAP: dict[str, EmploymentType] = {
     "full_time": EmploymentType.FULL_TIME,
@@ -80,12 +85,13 @@ def normalize_raw_job(
     parser_version = project.versions.parser
     classification_version = project.versions.classification
 
-    description = strip_html(raw.description_text)
-    # Strip HTML first, then hard-cap length so Pydantic never rejects the record.
-    summary_source = raw.summary or description
-    summary = normalize_whitespace(strip_html(summary_source)) if summary_source else None
-    if summary and len(summary) > 1000:
-        summary = summary[:997].rstrip() + "..."
+    description = html_to_plaintext(raw.description_text)
+    summary_raw = html_to_plaintext(raw.summary)
+    # Prefer the richest cleaned corpus; never keep adapter-pretruncated dirty HTML.
+    summary_source = description if len(description) >= len(summary_raw) else summary_raw
+    if not summary_source:
+        summary_source = description or summary_raw
+    summary = truncate_summary(summary_source)
 
     career_level, career_confidence = classify_career_level(raw.title, description, root=root)
     academic_term = classify_academic_term(raw.title, description, root=root)

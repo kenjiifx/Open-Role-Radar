@@ -13,6 +13,7 @@ from openroleradar.adapters.base import AdapterFetchResult, register_adapter
 from openroleradar.http.client import SafeHTTPClient
 from openroleradar.http.url import build_url
 from openroleradar.models.job import RawJob, Source
+from openroleradar.normalize.text import html_to_plaintext
 
 GREENHOUSE_HOSTS = frozenset(
     {
@@ -34,33 +35,6 @@ def _parse_datetime(value: str | None) -> datetime | None:
     if parsed.tzinfo is None:
         return parsed.replace(tzinfo=UTC)
     return parsed.astimezone(UTC)
-
-
-def _strip_html(html: str | None) -> str | None:
-    if not html:
-        return None
-    text = (
-        html.replace("<br>", "\n")
-        .replace("<br/>", "\n")
-        .replace("<br />", "\n")
-        .replace("</p>", "\n")
-        .replace("</li>", "\n")
-    )
-    cleaned: list[str] = []
-    in_tag = False
-    for char in text:
-        if char == "<":
-            in_tag = True
-            continue
-        if char == ">":
-            in_tag = False
-            continue
-        if not in_tag:
-            cleaned.append(char)
-    result = "".join(cleaned)
-    lines = [line.strip() for line in result.splitlines()]
-    compact = "\n".join(line for line in lines if line)
-    return compact or None
 
 
 class GreenhouseAdapter:
@@ -118,7 +92,7 @@ class GreenhouseAdapter:
         location_name = location.get("name") if isinstance(location, dict) else None
         locations = [location_name] if location_name else []
 
-        description = _strip_html(item.get("content"))
+        description = html_to_plaintext(item.get("content")) or None
         metadata = item.get("metadata") if isinstance(item.get("metadata"), dict) else {}
 
         departments: list[str] = []
@@ -148,7 +122,7 @@ class GreenhouseAdapter:
             apply_url=str(job_url),
             locations_raw=locations,
             description_text=description,
-            summary=(description[:1000] if description else None),
+            summary=None,
             department=str(department) if department else None,
             posted_at=_parse_datetime(item.get("first_published")),
             updated_at=_parse_datetime(item.get("updated_at")),

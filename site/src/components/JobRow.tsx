@@ -1,9 +1,11 @@
 import { useId } from 'react';
-import { formatDate, formatRelative, postedAt } from '../lib/dates';
+import { formatDate, formatRelative, openedFreshness, postedAt } from '../lib/dates';
 import { companyUrl } from '../lib/paths';
+import { cleanSummary, looksLikeReadableSummary } from '../lib/summary';
 import type { Job, MobilityFlag } from '../lib/types';
 import { slugifyCompany } from '../lib/types';
 import {
+  ACADEMIC_TERM_LABELS,
   CAREER_LEVEL_LABELS,
   formatLocation,
   getMobilityFlags,
@@ -71,6 +73,21 @@ function MobilityBadges({
   );
 }
 
+function formatCompensation(job: Job): string | null {
+  const comp = job.compensation;
+  if (!comp) return null;
+  const min = comp.min_amount;
+  const max = comp.max_amount;
+  const currency = comp.currency || 'USD';
+  if (min == null && max == null) return null;
+  const period = comp.period && comp.period !== 'unknown' ? ` / ${comp.period}` : '';
+  if (min != null && max != null) {
+    return `${currency} ${Math.round(min).toLocaleString()}–${Math.round(max).toLocaleString()}${period}`;
+  }
+  const amount = min ?? max;
+  return amount == null ? null : `${currency} ${Math.round(amount).toLocaleString()}${period}`;
+}
+
 export default function JobRow({
   job,
   saved,
@@ -89,13 +106,23 @@ export default function JobRow({
   const postedLabel = formatDate(posted);
   const postedRelative = formatRelative(posted);
   const location = formatLocation(job.locations);
+  const freshness = openedFreshness(job);
+  const summary = cleanSummary(job.summary);
+  const hasSummary = looksLikeReadableSummary(job.summary ?? '');
+  const compensation = formatCompensation(job);
+  const term =
+    job.academic_term && job.academic_term !== 'unknown'
+      ? ACADEMIC_TERM_LABELS[job.academic_term]
+      : null;
+  const skills = (job.skills ?? []).slice(0, 8);
 
   return (
     <>
       <tr
         className={[
           'job-row',
-          isNew ? 'job-row--new' : '',
+          isNew || freshness.tier === 'hot' ? 'job-row--new' : '',
+          freshness.tier === 'hot' ? 'job-row--hot' : '',
           expanded ? 'job-row--expanded' : '',
           selected ? 'job-row--selected' : '',
           saved ? 'job-row--saved' : '',
@@ -131,7 +158,10 @@ export default function JobRow({
         <td className="job-row__title">
           <div className="job-row__title-line">
             <strong>{job.title}</strong>
-            {isNew ? <span className="chip chip--new">New</span> : null}
+            {freshness.tier === 'hot' ? (
+              <span className="chip chip--hot">{freshness.label}</span>
+            ) : null}
+            {freshness.tier !== 'hot' && isNew ? <span className="chip chip--new">New</span> : null}
             {saved ? <span className="chip chip--saved">Saved</span> : null}
           </div>
         </td>
@@ -182,17 +212,38 @@ export default function JobRow({
         <td colSpan={8}>
           <div className="job-detail__inner">
             <div className="job-detail__grid">
-              <div>
-                <p className="job-detail__label">Summary</p>
-                <p className="job-detail__body">
-                  {job.summary?.trim() || 'No summary available from the ATS board.'}
-                </p>
-              </div>
-              <div>
-                <p className="job-detail__label">Signals</p>
+              <section className="job-detail__summary">
+                <p className="job-detail__label">Role overview</p>
+                {hasSummary ? (
+                  <p className="job-detail__body">{summary}</p>
+                ) : (
+                  <div className="job-detail__empty">
+                    <p>
+                      Full posting text isn&apos;t in the public ATS feed for this role. Open the
+                      source listing for the complete description.
+                    </p>
+                    <a
+                      href={job.job_url}
+                      className="btn btn--secondary btn--sm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      Read full posting
+                    </a>
+                  </div>
+                )}
+              </section>
+              <aside className="job-detail__aside">
+                <p className="job-detail__label">Intel</p>
                 <ul className="job-detail__meta">
                   <li>
                     Posted <strong>{postedLabel}</strong>
+                    <span className="job-detail__meta-sub">{postedRelative}</span>
+                  </li>
+                  <li>
+                    First seen by radar{' '}
+                    <strong>{formatRelative(job.first_seen_at)}</strong>
                   </li>
                   <li>
                     Workplace <strong>{WORKPLACE_LABELS[job.workplace_type]}</strong>
@@ -200,11 +251,35 @@ export default function JobRow({
                   <li>
                     Level <strong>{CAREER_LEVEL_LABELS[job.career_level]}</strong>
                   </li>
+                  {term ? (
+                    <li>
+                      Term <strong>{term}</strong>
+                    </li>
+                  ) : null}
                   <li>
                     Location <strong>{location}</strong>
                   </li>
+                  {compensation ? (
+                    <li>
+                      Comp <strong>{compensation}</strong>
+                    </li>
+                  ) : null}
+                  {job.disciplines?.primary ? (
+                    <li>
+                      Discipline <strong>{job.disciplines.primary}</strong>
+                    </li>
+                  ) : null}
                 </ul>
-              </div>
+                {skills.length > 0 ? (
+                  <div className="job-detail__skills">
+                    {skills.map((skill) => (
+                      <span key={skill} className="chip chip--quiet">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </aside>
             </div>
             <div className="job-detail__cta">
               <a
@@ -212,6 +287,7 @@ export default function JobRow({
                 className="btn btn--primary"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(event) => event.stopPropagation()}
               >
                 Open application
               </a>
@@ -220,6 +296,7 @@ export default function JobRow({
                 className="btn btn--secondary"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(event) => event.stopPropagation()}
               >
                 Source listing
               </a>

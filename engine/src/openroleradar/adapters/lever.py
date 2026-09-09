@@ -13,6 +13,7 @@ from openroleradar.adapters.base import AdapterFetchResult, register_adapter
 from openroleradar.http.client import SafeHTTPClient
 from openroleradar.http.url import build_url
 from openroleradar.models.job import RawJob, Source
+from openroleradar.normalize.text import html_to_plaintext
 
 LEVER_HOSTS = frozenset({"jobs.lever.co", "api.lever.co"})
 
@@ -82,8 +83,35 @@ class LeverAdapter:
         department = categories.get("department") if isinstance(categories, dict) else None
         commitment = categories.get("commitment") if isinstance(categories, dict) else None
 
-        description = item.get("descriptionPlain") or item.get("description")
-        description_text = description.strip() or None if isinstance(description, str) else None
+        chunks: list[str] = []
+        for key in (
+            "descriptionPlain",
+            "descriptionBodyPlain",
+            "openingPlain",
+            "additionalPlain",
+            "description",
+        ):
+            value = item.get(key)
+            if isinstance(value, str) and value.strip():
+                chunks.append(html_to_plaintext(value))
+        lists = item.get("lists")
+        if isinstance(lists, list):
+            for entry in lists:
+                if not isinstance(entry, dict):
+                    continue
+                heading = entry.get("text") if isinstance(entry.get("text"), str) else None
+                content = entry.get("content") if isinstance(entry.get("content"), str) else None
+                plain = html_to_plaintext("\n".join(part for part in (heading, content) if part))
+                if plain:
+                    chunks.append(plain)
+        # Deduplicate while preserving order.
+        seen: set[str] = set()
+        ordered: list[str] = []
+        for chunk in chunks:
+            if chunk and chunk not in seen:
+                seen.add(chunk)
+                ordered.append(chunk)
+        description_text = "\n\n".join(ordered) or None
 
         apply_url = item.get("applyUrl") or hosted_url
 
@@ -94,7 +122,7 @@ class LeverAdapter:
             apply_url=str(apply_url),
             locations_raw=[str(location)] if location else [],
             description_text=description_text,
-            summary=(description_text[:1000] if description_text else None),
+            summary=None,
             employment_type=str(commitment) if commitment else None,
             department=str(department) if department else None,
             posted_at=_parse_epoch_ms(item.get("createdAt")),

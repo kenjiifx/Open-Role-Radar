@@ -103,6 +103,13 @@ export interface Provenance {
   first_party_verified: boolean;
 }
 
+export interface Compensation {
+  min_amount?: number | null;
+  max_amount?: number | null;
+  currency?: string | null;
+  period?: string | null;
+}
+
 export interface Job {
   job_id: string;
   source_job_id: string;
@@ -118,6 +125,7 @@ export interface Job {
   career_level: CareerLevel;
   career_level_confidence: number;
   disciplines: DisciplineClassification;
+  skills?: string[];
   locations: Location[];
   workplace_type: WorkplaceType;
   remote_scope: RemoteScope;
@@ -129,6 +137,7 @@ export interface Job {
   last_changed_at?: string | null;
   closed_at?: string | null;
   academic_term: AcademicTerm;
+  compensation?: Compensation | null;
   eligibility: Eligibility;
   mobility: MobilityBenefits;
   provenance: Provenance;

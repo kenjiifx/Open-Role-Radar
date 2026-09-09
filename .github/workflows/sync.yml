@@ -2,8 +2,8 @@ name: Sync and Deploy
 
 on:
   schedule:
-    # Every 5 minutes so a user refresh is rarely more than one deploy behind.
-    - cron: "*/5 * * * *"
+    # Every 3 minutes — catch openings as close to publish as Actions allows.
+    - cron: "*/3 * * * *"
   workflow_dispatch:
     inputs:
       sample:

@@ -107,7 +107,7 @@ class Job(BaseModel):
     apply_url: str
     careers_url: str | None = None
     source_url: str | None = None
-    summary: str | None = Field(default=None, max_length=1000)
+    summary: str | None = Field(default=None, max_length=2000)
     career_level: CareerLevel = CareerLevel.UNKNOWN
     career_level_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     employment_type: EmploymentType = EmploymentType.UNKNOWN

@@ -32,7 +32,7 @@ export const DEFAULT_FILTERS: FilterState = {
   originCountry: '',
   showSavedOnly: false,
   hideDismissed: true,
-  sort: 'diverse',
+  sort: 'newest',
   page: 1,
   pageSize: DEFAULT_PAGE_SIZE,
   view: 'table',

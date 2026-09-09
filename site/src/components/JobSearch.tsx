@@ -141,7 +141,7 @@ export default function JobSearch({
     };
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisible);
-    const timer = window.setInterval(() => reload(true), 60_000);
+    const timer = window.setInterval(() => reload(true), 30_000);
     return () => {
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisible);
@@ -222,10 +222,15 @@ export default function JobSearch({
 
   const isNewJob = useCallback(
     (job: Job) => {
+      const posted = Date.parse(postedAt(job));
+      const firstSeen = Date.parse(job.first_seen_at);
+      const now = Date.now();
+      const hotWindow = 24 * 60 * 60 * 1000;
+      if (!Number.isNaN(firstSeen) && now - firstSeen < hotWindow) return true;
+      if (!Number.isNaN(posted) && now - posted < hotWindow) return true;
       if (!prefs.lastVisit) return false;
-      const seen = Date.parse(postedAt(job));
       const visit = Date.parse(prefs.lastVisit);
-      return !Number.isNaN(seen) && !Number.isNaN(visit) && seen > visit;
+      return !Number.isNaN(posted) && !Number.isNaN(visit) && posted > visit;
     },
     [prefs.lastVisit],
   );
