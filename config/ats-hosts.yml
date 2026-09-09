@@ -33,18 +33,22 @@ platforms:
     board_pattern: "https://careers.smartrecruiters.com/{tenant}"
     supported: true
 
-  workable:
-    hosts:
-      - apply.workable.com
-    supported: partial
-
   workday:
     hosts:
       - myworkdayjobs.com
       - wd1.myworkdayjobs.com
       - wd3.myworkdayjobs.com
       - wd5.myworkdayjobs.com
-    supported: partial
+      - wd12.myworkdayjobs.com
+    supported: true
+
+  workable:
+    hosts:
+      - apply.workable.com
+      - jobs.workable.com
+    api_pattern: "https://apply.workable.com/api/v1/widget/accounts/{tenant}"
+    board_pattern: "https://apply.workable.com/{tenant}"
+    supported: true
 
   icims:
     hosts:

@@ -93,7 +93,13 @@ def normalize_raw_job(
         summary_source = description or summary_raw
     summary = truncate_summary(summary_source)
 
-    career_level, career_confidence = classify_career_level(raw.title, description, root=root)
+    career_level, career_confidence = classify_career_level(
+        raw.title,
+        description,
+        employment_type=raw.employment_type,
+        metadata=raw.metadata,
+        root=root,
+    )
     academic_term = classify_academic_term(raw.title, description, root=root)
     disciplines = classify_discipline(
         raw.title,

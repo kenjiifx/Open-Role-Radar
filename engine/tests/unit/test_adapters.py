@@ -45,6 +45,7 @@ def test_adapter_registry_contains_all_adapters() -> None:
         "json_ld",
         "lever",
         "smartrecruiters",
+        "workable",
         "workday",
     }
     assert get_adapter("greenhouse").name == "greenhouse"
@@ -122,7 +123,7 @@ def test_json_ld_parses_html_fixture() -> None:
 
 
 @pytest.mark.asyncio
-async def test_workday_adapter_reports_unsupported() -> None:
+async def test_workday_adapter_requires_host_site_tenant() -> None:
     adapter = WorkdayAdapter()
     source = _sample_source("workday", "acme")
     source = source.model_copy(
@@ -130,15 +131,32 @@ async def test_workday_adapter_reports_unsupported() -> None:
     )
 
     assert adapter.detect_host("acme.wd5.myworkdayjobs.com")
-    assert adapter.extract_tenant(source.careers_url) == "en-US"
+    assert adapter.supported is True
 
     class _NoopClient:
         pass
 
     result = await adapter.fetch_jobs(source, _NoopClient())  # type: ignore[arg-type]
-    assert result.status == "unsupported"
+    assert result.status == "error"
     assert result.jobs == []
     assert result.message is not None
+
+
+def test_workday_tenant_parser() -> None:
+    from openroleradar.adapters.workday import parse_workday_tenant
+
+    assert parse_workday_tenant("nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite") == (
+        "nvidia.wd5.myworkdayjobs.com",
+        "nvidia",
+        "NVIDIAExternalCareerSite",
+    )
+    assert parse_workday_tenant(
+        "salesforce.wd12.myworkdayjobs.com/salesforce/External_Career_Site"
+    ) == (
+        "salesforce.wd12.myworkdayjobs.com",
+        "salesforce",
+        "External_Career_Site",
+    )
 
 
 @pytest.mark.parametrize(

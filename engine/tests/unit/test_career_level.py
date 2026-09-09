@@ -42,3 +42,28 @@ def test_step_intern_title() -> None:
     level, confidence = classify_career_level("STEP Intern — Software Engineering")
     assert level == CareerLevel.INTERNSHIP
     assert confidence >= 0.65
+
+
+def test_jr_and_engineer_i_titles() -> None:
+    level, confidence = classify_career_level("Jr. Software Engineer")
+    assert level == CareerLevel.ENTRY_LEVEL
+    assert confidence >= 0.65
+    level, confidence = classify_career_level("Software Engineer I")
+    assert level == CareerLevel.ENTRY_LEVEL
+    assert confidence >= 0.65
+
+
+def test_lead_intern_not_rejected() -> None:
+    level, confidence = classify_career_level("Lead Intern, Product Design")
+    assert level == CareerLevel.INTERNSHIP
+    assert confidence >= 0.65
+
+
+def test_ats_metadata_promotes_generic_title() -> None:
+    level, confidence = classify_career_level(
+        "Software Engineer",
+        employment_type="Intern",
+        metadata={"experience_level": "Internship"},
+    )
+    assert level == CareerLevel.INTERNSHIP
+    assert confidence >= 0.7

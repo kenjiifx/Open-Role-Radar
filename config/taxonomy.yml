@@ -96,6 +96,8 @@ career_levels:
       - winter associate
       - step intern
       - university intern
+      - lead intern
+      - student intern
   - id: co_op
     label: Co-op
     patterns:
@@ -121,6 +123,14 @@ career_levels:
       - university hire
       - college hire
       - college graduate
+      - college grad
+      - new college grad
+      - ncg
+      - class of
+      - university software
+      - grad software
+      - software engineer graduate
+      - graduate software engineer
   - id: entry_level
     label: Entry Level
     patterns:
@@ -131,11 +141,28 @@ career_levels:
       - junior software
       - junior analyst
       - junior associate
+      - jr
+      - jr engineer
+      - jr. engineer
+      - jr developer
+      - jr. developer
+      - jr software
       - early career
       - early careers
       - associate engineer
       - associate developer
       - associate software
+      - software engineer associate
+      - engineer i
+      - developer i
+      - analyst i
+      - sde i
+      - swe i
+      - software engineer i
+      - associate product manager
+      - apm
+      - campus software
+      - trainee
   - id: apprenticeship
     label: Apprenticeship
     patterns:
@@ -154,6 +181,7 @@ career_levels:
       - rotational program
       - rotational engineer
       - rotational analyst
+      - rotational software
   - id: research_internship
     label: Research Internship
     patterns:
@@ -170,6 +198,7 @@ career_levels:
       - student program
       - student engineer
       - student developer
+      - student software
       - undergraduate
       - undergrad
       - student role

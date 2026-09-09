@@ -536,3 +536,16 @@
 - { company: Cred, domain: cred.com, adapter: lever, tenant: cred }
 - { company: Meesho, domain: meesho.com, adapter: lever, tenant: meesho }
 - { company: Woven By Toyota, domain: woven-by-toyota.com, adapter: lever, tenant: woven-by-toyota }
+
+# --- Workday CXS boards (large employers / campus heavy) ---
+- { company: NVIDIA, domain: nvidia.com, adapter: workday, tenant: nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite }
+- { company: Salesforce, domain: salesforce.com, adapter: workday, tenant: salesforce.wd12.myworkdayjobs.com/salesforce/External_Career_Site }
+- { company: Adobe, domain: adobe.com, adapter: workday, tenant: adobe.wd5.myworkdayjobs.com/external_experienced }
+- { company: Disney, domain: disney.com, adapter: workday, tenant: disney.wd5.myworkdayjobs.com/disneycareer }
+- { company: Target, domain: target.com, adapter: workday, tenant: target.wd5.myworkdayjobs.com/TargetCareers }
+- { company: Cisco, domain: cisco.com, adapter: workday, tenant: cisco.wd5.myworkdayjobs.com/Cisco_Careers }
+- { company: Intel, domain: intel.com, adapter: workday, tenant: intel.wd1.myworkdayjobs.com/External }
+- { company: Workday, domain: workday.com, adapter: workday, tenant: workday.wd5.myworkdayjobs.com/Workday }
+- { company: HP, domain: hp.com, adapter: workday, tenant: hp.wd5.myworkdayjobs.com/ExternalCareerSite }
+- { company: GE Aerospace, domain: geaerospace.com, adapter: workday, tenant: geaerospace.wd5.myworkdayjobs.com/GE_ExternalSite }
+- { company: BMO, domain: bmo.com, adapter: workday, tenant: bmo.wd3.myworkdayjobs.com/External }

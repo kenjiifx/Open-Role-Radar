@@ -152,10 +152,12 @@ class SafeHTTPClient:
         *,
         headers: Mapping[str, str] | None = None,
         params: Mapping[str, str] | None = None,
+        content: bytes | None = None,
     ) -> httpx.Response:
         current_url = await self._validate_request_url(url)
         redirects = 0
         request_headers = dict(headers or {})
+        request_content = content
 
         while True:
             parsed = urlparse(current_url)
@@ -170,6 +172,7 @@ class SafeHTTPClient:
                     current_url,
                     headers=request_headers,
                     params=params,
+                    content=request_content,
                 )
 
             if response.status_code in {301, 302, 303, 307, 308}:
@@ -186,6 +189,7 @@ class SafeHTTPClient:
                 current_url = await self._validate_request_url(str(next_url))
                 if response.status_code in {301, 302, 303}:
                     method = "GET"
+                    request_content = None
                 await response.aclose()
                 continue
 
@@ -199,6 +203,7 @@ class SafeHTTPClient:
         *,
         headers: Mapping[str, str] | None = None,
         params: Mapping[str, str] | None = None,
+        content: bytes | None = None,
         etag: str | None = None,
         if_modified_since: str | None = None,
     ) -> HTTPResponse:
@@ -233,6 +238,7 @@ class SafeHTTPClient:
                     url,
                     headers=request_headers,
                     params=params,
+                    content=content,
                 )
                 if response.status_code in {429, 500, 502, 503, 504}:
                     await response.aclose()
@@ -276,6 +282,23 @@ class SafeHTTPClient:
             params=params,
             etag=etag,
             if_modified_since=if_modified_since,
+        )
+
+    async def post(
+        self,
+        url: str,
+        *,
+        content: bytes | None = None,
+        headers: Mapping[str, str] | None = None,
+        params: Mapping[str, str] | None = None,
+    ) -> HTTPResponse:
+        """Perform a POST request with an optional body."""
+        return await self.request(
+            "POST",
+            url,
+            headers=headers,
+            params=params,
+            content=content,
         )
 
     async def get_json(

@@ -26,15 +26,15 @@ Published by [OpenRoleRadar](https://kenjiifx.github.io/Open-Role-Radar/).
 
 ## What it does
 
-- Polls **public** Greenhouse, Lever, and Ashby job boards on a GitHub Actions schedule (SmartRecruiters / JSON-LD adapters exist; Workday is detected but not fetched yet)
-- Classifies early-career titles and extracts mobility signals (visa, relocation)
-- Exports static JSON + Atom feeds and deploys to GitHub Pages
+- Polls **public** Greenhouse, Lever, Ashby, Workday, Workable, and SmartRecruiters boards on a GitHub Actions schedule
+- Classifies early-career titles (intern / co-op / new-grad / junior / engineer I / campus, plus ATS metadata tags)
+- Exports static JSON + Atom feeds; browser refresh reads a live-feed branch so Pages CDN lag doesn’t hide new syncs
 
 ## What it does not do
 
-- Live scrape on page refresh — the site only reloads the last published snapshot
-- Cover Workday-heavy employers (most banks) until a Workday adapter ships
-- Guarantee every board stays healthy — dead tenants are marked failing and skipped for closures
+- Scrape LinkedIn or Indeed (aggregator noise; we only use first-party ATS APIs)
+- Cover every employer on earth — boards still need a public API we can poll
+- Guarantee sub-minute latency — sync runs every few minutes, then live-feed updates
 
 ## Repo layout
 

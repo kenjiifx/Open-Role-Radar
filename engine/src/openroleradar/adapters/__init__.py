@@ -16,6 +16,7 @@ from openroleradar.adapters.smartrecruiters import (
     SmartRecruitersAdapter,
     smartrecruiters_adapter,
 )
+from openroleradar.adapters.workable import WorkableAdapter, workable_adapter
 from openroleradar.adapters.workday import WorkdayAdapter, workday_adapter
 
 __all__ = [
@@ -26,6 +27,7 @@ __all__ = [
     "JsonLdAdapter",
     "LeverAdapter",
     "SmartRecruitersAdapter",
+    "WorkableAdapter",
     "WorkdayAdapter",
     "ashby_adapter",
     "clear_adapter_registry",
@@ -36,5 +38,6 @@ __all__ = [
     "list_adapters",
     "register_adapter",
     "smartrecruiters_adapter",
+    "workable_adapter",
     "workday_adapter",
 ]

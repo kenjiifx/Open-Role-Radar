@@ -55,11 +55,12 @@ class SmartRecruitersAdapter:
             return parts[2]
         return parts[0]
 
-    def build_api_url(self, tenant: str) -> str:
+    def build_api_url(self, tenant: str, *, offset: int = 0, limit: int = 100) -> str:
         return build_url(
             "https",
             "api.smartrecruiters.com",
             f"/v1/companies/{tenant}/postings",
+            query={"limit": str(limit), "offset": str(offset)},
         )
 
     def parse_payload(self, payload: Any, source: Source) -> list[RawJob]:
@@ -133,40 +134,49 @@ class SmartRecruitersAdapter:
         )
 
     async def fetch_jobs(self, source: Source, client: SafeHTTPClient) -> AdapterFetchResult:
-        api_url = self.build_api_url(source.adapter_tenant)
-        response = await client.get(
-            api_url,
-            etag=source.etag,
-            if_modified_since=source.last_modified,
-        )
+        jobs: list[RawJob] = []
+        offset = 0
+        limit = 100
+        total: int | None = None
 
-        if response.is_not_modified:
-            return AdapterFetchResult(
-                not_modified=True,
-                etag=response.etag or source.etag,
-                last_modified=response.last_modified or source.last_modified,
-            )
+        while True:
+            api_url = self.build_api_url(source.adapter_tenant, offset=offset, limit=limit)
+            response = await client.get(api_url)
+            if response.status_code != 200:
+                if offset == 0:
+                    return AdapterFetchResult(
+                        status="error",
+                        message=f"SmartRecruiters API returned HTTP {response.status_code}",
+                    )
+                break
+            try:
+                payload = json.loads(response.content)
+            except json.JSONDecodeError as exc:
+                return AdapterFetchResult(
+                    status="error",
+                    message=f"Invalid JSON from SmartRecruiters API: {exc}",
+                )
+            if isinstance(payload, dict) and total is None:
+                try:
+                    total = int(payload.get("totalFound") or 0)
+                except (TypeError, ValueError):
+                    total = None
+            batch = self.parse_payload(payload, source)
+            if not batch:
+                break
+            jobs.extend(batch)
+            offset += len(batch)
+            if total is not None and offset >= total:
+                break
+            if len(batch) < limit:
+                break
+            if offset >= 2000:
+                break
 
-        if response.status_code != 200:
-            return AdapterFetchResult(
-                status="error",
-                message=f"SmartRecruiters API returned HTTP {response.status_code}",
-            )
-
-        try:
-            payload = json.loads(response.content)
-        except json.JSONDecodeError as exc:
-            return AdapterFetchResult(
-                status="error",
-                message=f"Invalid JSON from SmartRecruiters API: {exc}",
-            )
-
-        jobs = self.parse_payload(payload, source)
         return AdapterFetchResult(
             jobs=jobs,
-            etag=response.etag,
-            last_modified=response.last_modified,
-            metadata={"job_count": len(jobs)},
+            status="ok",
+            metadata={"job_count": len(jobs), "total": total},
         )
 
 

@@ -18,7 +18,13 @@ def reclassify_state(state: LiveState, *, root: Path | None = None) -> int:
     """
     changed = 0
     for job in state.jobs.values():
-        level, confidence = classify_career_level(job.title, job.summary, root=root)
+        level, confidence = classify_career_level(
+            job.title,
+            job.summary,
+            employment_type=job.employment_type.value if job.employment_type else None,
+            metadata=job.extra,
+            root=root,
+        )
         disciplines = classify_discipline(job.title, description=job.summary, root=root)
         academic_term = classify_academic_term(job.title, job.summary, root=root)
         cleaned_summary = truncate_summary(html_to_plaintext(job.summary))
