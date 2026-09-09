@@ -29,3 +29,21 @@ def test_public_job_rejects_closed() -> None:
 def test_public_job_rejects_low_confidence() -> None:
     job = sample_job(career_level=CareerLevel.NEW_GRAD, career_level_confidence=0.2)
     assert is_public_job(job) is False
+
+
+def test_public_job_rejects_closed_application_copy() -> None:
+    job = sample_job(
+        career_level=CareerLevel.INTERNSHIP,
+        career_level_confidence=0.9,
+        summary="Thanks for your interest. We are no longer accepting applications.",
+    )
+    assert is_public_job(job) is False
+
+
+def test_public_job_rejects_missing_apply_url() -> None:
+    job = sample_job(
+        career_level=CareerLevel.INTERNSHIP,
+        career_level_confidence=0.9,
+        apply_url="",
+    )
+    assert is_public_job(job) is False

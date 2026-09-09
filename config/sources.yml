@@ -200,3 +200,155 @@
 - { company: Starburst, domain: starburst.io, adapter: greenhouse, tenant: starburst }
 - { company: 10x Genomics, domain: 10xgenomics.com, adapter: greenhouse, tenant: 10xgenomics }
 - { company: Recursion, domain: recursion.com, adapter: greenhouse, tenant: recursion }
+
+# --- Mass expansion (verified live boards across industries) ---
+- { company: Acquia, domain: acquia.com, adapter: greenhouse, tenant: acquia }
+- { company: Adyen, domain: adyen.com, adapter: greenhouse, tenant: adyen }
+- { company: Alarm.com, domain: alarm.com, adapter: greenhouse, tenant: alarmcom }
+- { company: Algolia, domain: algolia.com, adapter: greenhouse, tenant: algolia }
+- { company: Amperity, domain: amperity.com, adapter: greenhouse, tenant: amperity }
+- { company: AppLovin, domain: applovin.com, adapter: greenhouse, tenant: applovin }
+- { company: Attentive, domain: attentive.com, adapter: greenhouse, tenant: attentive }
+- { company: Aviatrix, domain: aviatrix.com, adapter: greenhouse, tenant: aviatrix }
+- { company: Axios, domain: axios.com, adapter: greenhouse, tenant: axios }
+- { company: Backblaze, domain: backblaze.com, adapter: greenhouse, tenant: backblaze }
+- { company: Betterment, domain: betterment.com, adapter: greenhouse, tenant: betterment }
+- { company: BigID, domain: bigid.com, adapter: greenhouse, tenant: bigid }
+- { company: Billtrust, domain: billtrust.com, adapter: greenhouse, tenant: billtrust }
+- { company: Blend, domain: blend.com, adapter: greenhouse, tenant: blend }
+- { company: Bloomreach, domain: bloomreach.com, adapter: greenhouse, tenant: bloomreach }
+- { company: Braze, domain: braze.com, adapter: greenhouse, tenant: braze }
+- { company: Buildkite, domain: buildkite.com, adapter: greenhouse, tenant: buildkite }
+- { company: BuzzFeed, domain: buzzfeed.com, adapter: greenhouse, tenant: buzzfeed }
+- { company: Candidly, domain: candidly.com, adapter: greenhouse, tenant: candidly }
+- { company: CarGurus, domain: cargurus.com, adapter: greenhouse, tenant: cargurus }
+- { company: Checkr, domain: checkr.com, adapter: greenhouse, tenant: checkr }
+- { company: Cognite, domain: cognite.com, adapter: greenhouse, tenant: cognite }
+- { company: Compass Pathways, domain: compasspathways.com, adapter: greenhouse, tenant: compasspathways }
+- { company: Contentful, domain: contentful.com, adapter: greenhouse, tenant: contentful }
+- { company: CoreWeave, domain: coreweave.com, adapter: greenhouse, tenant: coreweave }
+- { company: Crossbeam, domain: crossbeam.com, adapter: greenhouse, tenant: crossbeam }
+- { company: Current, domain: current.com, adapter: greenhouse, tenant: current }
+- { company: Customer.io, domain: customer.io, adapter: greenhouse, tenant: customerio }
+- { company: Dialpad, domain: dialpad.com, adapter: greenhouse, tenant: dialpad }
+- { company: Dispatch, domain: dispatch.me, adapter: greenhouse, tenant: dispatch }
+- { company: Earnest, domain: earnest.com, adapter: greenhouse, tenant: earnest }
+- { company: Epic Games, domain: epicgames.com, adapter: greenhouse, tenant: epicgames }
+- { company: Everlane, domain: everlane.com, adapter: greenhouse, tenant: everlane }
+- { company: Fandom, domain: fandom.com, adapter: greenhouse, tenant: fandom }
+- { company: FanDuel, domain: fanduel.com, adapter: greenhouse, tenant: fanduel }
+- { company: Forter, domain: forter.com, adapter: greenhouse, tenant: forter }
+- { company: Gather, domain: gather.town, adapter: greenhouse, tenant: gather }
+- { company: Genesis, domain: genesis.com, adapter: greenhouse, tenant: genesis }
+- { company: Genius, domain: genius.com, adapter: greenhouse, tenant: genius }
+- { company: Ghost, domain: ghost.org, adapter: greenhouse, tenant: ghost }
+- { company: Glossier, domain: glossier.com, adapter: greenhouse, tenant: glossier }
+- { company: GoFundMe, domain: gofundme.com, adapter: greenhouse, tenant: gofundme }
+- { company: Gong, domain: gong.io, adapter: greenhouse, tenant: gongio }
+- { company: Greenhouse, domain: greenhouse.io, adapter: greenhouse, tenant: greenhouse }
+- { company: Groupon, domain: groupon.com, adapter: greenhouse, tenant: groupon }
+- { company: HackerRank, domain: hackerrank.com, adapter: greenhouse, tenant: hackerrank }
+- { company: Happy Money, domain: happymoney.com, adapter: greenhouse, tenant: happymoney }
+- { company: HelloFresh, domain: hellofresh.com, adapter: greenhouse, tenant: hellofresh }
+- { company: Huntress, domain: huntress.com, adapter: greenhouse, tenant: huntress }
+- { company: Imgur, domain: imgur.com, adapter: greenhouse, tenant: imgur }
+- { company: Iterable, domain: iterable.com, adapter: greenhouse, tenant: iterable }
+- { company: Justworks, domain: justworks.com, adapter: greenhouse, tenant: justworks }
+- { company: Khan Academy, domain: khanacademy.org, adapter: greenhouse, tenant: khanacademy }
+- { company: Klaviyo, domain: klaviyo.com, adapter: greenhouse, tenant: klaviyo }
+- { company: LaunchDarkly, domain: launchdarkly.com, adapter: greenhouse, tenant: launchdarkly }
+- { company: Liftoff, domain: liftoff.io, adapter: greenhouse, tenant: liftoff }
+- { company: LinkedIn, domain: linkedin.com, adapter: greenhouse, tenant: linkedin }
+- { company: Lithic, domain: lithic.com, adapter: greenhouse, tenant: lithic }
+- { company: LivePerson, domain: liveperson.com, adapter: greenhouse, tenant: liveperson }
+- { company: Lob, domain: lob.com, adapter: greenhouse, tenant: lob }
+- { company: Lucidchart, domain: lucid.co, adapter: greenhouse, tenant: lucidsoftware }
+- { company: Maven Clinic, domain: mavenclinic.com, adapter: greenhouse, tenant: mavenclinic }
+- { company: Medium, domain: medium.com, adapter: greenhouse, tenant: medium }
+- { company: Modern Health, domain: modernhealth.com, adapter: greenhouse, tenant: modernhealth }
+- { company: N26, domain: n26.com, adapter: greenhouse, tenant: n26 }
+- { company: Netlify, domain: netlify.com, adapter: greenhouse, tenant: netlify }
+- { company: New Relic, domain: newrelic.com, adapter: greenhouse, tenant: newrelic }
+- { company: Newsela, domain: newsela.com, adapter: greenhouse, tenant: newsela }
+- { company: OneTrust, domain: onetrust.com, adapter: greenhouse, tenant: onetrust }
+- { company: Optiver, domain: optiver.com, adapter: greenhouse, tenant: optiver }
+- { company: Oscar Health, domain: hioscar.com, adapter: greenhouse, tenant: oscar }
+- { company: Otter.ai, domain: otter.ai, adapter: greenhouse, tenant: otterai }
+- { company: Payoneer, domain: payoneer.com, adapter: greenhouse, tenant: payoneer }
+- { company: Peloton, domain: onepeloton.com, adapter: greenhouse, tenant: peloton }
+- { company: Pendo, domain: pendo.io, adapter: greenhouse, tenant: pendo }
+- { company: Prisma, domain: prisma.io, adapter: greenhouse, tenant: prisma }
+- { company: PubNub, domain: pubnub.com, adapter: greenhouse, tenant: pubnub }
+- { company: Riot Games, domain: riotgames.com, adapter: greenhouse, tenant: riotgames }
+- { company: Roku, domain: roku.com, adapter: greenhouse, tenant: roku }
+- { company: Sauce Labs, domain: saucelabs.com, adapter: greenhouse, tenant: saucelabs }
+- { company: SolarWinds, domain: solarwinds.com, adapter: greenhouse, tenant: solarwinds }
+- { company: SpaceX, domain: spacex.com, adapter: greenhouse, tenant: spacex }
+- { company: SpotHero, domain: spothero.com, adapter: greenhouse, tenant: spothero }
+- { company: Stash, domain: stash.com, adapter: greenhouse, tenant: stashinvest }
+- { company: Stitch Fix, domain: stitchfix.com, adapter: greenhouse, tenant: stitchfix }
+- { company: StockX, domain: stockx.com, adapter: greenhouse, tenant: stockx }
+- { company: Sumo Logic, domain: sumologic.com, adapter: greenhouse, tenant: sumologic }
+- { company: SurveyMonkey, domain: surveymonkey.com, adapter: greenhouse, tenant: surveymonkey }
+- { company: Sweetgreen, domain: sweetgreen.com, adapter: greenhouse, tenant: sweetgreen }
+- { company: Tanium, domain: tanium.com, adapter: greenhouse, tenant: tanium }
+- { company: TaskRabbit, domain: taskrabbit.com, adapter: greenhouse, tenant: taskrabbit }
+- { company: The Trade Desk, domain: thetradedesk.com, adapter: greenhouse, tenant: thetradedesk }
+- { company: Tide, domain: tide.co, adapter: greenhouse, tenant: tide }
+- { company: TripAdvisor, domain: tripadvisor.com, adapter: greenhouse, tenant: tripadvisor }
+- { company: Truebill, domain: rocketmoney.com, adapter: greenhouse, tenant: truebill }
+- { company: Trustpilot, domain: trustpilot.com, adapter: greenhouse, tenant: trustpilot }
+- { company: Typeform, domain: typeform.com, adapter: greenhouse, tenant: typeform }
+- { company: Udacity, domain: udacity.com, adapter: greenhouse, tenant: udacity }
+- { company: Udemy, domain: udemy.com, adapter: greenhouse, tenant: udemy }
+- { company: Upstart, domain: upstart.com, adapter: greenhouse, tenant: upstart }
+- { company: Upwork, domain: upwork.com, adapter: greenhouse, tenant: upwork }
+- { company: Veriff, domain: veriff.com, adapter: greenhouse, tenant: veriff }
+- { company: Vox Media, domain: voxmedia.com, adapter: greenhouse, tenant: voxmedia }
+- { company: Wikimedia, domain: wikimediafoundation.org, adapter: greenhouse, tenant: wikimedia }
+- { company: Wolt, domain: wolt.com, adapter: greenhouse, tenant: wolt }
+- { company: Yext, domain: yext.com, adapter: greenhouse, tenant: yext }
+- { company: ZipRecruiter, domain: ziprecruiter.com, adapter: greenhouse, tenant: ziprecruiter }
+- { company: ZoomInfo, domain: zoominfo.com, adapter: greenhouse, tenant: zoominfo }
+- { company: Zscaler, domain: zscaler.com, adapter: greenhouse, tenant: zscaler }
+- { company: Abridge, domain: abridge.com, adapter: ashby, tenant: abridge }
+- { company: Ashby, domain: ashbyhq.com, adapter: ashby, tenant: ashby }
+- { company: ElevenLabs, domain: elevenlabs.io, adapter: ashby, tenant: elevenlabs }
+- { company: Vanta, domain: vanta.com, adapter: ashby, tenant: vanta }
+- { company: Clerk, domain: clerk.com, adapter: ashby, tenant: clerk }
+- { company: Harvey, domain: harvey.ai, adapter: ashby, tenant: harvey }
+- { company: Lovable, domain: lovable.dev, adapter: ashby, tenant: lovable }
+- { company: n8n, domain: n8n.io, adapter: ashby, tenant: n8n }
+- { company: Pika, domain: pika.art, adapter: ashby, tenant: pika }
+- { company: Reflection AI, domain: reflection.ai, adapter: ashby, tenant: reflectionai }
+- { company: Sierra, domain: sierra.ai, adapter: ashby, tenant: sierra }
+- { company: Stytch, domain: stytch.com, adapter: ashby, tenant: stytch }
+- { company: Tldraw, domain: tldraw.com, adapter: ashby, tenant: tldraw }
+- { company: Writer, domain: writer.com, adapter: ashby, tenant: writer }
+- { company: A24, domain: a24films.com, adapter: greenhouse, tenant: a24 }
+- { company: Abnormal Security, domain: abnormalsecurity.com, adapter: greenhouse, tenant: abnormalsecurity }
+- { company: Anaplan, domain: anaplan.com, adapter: greenhouse, tenant: anaplan }
+- { company: AppleCart, domain: applecart.co, adapter: greenhouse, tenant: applecart }
+- { company: Bird, domain: bird.co, adapter: greenhouse, tenant: bird }
+- { company: Branch, domain: branch.io, adapter: greenhouse, tenant: branchmetrics }
+- { company: Cohere Health, domain: coherehealth.com, adapter: greenhouse, tenant: coherehealth }
+- { company: Crunchyroll, domain: crunchyroll.com, adapter: greenhouse, tenant: crunchyroll }
+- { company: Earnin, domain: earnin.com, adapter: greenhouse, tenant: earnin }
+- { company: GoDaddy, domain: godaddy.com, adapter: greenhouse, tenant: godaddy }
+- { company: Indeed, domain: indeed.com, adapter: greenhouse, tenant: indeed }
+- { company: Intercom, domain: intercom.com, adapter: greenhouse, tenant: intercom }
+- { company: Mejuri, domain: mejuri.com, adapter: greenhouse, tenant: mejuri }
+- { company: Mozilla, domain: mozilla.org, adapter: greenhouse, tenant: mozilla }
+- { company: Alchemy, domain: alchemy.com, adapter: ashby, tenant: alchemy }
+- { company: Baseten, domain: baseten.co, adapter: ashby, tenant: baseten }
+- { company: Braintrust, domain: braintrustdata.com, adapter: ashby, tenant: braintrust }
+- { company: Browserbase, domain: browserbase.com, adapter: ashby, tenant: browserbase }
+- { company: Cognition, domain: cognition.ai, adapter: ashby, tenant: cognition }
+- { company: Deepgram, domain: deepgram.com, adapter: ashby, tenant: deepgram }
+- { company: Factory, domain: factory.ai, adapter: ashby, tenant: factory }
+- { company: Granola, domain: granola.ai, adapter: ashby, tenant: granola }
+- { company: Ideogram, domain: ideogram.ai, adapter: ashby, tenant: ideogram }
+- { company: Midjourney, domain: midjourney.com, adapter: ashby, tenant: midjourney }
+- { company: Pinecone, domain: pinecone.io, adapter: ashby, tenant: pinecone }
+- { company: Suno, domain: suno.com, adapter: ashby, tenant: suno }
+- { company: Synthesia, domain: synthesia.io, adapter: ashby, tenant: synthesia }
