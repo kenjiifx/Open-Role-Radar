@@ -78,9 +78,10 @@ Quarantined records include `issues[]` for operator review.
 
 ```bash
 cd engine
-uv run openroleradar discover          # GitHub + career inspection
-uv run openroleradar discover --no-github
-uv run openroleradar validate            # Report seed + state summary
+uv run openroleradar discover --publish          # validate + promote + publish live-state
+uv run openroleradar discover --common-crawl     # also query Common Crawl CDX
+uv run openroleradar discover --no-github --no-publish
+uv run openroleradar validate                    # Report seed + state summary
 uv run openroleradar inspect-source <id>
 ```
 

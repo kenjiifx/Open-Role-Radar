@@ -3,6 +3,7 @@ import {
   buildSearchIndex,
   filterJobs,
   matchesQuery,
+  normalizeCountryCode,
   paginateJobs,
   tokenizeQuery,
   totalPages,
@@ -179,5 +180,11 @@ describe('search utilities', () => {
       {},
     );
     expect(filtered.map((job) => job.job_id)).toEqual(['b1', 'a1', 'a2']);
+  });
+
+  it('normalizes origin country aliases to ISO codes', () => {
+    expect(normalizeCountryCode('Canada')).toBe('CA');
+    expect(normalizeCountryCode('uk')).toBe('GB');
+    expect(normalizeCountryCode('US')).toBe('US');
   });
 });

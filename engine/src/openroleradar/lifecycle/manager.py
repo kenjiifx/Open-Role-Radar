@@ -128,6 +128,9 @@ class LifecycleManager:
             changed.append("career_level_confidence")
         existing.career_level = updated.career_level
         existing.career_level_confidence = updated.career_level_confidence
+        if existing.academic_term != updated.academic_term:
+            changed.append("academic_term")
+        existing.academic_term = updated.academic_term
         existing.disciplines = updated.disciplines
         existing.eligibility = updated.eligibility
         existing.mobility = updated.mobility

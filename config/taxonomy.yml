@@ -92,6 +92,10 @@ career_levels:
       - winter analyst
       - fall analyst
       - spring analyst
+      - summer associate
+      - winter associate
+      - step intern
+      - university intern
   - id: co_op
     label: Co-op
     patterns:
@@ -115,6 +119,8 @@ career_levels:
       - graduate developer
       - graduate software
       - university hire
+      - college hire
+      - college graduate
   - id: entry_level
     label: Entry Level
     patterns:
@@ -141,6 +147,7 @@ career_levels:
       - graduate program
       - graduate scheme
       - analyst program
+      - leadership program
   - id: rotational_program
     label: Rotational Program
     patterns:
@@ -166,6 +173,11 @@ career_levels:
       - undergraduate
       - undergrad
       - student role
+      - phd intern
+      - phd internship
+      - masters intern
+      - university program
+      - campus program
 
 senior_exclusions:
   - senior

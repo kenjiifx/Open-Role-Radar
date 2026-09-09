@@ -256,9 +256,11 @@ export default function FilterPanel({
           type="text"
           value={filters.originCountry}
           onChange={(event) => update({ originCountry: event.target.value })}
-          placeholder="e.g. Canada, India, UK"
+          placeholder="e.g. CA, Canada, India, UK"
         />
-        <p className="filter-hint">Hides roles that explicitly exclude your country.</p>
+        <p className="filter-hint">
+          Matches ISO country codes in eligibility text (names like Canada map to CA).
+        </p>
       </fieldset>
 
       <fieldset className="filter-group">

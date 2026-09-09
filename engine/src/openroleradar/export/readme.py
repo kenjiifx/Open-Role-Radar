@@ -8,6 +8,7 @@ from datetime import UTC
 from pathlib import Path
 
 from openroleradar.config import ProjectConfig, load_project_config
+from openroleradar.export.public_filter import is_public_job
 from openroleradar.models.state import LiveState
 
 START_MARKER = "<!-- GENERATED_STATS:START -->"
@@ -34,19 +35,19 @@ class ReadmeGenerator:
         self.config = config or load_project_config()
 
     def compute_stats(self, state: LiveState) -> ReadmeStats:
-        open_jobs = sum(
-            1 for job in state.jobs.values() if job.lifecycle.value in {"open", "reopened"}
-        )
+        open_jobs = sum(1 for job in state.jobs.values() if is_public_job(job))
         healthy_sources = sum(
-            1 for source in state.sources.values() if source.health_status == "healthy"
+            1
+            for source in state.sources.values()
+            if source.enabled and source.health_status == "healthy"
         )
-        adapters = len({source.adapter for source in state.sources.values()})
+        adapters = len({source.adapter for source in state.sources.values() if source.enabled})
         return ReadmeStats(
             generated_at=state.generated_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC"),
             open_jobs=open_jobs,
             total_jobs=len(state.jobs),
             companies=len(state.companies),
-            sources=len(state.sources),
+            sources=sum(1 for source in state.sources.values() if source.enabled),
             healthy_sources=healthy_sources,
             adapters=adapters,
         )
@@ -59,7 +60,7 @@ class ReadmeGenerator:
             f"_Last updated: {stats.generated_at}_\n\n"
             f"| Metric | Count |\n"
             f"| --- | ---: |\n"
-            f"| Open roles | {stats.open_jobs:,} |\n"
+            f"| Public early-career roles | {stats.open_jobs:,} |\n"
             f"| Total tracked roles | {stats.total_jobs:,} |\n"
             f"| Companies | {stats.companies:,} |\n"
             f"| Sources | {stats.sources:,} |\n"

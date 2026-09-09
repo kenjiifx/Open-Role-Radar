@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
 
@@ -13,8 +15,15 @@ from rich.table import Table
 
 from openroleradar.config import find_repo_root, load_project_config
 from openroleradar.discovery.career_site import CareerSiteInspector
+from openroleradar.discovery.common_crawl import CommonCrawlDiscovery
 from openroleradar.discovery.github_search import GitHubCodeSearch
+from openroleradar.discovery.promote import (
+    domain_from_url,
+    promote_validation,
+    quarantine_candidate,
+)
 from openroleradar.discovery.registry import load_seed_sources
+from openroleradar.discovery.validate import validate_candidate
 from openroleradar.export.archive import ArchiveExporter
 from openroleradar.export.readme import ReadmeGenerator
 from openroleradar.health.monitor import HealthMonitor
@@ -90,26 +99,139 @@ def build_site_data() -> None:
 @app.command()
 def discover(
     github: Annotated[bool, typer.Option("--github/--no-github")] = True,
+    common_crawl: Annotated[
+        bool, typer.Option("--common-crawl/--no-common-crawl", help="Query Common Crawl CDX")
+    ] = False,
+    publish: Annotated[
+        bool,
+        typer.Option(
+            "--publish/--no-publish",
+            help="Publish live-state release when GITHUB_TOKEN is set",
+        ),
+    ] = True,
 ) -> None:
-    """Run source discovery (GitHub code search, career site inspection)."""
+    """Discover ATS boards, validate candidates, and promote into live state."""
     root = _repo_root()
     config = load_project_config(root)
     store = _state_store(root)
-    state = store.load() if store.exists() else SyncOrchestrator(root=root).bootstrap_state()
+    orchestrator = SyncOrchestrator(root=root)
+    if store.exists():
+        state = store.load()
+    else:
+        restored = orchestrator.restore_live_state_release()
+        state = store.load() if restored and store.exists() else orchestrator.bootstrap_state()
 
-    counts = {"github": 0, "career": 0}
+    counts = {
+        "github_candidates": 0,
+        "common_crawl_candidates": 0,
+        "career_inspected": 0,
+        "promoted": 0,
+        "quarantined": 0,
+        "already_tracked": 0,
+    }
+
+    def _handle_candidate(
+        *,
+        url: str,
+        platform: str | None,
+        tenant: str | None,
+        confidence: float,
+        discovered_via: str,
+        company_domain: str | None = None,
+        company_name: str | None = None,
+        has_json_ld: bool = False,
+    ) -> None:
+        domain = company_domain or domain_from_url(url)
+        result = validate_candidate(
+            url=url,
+            company_domain=domain,
+            platform=platform,
+            tenant=tenant,
+            base_confidence=confidence,
+            has_json_ld=has_json_ld,
+            config=config,
+            root=root,
+        )
+        if result.source_id and result.source_id in state.sources:
+            counts["already_tracked"] += 1
+            return
+        if result.accepted:
+            promoted = promote_validation(
+                state,
+                result,
+                discovered_via=discovered_via,
+                company_name=company_name,
+            )
+            if promoted is not None:
+                counts["promoted"] += 1
+            return
+        quarantine_candidate(
+            state,
+            url=url,
+            result=result,
+            discovered_via=discovered_via,
+        )
+        counts["quarantined"] += 1
+
     if github:
-        with GitHubCodeSearch(config=config) as search:
-            candidates, _cursor = search.discover()
-            counts["github"] = len(candidates)
+        token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+        with GitHubCodeSearch(config=config, token=token) as search:
+            candidates, cursor = search.discover(cursor=state.discovery.github_cursor)
+            counts["github_candidates"] = len(candidates)
+            state.discovery.github_cursor = cursor
+            state.discovery.last_github_run = datetime.now(UTC)
+            for candidate in candidates:
+                _handle_candidate(
+                    url=candidate.url,
+                    platform=candidate.platform,
+                    tenant=candidate.tenant,
+                    confidence=candidate.confidence,
+                    discovered_via="github",
+                )
+
+    if common_crawl:
+        with CommonCrawlDiscovery(config=config) as discovery:
+            crawl_candidates, crawl_index = discovery.discover(
+                index=state.discovery.common_crawl_index
+            )
+            counts["common_crawl_candidates"] = len(crawl_candidates)
+            state.discovery.common_crawl_index = crawl_index
+            state.discovery.last_common_crawl_run = datetime.now(UTC)
+            for candidate in crawl_candidates:
+                _handle_candidate(
+                    url=candidate.url,
+                    platform=candidate.platform,
+                    tenant=candidate.tenant,
+                    confidence=candidate.confidence,
+                    discovered_via="common_crawl",
+                )
+
     with CareerSiteInspector(config=config) as inspector:
         for seed in load_seed_sources(root)[:5]:
-            result = inspector.inspect(seed.domain)
-            if result.ats_match is not None:
-                counts["career"] += 1
+            inspection = inspector.inspect(seed.domain)
+            counts["career_inspected"] += 1
+            if inspection.ats_match is None:
+                continue
+            match = inspection.ats_match
+            url = inspection.careers_urls[0] if inspection.careers_urls else seed.careers_url
+            _handle_candidate(
+                url=url,
+                platform=match.platform,
+                tenant=match.tenant,
+                confidence=max(match.confidence, inspection.confidence),
+                discovered_via="career_site",
+                company_domain=seed.domain,
+                company_name=seed.company,
+                has_json_ld=inspection.has_json_ld_jobs,
+            )
 
+    state.generated_at = datetime.now(UTC)
     store.save(state)
     console.print(f"Discovery complete: {counts}")
+
+    if publish and (os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")):
+        published = orchestrator.publish_live_state_release()
+        console.print_json(json.dumps(published, indent=2))
 
 
 @app.command()

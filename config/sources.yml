@@ -13,14 +13,14 @@
 - { company: Vercel, domain: vercel.com, adapter: greenhouse, tenant: vercel }
 - { company: Supabase, domain: supabase.com, adapter: ashby, tenant: supabase }
 - { company: GitLab, domain: about.gitlab.com, adapter: greenhouse, tenant: gitlab }
-- { company: HashiCorp, domain: hashicorp.com, adapter: greenhouse, tenant: hashicorp }
+# HashiCorp careers moved off public Greenhouse/Ashby/Lever after IBM acquisition (Workday).
 - { company: MongoDB, domain: mongodb.com, adapter: greenhouse, tenant: mongodb }
-- { company: Snowflake, domain: snowflake.com, adapter: greenhouse, tenant: snowflake }
+- { company: Snowflake, domain: snowflake.com, adapter: ashby, tenant: snowflake }
 - { company: Databricks, domain: databricks.com, adapter: greenhouse, tenant: databricks }
 - { company: Robinhood, domain: robinhood.com, adapter: greenhouse, tenant: robinhood }
 - { company: Coinbase, domain: coinbase.com, adapter: greenhouse, tenant: coinbase }
 # Shopify careers are Ashby-embedded but the public job-board API is closed; skip until a public feed exists.
-- { company: Spotify, domain: lifeatspotify.com, adapter: greenhouse, tenant: spotify }
+- { company: Spotify, domain: lifeatspotify.com, adapter: lever, tenant: spotify }
 - { company: Reddit, domain: redditinc.com, adapter: greenhouse, tenant: reddit }
 
 # --- Expanded tech ---
@@ -31,7 +31,7 @@
 - { company: Lyft, domain: lyft.com, adapter: greenhouse, tenant: lyft }
 - { company: DoorDash, domain: doordash.com, adapter: greenhouse, tenant: doordash }
 - { company: Affirm, domain: affirm.com, adapter: greenhouse, tenant: affirm }
-- { company: Block, domain: block.xyz, adapter: greenhouse, tenant: square }
+- { company: Block, domain: block.xyz, adapter: greenhouse, tenant: block }
 - { company: Twilio, domain: twilio.com, adapter: greenhouse, tenant: twilio }
 - { company: Asana, domain: asana.com, adapter: greenhouse, tenant: asana }
 - { company: HubSpot, domain: hubspot.com, adapter: greenhouse, tenant: hubspot }
@@ -133,7 +133,7 @@
 
 # --- Lever + large boards ---
 - { company: Palantir, domain: palantir.com, adapter: lever, tenant: palantir }
-- { company: Netflix, domain: netflix.com, adapter: greenhouse, tenant: netflix }
+# Netflix uses a private careers stack (no public Greenhouse/Ashby/Lever board).
 
 # --- Expanded coverage (unique tenants) ---
 - { company: Gusto, domain: gusto.com, adapter: greenhouse, tenant: gusto }

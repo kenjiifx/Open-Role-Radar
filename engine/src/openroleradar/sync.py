@@ -70,16 +70,23 @@ class SyncOrchestrator:
                 added += 1
             else:
                 existing = state.sources[source.source_id]
+                tenant_changed = (
+                    existing.adapter != source.adapter
+                    or existing.adapter_tenant != source.adapter_tenant
+                )
                 existing.company_name = source.company_name
                 existing.company_domain = source.company_domain
                 existing.careers_url = source.careers_url
                 existing.adapter = source.adapter
                 existing.adapter_tenant = source.adapter_tenant
-                existing.enabled = True
                 existing.poll_tier = "hot"
-                if existing.health_status in {"failing", "degraded", "unsupported"}:
+                if tenant_changed:
+                    # Seed tenant/adapter fix — give the board a clean slate.
+                    existing.enabled = True
                     existing.health_status = "healthy"
                     existing.consecutive_failures = 0
+                elif existing.health_status != "disabled":
+                    existing.enabled = True
 
         for existing in state.sources.values():
             domain = (existing.company_domain or "").lower()
@@ -126,9 +133,49 @@ class SyncOrchestrator:
             source.health_status = "unsupported"
             return {"source_id": source.source_id, "status": "unsupported", "jobs": []}
 
+        if not getattr(adapter, "supported", True):
+            source.health_status = "unsupported"
+            return {"source_id": source.source_id, "status": "unsupported", "jobs": []}
+
         try:
             result = await adapter.fetch_jobs(source, client)
             now = datetime.now(UTC)
+
+            if result.not_modified:
+                source.last_success_at = now
+                source.last_validated_at = now
+                source.consecutive_failures = 0
+                source.health_status = "healthy"
+                if result.etag:
+                    source.etag = result.etag
+                if result.last_modified:
+                    source.last_modified = result.last_modified
+                return {"source_id": source.source_id, "status": "not_modified", "jobs": []}
+
+            # Critical: adapters return status="error" for HTTP 404/etc. Treating that as
+            # an empty healthy board would falsely close every previously known job.
+            if result.status != "ok":
+                source.last_failure_at = now
+                source.consecutive_failures += 1
+                if source.consecutive_failures >= 3:
+                    source.health_status = "degraded"
+                if source.consecutive_failures >= 10:
+                    source.health_status = "failing"
+                message = result.message or result.status
+                logger.warning(
+                    "Source %s adapter status=%s: %s",
+                    source.source_id,
+                    result.status,
+                    message,
+                )
+                state = self.health.record_failure(state, source.adapter, message)
+                return {
+                    "source_id": source.source_id,
+                    "status": "error",
+                    "error": message,
+                    "jobs": [],
+                }
+
             source.last_success_at = now
             source.consecutive_failures = 0
             source.health_status = "healthy"
@@ -137,8 +184,6 @@ class SyncOrchestrator:
                 source.etag = result.etag
             if result.last_modified:
                 source.last_modified = result.last_modified
-            if result.not_modified:
-                return {"source_id": source.source_id, "status": "not_modified", "jobs": []}
             state = self.health.record_success(state, source.adapter)
             return {
                 "source_id": source.source_id,
@@ -239,11 +284,17 @@ class SyncOrchestrator:
 
         for source_id, seen_ids in seen_by_source.items():
             src = state.sources.get(source_id)
-            if src is None or src.health_status == "failing":
+            if src is None or src.health_status in {"failing", "degraded", "unsupported", "blocked"}:
                 continue
             closed, reopened = self.lifecycle.process_missing_jobs(state, src, seen_ids, now)
             summary["closed"] += closed
             summary["reopened"] += reopened
+
+        # Auto-disable boards that keep failing so they stop burning poll budget.
+        for source in state.sources.values():
+            if source.consecutive_failures >= 10 and source.health_status == "failing":
+                source.enabled = False
+                source.health_status = "disabled"
 
         state.generated_at = datetime.now(UTC)
         self.store.save(state)

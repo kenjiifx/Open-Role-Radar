@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from openroleradar.classify.academic_term import classify_academic_term
 from openroleradar.classify.career_level import classify_career_level
 from openroleradar.classify.discipline import classify_discipline
 from openroleradar.classify.skills import extract_skills
@@ -87,6 +88,7 @@ def normalize_raw_job(
         summary = summary[:997].rstrip() + "..."
 
     career_level, career_confidence = classify_career_level(raw.title, description, root=root)
+    academic_term = classify_academic_term(raw.title, description, root=root)
     disciplines = classify_discipline(
         raw.title,
         raw.department,
@@ -134,6 +136,7 @@ def normalize_raw_job(
         summary=summary,
         career_level=career_level,
         career_level_confidence=career_confidence,
+        academic_term=academic_term,
         employment_type=_parse_employment_type(raw.employment_type),
         disciplines=disciplines,
         skills=skills,

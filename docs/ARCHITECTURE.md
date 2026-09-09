@@ -1,6 +1,8 @@
 # OpenRoleRadar Architecture
 
-OpenRoleRadar is a fully autonomous, zero-cost pipeline that discovers first-party early-career job postings, normalizes them into a stable data model, and publishes static JSON APIs and a searchable site on GitHub Pages.
+OpenRoleRadar is a zero-cost pipeline that polls first-party early-career job postings from public ATS APIs, normalizes them into a stable data model, and publishes static JSON APIs plus a searchable site on GitHub Pages.
+
+Discovery (GitHub code search / Common Crawl) can propose new boards; promotion is gated by validation confidence. The static site never scrapes live — it only serves the last Actions publish.
 
 ## Design goals
 
@@ -67,7 +69,7 @@ Selects due sources by poll tier, fetches listings through registered adapters, 
 
 ### Adapters (`engine/src/openroleradar/adapters/`)
 
-Each adapter implements a common interface for a specific ATS (Greenhouse, Lever, Ashby, SmartRecruiters, Workday, JSON-LD). Adapters return structured job payloads without writing to disk directly.
+Each adapter implements a common interface for a specific ATS (Greenhouse, Lever, Ashby, SmartRecruiters, JSON-LD). Workday is registered for detection only (`supported=False`) until a tenant-safe fetch path exists. Adapters return structured job payloads without writing to disk directly.
 
 ### Discovery (`engine/src/openroleradar/discovery/`)
 

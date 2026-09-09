@@ -15,7 +15,7 @@ on:
         default: true
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: openroleradar-discover
@@ -54,9 +54,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ARGS=""
+          ARGS="--publish"
           if [ "${{ github.event.inputs.github }}" = "false" ]; then
-            ARGS="--no-github"
+            ARGS="$ARGS --no-github"
+          fi
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.common_crawl }}" = "true" ]; then
+            ARGS="$ARGS --common-crawl"
           fi
           uv run openroleradar discover $ARGS
 

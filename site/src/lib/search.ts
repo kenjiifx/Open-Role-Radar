@@ -22,6 +22,57 @@ const FRESHNESS_MS: Record<string, number> = {
   '30d': 30 * 24 * 60 * 60 * 1000,
 };
 
+/** Map free-text origin country input to ISO-3166 alpha-2 used in eligibility fields. */
+const COUNTRY_ALIASES: Record<string, string> = {
+  canada: 'CA',
+  ca: 'CA',
+  'united states': 'US',
+  usa: 'US',
+  us: 'US',
+  'u.s.': 'US',
+  'u.s.a.': 'US',
+  america: 'US',
+  india: 'IN',
+  in: 'IN',
+  'united kingdom': 'GB',
+  uk: 'GB',
+  britain: 'GB',
+  england: 'GB',
+  gb: 'GB',
+  germany: 'DE',
+  de: 'DE',
+  france: 'FR',
+  fr: 'FR',
+  australia: 'AU',
+  au: 'AU',
+  ireland: 'IE',
+  ie: 'IE',
+  netherlands: 'NL',
+  nl: 'NL',
+  singapore: 'SG',
+  sg: 'SG',
+  brazil: 'BR',
+  br: 'BR',
+  mexico: 'MX',
+  mx: 'MX',
+  japan: 'JP',
+  jp: 'JP',
+  china: 'CN',
+  cn: 'CN',
+  'south korea': 'KR',
+  korea: 'KR',
+  kr: 'KR',
+};
+
+export function normalizeCountryCode(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return '';
+  const alias = COUNTRY_ALIASES[trimmed.toLowerCase()];
+  if (alias) return alias;
+  if (/^[a-z]{2}$/i.test(trimmed)) return trimmed.toUpperCase();
+  return trimmed.toUpperCase();
+}
+
 export function buildSearchIndex(jobs: Job[], hashBuckets = 32): SearchIndexEntry[] {
   return jobs.map((job) => ({
     job_id: job.job_id,
@@ -210,9 +261,9 @@ export function filterJobs(
     if (!matchesMobility(job, filters.mobility)) return false;
 
     if (filters.originCountry) {
-      const country = filters.originCountry.toLowerCase();
-      const allowed = job.eligibility.explicit_allowed_countries.map((c) => c.toLowerCase());
-      const excluded = job.eligibility.explicit_excluded_countries.map((c) => c.toLowerCase());
+      const country = normalizeCountryCode(filters.originCountry);
+      const allowed = job.eligibility.explicit_allowed_countries.map(normalizeCountryCode);
+      const excluded = job.eligibility.explicit_excluded_countries.map(normalizeCountryCode);
       if (excluded.includes(country)) return false;
       if (allowed.length > 0 && !allowed.includes(country)) return false;
     }

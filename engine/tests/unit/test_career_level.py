@@ -36,3 +36,9 @@ def test_new_grad_title() -> None:
     level, confidence = classify_career_level("New Grad Software Engineer")
     assert level == CareerLevel.NEW_GRAD
     assert confidence >= 0.65
+
+
+def test_step_intern_title() -> None:
+    level, confidence = classify_career_level("STEP Intern — Software Engineering")
+    assert level == CareerLevel.INTERNSHIP
+    assert confidence >= 0.65
