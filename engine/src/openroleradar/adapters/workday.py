@@ -124,10 +124,17 @@ class WorkdayAdapter:
         bullet = item.get("bulletFields")
         if isinstance(bullet, list):
             for field in bullet:
-                if isinstance(field, str) and field.strip() and field.strip() not in locations:
-                    # Often includes req id / time type — keep short location-like values.
-                    if len(field) < 80 and any(ch.isalpha() for ch in field):
-                        pass
+                if not isinstance(field, str):
+                    continue
+                stripped = field.strip()
+                # Often includes req id / time type — keep short location-like values.
+                if (
+                    stripped
+                    and stripped not in locations
+                    and len(stripped) < 80
+                    and any(ch.isalpha() for ch in stripped)
+                ):
+                    locations.append(stripped)
 
         posted = (
             item.get("postedOn")

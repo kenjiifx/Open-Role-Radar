@@ -61,9 +61,7 @@ def _has_senior_exclusion(text: str, exclusions: list[str]) -> bool:
 def _is_senior_title(title_text: str, exclusions: list[str]) -> bool:
     if _has_senior_exclusion(title_text, exclusions) or _TITLE_SENIOR_RE.search(title_text):
         return True
-    if _TITLE_LEAD_RE.search(title_text) and not _EARLY_OVERRIDE_RE.search(title_text):
-        return True
-    return False
+    return bool(_TITLE_LEAD_RE.search(title_text) and not _EARLY_OVERRIDE_RE.search(title_text))
 
 
 def _from_ats_metadata(

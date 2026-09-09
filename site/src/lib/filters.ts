@@ -1,11 +1,4 @@
-import type {
-  CareerLevel,
-  FilterState,
-  FreshnessFilter,
-  MobilityFlag,
-  SortMode,
-  WorkplaceType,
-} from './types';
+import type { FilterState, FreshnessFilter, SortMode } from './types';
 import { CS_DISCIPLINES } from './labels';
 
 const DEFAULT_PAGE_SIZE = 40;

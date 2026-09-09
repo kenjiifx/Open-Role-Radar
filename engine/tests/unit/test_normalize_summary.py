@@ -40,7 +40,10 @@ def test_double_encoded_greenhouse_html_becomes_readable() -> None:
         title="New Grad Software Engineer",
         job_url="https://boards.greenhouse.io/example/jobs/2",
         apply_url="https://boards.greenhouse.io/example/jobs/2",
-        description_text="&lt;div&gt;&lt;h2&gt;About the role&lt;/h2&gt;&lt;p&gt;Build product with mentorship.&lt;/p&gt;&lt;/div&gt;",
+        description_text=(
+            "&lt;div&gt;&lt;h2&gt;About the role&lt;/h2&gt;"
+            "&lt;p&gt;Build product with mentorship.&lt;/p&gt;&lt;/div&gt;"
+        ),
     )
     job = normalize_raw_job(
         raw,
