@@ -12,6 +12,7 @@ from openroleradar.adapters.base import (
 from openroleradar.adapters.greenhouse import GreenhouseAdapter, greenhouse_adapter
 from openroleradar.adapters.json_ld import JsonLdAdapter, json_ld_adapter
 from openroleradar.adapters.lever import LeverAdapter, lever_adapter
+from openroleradar.adapters.simplify import SimplifyAdapter, simplify_adapter
 from openroleradar.adapters.smartrecruiters import (
     SmartRecruitersAdapter,
     smartrecruiters_adapter,
@@ -26,6 +27,7 @@ __all__ = [
     "GreenhouseAdapter",
     "JsonLdAdapter",
     "LeverAdapter",
+    "SimplifyAdapter",
     "SmartRecruitersAdapter",
     "WorkableAdapter",
     "WorkdayAdapter",
@@ -37,6 +39,7 @@ __all__ = [
     "lever_adapter",
     "list_adapters",
     "register_adapter",
+    "simplify_adapter",
     "smartrecruiters_adapter",
     "workable_adapter",
     "workday_adapter",

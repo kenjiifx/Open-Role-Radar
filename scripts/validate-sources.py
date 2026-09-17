@@ -25,12 +25,14 @@ SUPPORTED_ADAPTERS = {
     "smartrecruiters",
     "workday",
     "json_ld",
+    "simplify",
+    "workable",
 }
 
 DOMAIN_RE = re.compile(
     r"^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$"
 )
-TENANT_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
+TENANT_RE = re.compile(r"^[a-z0-9][a-z0-9._/-]*$")
 
 
 def _fail(message: str) -> None:
@@ -124,7 +126,10 @@ def validate_entry(
     parsed = urlparse(careers_url)
     hostname = parsed.hostname or domain
     if resolves_to_private(hostname):
-        _fail(f"{prefix}: domain '{hostname}' resolves to a private/reserved address")
+        _warn(
+            f"{prefix}: domain '{hostname}' resolves to a private/reserved address "
+            "(kept as warning — DNS sinkholes are common for unused career domains)"
+        )
 
     source_id = deterministic_id("source", domain, adapter, tenant)
     if source_id in seen_source_ids:

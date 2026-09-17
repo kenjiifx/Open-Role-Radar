@@ -9,16 +9,22 @@ from typing import Any
 
 from openroleradar.adapters import get_adapter
 from openroleradar.config import find_repo_root, load_project_config
-from openroleradar.discovery.registry import load_seed_sources, seed_to_company, seed_to_source
+from openroleradar.discovery.registry import (
+    deterministic_id,
+    load_seed_sources,
+    seed_to_company,
+    seed_to_source,
+)
 from openroleradar.export.site_data import SiteDataBuilder
 from openroleradar.export.static_api import StaticApiExporter
 from openroleradar.feeds.generator import FeedGenerator
 from openroleradar.health.monitor import HealthMonitor
 from openroleradar.http.client import SafeHTTPClient
 from openroleradar.lifecycle.manager import LifecycleManager
-from openroleradar.models.job import Source
+from openroleradar.models.job import Company, RawJob, Source
 from openroleradar.models.state import LiveState
 from openroleradar.normalize.pipeline import normalize_raw_job
+from openroleradar.normalize.text import canonicalize_text
 from openroleradar.storage.local import LocalStateStore
 
 logger = logging.getLogger(__name__)
@@ -118,8 +124,59 @@ class SyncOrchestrator:
             if source.health_status in ("blocked", "disabled", "unsupported"):
                 continue
             due.append(source)
-        due.sort(key=lambda s: s.next_due_at or datetime.min.replace(tzinfo=UTC))
+        # Multi-company feeds (Simplify / SWE List) first — cheap and high-signal.
+        due.sort(
+            key=lambda s: (
+                0 if s.adapter == "simplify" else 1,
+                s.next_due_at or datetime.min.replace(tzinfo=UTC),
+            )
+        )
         return due[:max_sources]
+
+    def _company_for_raw(
+        self,
+        state: LiveState,
+        source: Source,
+        raw: RawJob,
+        *,
+        now: datetime,
+    ) -> Company:
+        """Resolve the employer for a raw job (Simplify listings are multi-company)."""
+        if source.adapter != "simplify":
+            company = state.companies.get(source.company_id)
+            if company is None:
+                raise KeyError(f"Missing company for source {source.source_id}")
+            return company
+
+        company_name = str(raw.metadata.get("company_name") or "").strip() or source.company_name
+        domain = str(raw.metadata.get("company_domain") or "").strip().lower()
+        if not domain:
+            domain = f"{canonicalize_text(company_name).replace(' ', '-') or 'unknown'}.com"
+        company_id = deterministic_id("company", domain)
+        existing = state.companies.get(company_id)
+        if existing is not None:
+            existing.last_seen_at = now
+            if company_name and existing.name != company_name:
+                existing.aliases = sorted(
+                    {*(existing.aliases or []), existing.name, company_name}
+                )
+                existing.name = company_name
+            if source.adapter not in existing.ats_sources:
+                existing.ats_sources = [*(existing.ats_sources or []), source.adapter]
+            return existing
+
+        company = Company(
+            company_id=company_id,
+            name=company_name,
+            normalized_name=canonicalize_text(company_name).replace(" ", "-"),
+            canonical_domain=domain,
+            careers_urls=[f"https://{domain}/careers"],
+            ats_sources=[source.adapter],
+            first_seen_at=now,
+            last_seen_at=now,
+        )
+        state.companies[company_id] = company
+        return company
 
     async def _fetch_source(
         self,
@@ -240,14 +297,11 @@ class SyncOrchestrator:
                     continue
 
                 summary["fetched"] += 1
-                company = state.companies.get(source.company_id)
-                if company is None:
-                    continue
-
                 source_job_ids: set[str] = set()
                 for raw in result.get("jobs", []):
                     source_job_ids.add(raw.source_job_id)
                     try:
+                        company = self._company_for_raw(state, source, raw, now=now)
                         job = normalize_raw_job(
                             raw,
                             company_id=company.company_id,

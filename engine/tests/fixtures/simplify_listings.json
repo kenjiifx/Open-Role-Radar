@@ -1,0 +1,67 @@
+[
+  {
+    "source": "Simplify",
+    "category": "Software",
+    "company_name": "Stripe",
+    "id": "simplify-stripe-intern-1",
+    "title": "Software Engineering Intern",
+    "active": true,
+    "terms": ["Summer 2026"],
+    "date_updated": 1726500000,
+    "date_posted": 1726500000,
+    "url": "https://boards.greenhouse.io/stripe/jobs/123",
+    "locations": ["San Francisco, CA", "Remote"],
+    "company_url": "https://simplify.jobs/c/Stripe",
+    "is_visible": true,
+    "sponsorship": "Other"
+  },
+  {
+    "source": "Simplify",
+    "category": "Software Engineering",
+    "company_name": "Notion",
+    "id": "simplify-notion-intern-1",
+    "title": "Software Engineer Intern",
+    "active": true,
+    "terms": ["Summer 2026"],
+    "date_updated": 1726500001,
+    "date_posted": 1726500001,
+    "url": "https://jobs.ashbyhq.com/notion/abc",
+    "locations": ["NYC"],
+    "company_url": "",
+    "is_visible": true,
+    "sponsorship": "Offers Sponsorship"
+  },
+  {
+    "source": "Simplify",
+    "category": "Software",
+    "company_name": "Blocked Co",
+    "id": "simplify-blocked-1",
+    "title": "Software Intern",
+    "active": true,
+    "url": "https://www.linkedin.com/jobs/view/999",
+    "locations": ["Remote"],
+    "is_visible": true
+  },
+  {
+    "source": "Simplify",
+    "category": "Other",
+    "company_name": "Random Corp",
+    "id": "simplify-other-1",
+    "title": "Office Assistant Intern",
+    "active": true,
+    "url": "https://boards.greenhouse.io/random/jobs/1",
+    "locations": ["Austin, TX"],
+    "is_visible": true
+  },
+  {
+    "source": "Simplify",
+    "category": "Software",
+    "company_name": "Closed Co",
+    "id": "simplify-closed-1",
+    "title": "Backend Intern",
+    "active": false,
+    "url": "https://boards.greenhouse.io/closed/jobs/1",
+    "locations": ["Remote"],
+    "is_visible": true
+  }
+]

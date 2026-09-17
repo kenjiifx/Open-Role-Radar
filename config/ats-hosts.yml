@@ -86,6 +86,13 @@ platforms:
     hosts: []
     supported: true
 
+  simplify:
+    hosts:
+      - raw.githubusercontent.com
+    api_pattern: "https://raw.githubusercontent.com/SimplifyJobs/{tenant}/dev/.github/scripts/listings.json"
+    board_pattern: "https://github.com/SimplifyJobs/{tenant}"
+    supported: true
+
 discovery_patterns:
   - boards.greenhouse.io
   - job-boards.greenhouse.io

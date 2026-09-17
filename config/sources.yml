@@ -1,6 +1,12 @@
 # Seed sources — human-maintained first-party career boards.
 # Unique by (domain, adapter, tenant). Validated by scripts/validate-sources.py.
 
+# --- SimplifyJobs / SWE List (public GitHub listings; apply URLs stay first-party) ---
+# SWE List emails alert on these same feeds. We ingest listings.json and keep roles
+# whose apply link is an employer ATS / careers page (never LinkedIn/Indeed).
+- { company: SimplifyJobs Internships, domain: summer2026-internships.github.io, adapter: simplify, tenant: summer2026-internships }
+- { company: SimplifyJobs New Grad, domain: new-grad-positions.github.io, adapter: simplify, tenant: new-grad-positions }
+
 # --- Core tech ---
 - { company: Stripe, domain: stripe.com, adapter: greenhouse, tenant: stripe }
 - { company: Figma, domain: figma.com, adapter: greenhouse, tenant: figma }
@@ -315,7 +321,6 @@
 - { company: Klaviyo, domain: klaviyo.com, adapter: greenhouse, tenant: klaviyo }
 - { company: LaunchDarkly, domain: launchdarkly.com, adapter: greenhouse, tenant: launchdarkly }
 - { company: Liftoff, domain: liftoff.io, adapter: greenhouse, tenant: liftoff }
-- { company: LinkedIn, domain: linkedin.com, adapter: greenhouse, tenant: linkedin }
 - { company: Lithic, domain: lithic.com, adapter: greenhouse, tenant: lithic }
 - { company: LivePerson, domain: liveperson.com, adapter: greenhouse, tenant: liveperson }
 - { company: Lob, domain: lob.com, adapter: greenhouse, tenant: lob }
@@ -365,7 +370,6 @@
 - { company: Wikimedia, domain: wikimediafoundation.org, adapter: greenhouse, tenant: wikimedia }
 - { company: Wolt, domain: wolt.com, adapter: greenhouse, tenant: wolt }
 - { company: Yext, domain: yext.com, adapter: greenhouse, tenant: yext }
-- { company: ZipRecruiter, domain: ziprecruiter.com, adapter: greenhouse, tenant: ziprecruiter }
 - { company: ZoomInfo, domain: zoominfo.com, adapter: greenhouse, tenant: zoominfo }
 - { company: Zscaler, domain: zscaler.com, adapter: greenhouse, tenant: zscaler }
 - { company: Abridge, domain: abridge.com, adapter: ashby, tenant: abridge }
@@ -392,7 +396,6 @@
 - { company: Crunchyroll, domain: crunchyroll.com, adapter: greenhouse, tenant: crunchyroll }
 - { company: Earnin, domain: earnin.com, adapter: greenhouse, tenant: earnin }
 - { company: GoDaddy, domain: godaddy.com, adapter: greenhouse, tenant: godaddy }
-- { company: Indeed, domain: indeed.com, adapter: greenhouse, tenant: indeed }
 - { company: Intercom, domain: intercom.com, adapter: greenhouse, tenant: intercom }
 - { company: Mejuri, domain: mejuri.com, adapter: greenhouse, tenant: mejuri }
 - { company: Mozilla, domain: mozilla.org, adapter: greenhouse, tenant: mozilla }

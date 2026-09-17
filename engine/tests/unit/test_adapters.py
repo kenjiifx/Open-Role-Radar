@@ -16,6 +16,7 @@ from openroleradar.adapters.ashby import AshbyAdapter
 from openroleradar.adapters.greenhouse import GreenhouseAdapter
 from openroleradar.adapters.json_ld import JsonLdAdapter
 from openroleradar.adapters.lever import LeverAdapter
+from openroleradar.adapters.simplify import SimplifyAdapter, company_domain_from_listing
 from openroleradar.adapters.smartrecruiters import SmartRecruitersAdapter
 from openroleradar.adapters.workday import WorkdayAdapter
 from openroleradar.models.job import Source
@@ -44,6 +45,7 @@ def test_adapter_registry_contains_all_adapters() -> None:
         "greenhouse",
         "json_ld",
         "lever",
+        "simplify",
         "smartrecruiters",
         "workable",
         "workday",
@@ -175,3 +177,38 @@ def test_workday_tenant_parser() -> None:
 def test_adapters_extract_tenant(adapter: object, url: str, tenant: str) -> None:
     extract = adapter.extract_tenant
     assert extract(url) == tenant
+
+
+def test_simplify_parses_public_listings_fixture() -> None:
+    payload = json.loads((FIXTURES / "simplify_listings.json").read_text(encoding="utf-8"))
+    adapter = SimplifyAdapter()
+    source = _sample_source("simplify", "summer2026-internships")
+    jobs = adapter.parse_payload(payload, source)
+
+    assert len(jobs) == 2
+    assert {job.metadata["company_name"] for job in jobs} == {"Stripe", "Notion"}
+    assert all(job.apply_url.startswith("http") for job in jobs)
+    assert jobs[0].metadata["experience_level"] == "Internship"
+    assert company_domain_from_listing("Citadel", "https://www.citadel.com/careers/x") == "citadel.com"
+
+
+def test_simplify_new_grad_feed_marks_entry_level_hint() -> None:
+    payload = [
+        {
+            "id": "ng-1",
+            "title": "Software Engineer New Grad",
+            "company_name": "Ramp",
+            "active": True,
+            "is_visible": True,
+            "category": "Software",
+            "url": "https://jobs.ashbyhq.com/ramp/ng1",
+            "locations": ["NYC"],
+            "date_posted": 1726500000,
+        }
+    ]
+    adapter = SimplifyAdapter()
+    source = _sample_source("simplify", "new-grad-positions")
+    jobs = adapter.parse_payload(payload, source)
+    assert len(jobs) == 1
+    assert jobs[0].metadata["experience_level"] == "New Grad"
+    assert jobs[0].employment_type == "Full-time"
