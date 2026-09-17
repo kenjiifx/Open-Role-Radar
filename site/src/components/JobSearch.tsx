@@ -13,7 +13,6 @@ import {
   collectFacetValues,
   computeStats,
   filterJobs,
-  getMobilityClaims,
   paginateJobs,
   totalPages,
 } from '../lib/search';
@@ -21,11 +20,9 @@ import {
   loadPreferences,
   recordVisit,
   setOriginCountry,
-  toggleDismissedJob,
   toggleSavedJob,
 } from '../lib/storage';
-import type { Job, MobilityFlag, SiteStats, SortMode } from '../lib/types';
-import EvidenceModal from './EvidenceModal';
+import type { Job, SiteStats, SortMode } from '../lib/types';
 import FilterPanel from './FilterPanel';
 import JobRow from './JobRow';
 import StatsBar from './StatsBar';
@@ -35,11 +32,6 @@ interface JobSearchProps {
   companySlug?: string;
   showStats?: boolean;
   showHero?: boolean;
-}
-
-interface EvidenceState {
-  job: Job;
-  flag: MobilityFlag;
 }
 
 const EMPTY_STATS: SiteStats = {
@@ -54,31 +46,18 @@ const EMPTY_STATS: SiteStats = {
 
 function HeroBanner() {
   return (
-    <section className="hero">
+    <section className="hero hero--compact">
       <div className="hero__copy">
-        <p className="hero__eyebrow">First-party · CS track · Live feed</p>
         <h1 className="hero__brand">
           OpenRole<span>Radar</span>
         </h1>
         <p className="hero__lead">
-          Real software internships and new-grad roles. Live from company career pages and public
-          ATS boards.
+          Real software internships and new-grad roles from company career pages and public ATS
+          boards.
         </p>
         <div className="hero__actions">
           <a className="btn btn--primary" href="#roles">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-              <path
-                d="M20 20l-3.5-3.5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
             Browse roles
-          </a>
-          <a className="btn btn--ghost" href="#roles">
-            Live feed
           </a>
           <a
             className="btn btn--ghost"
@@ -86,7 +65,7 @@ function HeroBanner() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            View on GitHub
+            GitHub
           </a>
         </div>
       </div>
@@ -97,10 +76,6 @@ function HeroBanner() {
           <li>
             <span className="hero__check" aria-hidden="true" />
             Direct from company career pages
-          </li>
-          <li>
-            <span className="hero__check" aria-hidden="true" />
-            Updated automatically from public ATS boards
           </li>
           <li>
             <span className="hero__check" aria-hidden="true" />
@@ -131,7 +106,6 @@ export default function JobSearch({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [prefs, setPrefs] = useState(() => loadPreferences());
-  const [evidence, setEvidence] = useState<EvidenceState | null>(null);
   const [stats, setStats] = useState<SiteStats>(initialStats ?? EMPTY_STATS);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -325,15 +299,6 @@ export default function JobSearch({
     setPrefs(toggleSavedJob(jobId));
   }, []);
 
-  const handleDismiss = useCallback((jobId: string) => {
-    setPrefs(toggleDismissedJob(jobId));
-    setExpandedId((current) => (current === jobId ? null : current));
-  }, []);
-
-  const handleEvidence = useCallback((job: Job, flag: MobilityFlag) => {
-    setEvidence({ job, flag });
-  }, []);
-
   const isNewJob = useCallback(
     (job: Job) => {
       const posted = Date.parse(postedAt(job));
@@ -449,13 +414,61 @@ export default function JobSearch({
                 >
                   Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
                 </button>
+                <label htmlFor="toolbar-search" className="sr-only">
+                  Search roles
+                </label>
+                <div className="filter-search-field job-search__toolbar-search">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+                    <path
+                      d="M20 20l-3.5-3.5"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <input
+                    id="toolbar-search"
+                    type="search"
+                    value={filters.q}
+                    onChange={(event) =>
+                      setFilters((current) => ({
+                        ...current,
+                        q: event.target.value,
+                        page: 1,
+                        view: 'table',
+                      }))
+                    }
+                    placeholder="Search roles, companies…"
+                    autoComplete="off"
+                  />
+                </div>
                 <p className="job-search__count" aria-live="polite">
                   {loading
                     ? 'Pulling live feed…'
-                    : `${filteredJobs.length.toLocaleString()} CS early-career role${filteredJobs.length === 1 ? '' : 's'}`}
+                    : `${filteredJobs.length.toLocaleString()} role${filteredJobs.length === 1 ? '' : 's'}`}
                 </p>
               </div>
               <div className="job-search__controls">
+                <button
+                  type="button"
+                  className={
+                    filters.showSavedOnly
+                      ? 'btn btn--secondary btn--sm btn--pressed'
+                      : 'btn btn--ghost btn--sm'
+                  }
+                  aria-pressed={filters.showSavedOnly}
+                  onClick={() =>
+                    setFilters((current) => ({
+                      ...current,
+                      showSavedOnly: !current.showSavedOnly,
+                      page: 1,
+                      view: 'table',
+                    }))
+                  }
+                >
+                  Saved only
+                </button>
                 <label className="job-search__sort">
                   <span className="sr-only">Sort by</span>
                   <select
@@ -514,7 +527,7 @@ export default function JobSearch({
                       index={index}
                       saved={prefs.savedJobIds.includes(job.job_id)}
                       isNew={isNewJob(job)}
-                    justArrived={arrivedIds.has(job.job_id)}
+                      justArrived={arrivedIds.has(job.job_id)}
                       expanded={expandedId === job.job_id}
                       selected={selectedId === job.job_id}
                       onToggle={(jobId) =>
@@ -522,8 +535,6 @@ export default function JobSearch({
                       }
                       onSelect={setSelectedId}
                       onSave={handleSave}
-                      onDismiss={handleDismiss}
-                      onEvidence={handleEvidence}
                     />
                   </div>
                 ))}
@@ -575,16 +586,6 @@ export default function JobSearch({
           className="filter-backdrop"
           aria-label="Close filters"
           onClick={() => setFiltersOpen(false)}
-        />
-      ) : null}
-
-      {evidence ? (
-        <EvidenceModal
-          open
-          title={evidence.job.title}
-          mobilityFlag={evidence.flag}
-          claim={getMobilityClaims(evidence.job.mobility, evidence.flag)}
-          onClose={() => setEvidence(null)}
         />
       ) : null}
     </div>

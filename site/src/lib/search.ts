@@ -350,26 +350,29 @@ export function aggregateCompanies(jobs: Job[]): CompanySummary[] {
 }
 
 export interface FacetCounts {
-  disciplines: string[];
+  disciplines: Partial<Record<string, number>>;
   careerLevels: Partial<Record<CareerLevel, number>>;
   regions: Partial<Record<RegionId, number>>;
   workplaceTypes: Partial<Record<WorkplaceType, number>>;
   academicTerms: Partial<Record<AcademicTerm, number>>;
+  mobility: Partial<Record<MobilityFlag, number>>;
   startups: number;
   companies: CompanySummary[];
 }
 
 export function collectFacetValues(jobs: Job[]): FacetCounts {
-  const disciplines = new Set<string>();
+  const disciplines: Partial<Record<string, number>> = {};
   const careerLevels: Partial<Record<CareerLevel, number>> = {};
   const regions: Partial<Record<RegionId, number>> = {};
   const workplaceTypes: Partial<Record<WorkplaceType, number>> = {};
   const academicTerms: Partial<Record<AcademicTerm, number>> = {};
+  const mobility: Partial<Record<MobilityFlag, number>> = {};
   let startups = 0;
 
   for (const job of jobs) {
     if (job.disciplines.primary && job.disciplines.primary !== 'other') {
-      disciplines.add(job.disciplines.primary);
+      const key = job.disciplines.primary;
+      disciplines[key] = (disciplines[key] ?? 0) + 1;
     }
     careerLevels[job.career_level] = (careerLevels[job.career_level] ?? 0) + 1;
     workplaceTypes[job.workplace_type] = (workplaceTypes[job.workplace_type] ?? 0) + 1;
@@ -379,15 +382,19 @@ export function collectFacetValues(jobs: Job[]): FacetCounts {
     for (const region of regionsForJob(job)) {
       regions[region] = (regions[region] ?? 0) + 1;
     }
+    for (const flag of getMobilityFlags(job.mobility)) {
+      mobility[flag] = (mobility[flag] ?? 0) + 1;
+    }
     if (isStartupCompany(job.company_name)) startups += 1;
   }
 
   return {
-    disciplines: [...disciplines].sort((a, b) => a.localeCompare(b)),
+    disciplines,
     careerLevels,
     regions,
     workplaceTypes,
     academicTerms,
+    mobility,
     startups,
     companies: aggregateCompanies(jobs),
   };

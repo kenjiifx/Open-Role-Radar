@@ -12,7 +12,8 @@ export const REGION_LABELS: Record<RegionId, string> = {
   remote: 'Remote',
 };
 
-export const REGION_OPTIONS = Object.keys(REGION_LABELS) as RegionId[];
+/** Geographic region filters — Remote lives under Workplace only. */
+export const REGION_OPTIONS = ['na', 'eu', 'asia'] as const satisfies readonly RegionId[];
 
 /** Season / academic-term filters students usually care about. */
 export const SEASON_TERMS = [

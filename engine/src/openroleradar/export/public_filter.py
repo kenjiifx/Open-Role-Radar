@@ -60,8 +60,9 @@ _CS_TITLE_RE = re.compile(
     r"software|engineer|developer|swe|sde|programmer|full[\s-]?stack|"
     r"front[\s-]?end|back[\s-]?end|mobile|ios|android|data|machine\s+learning|"
     r"\bml\b|\bai\b|artificial\s+intelligence|cyber|security|devops|sre|"
-    r"platform|cloud|systems|infrastructure|quant|robotics|firmware|embedded|"
-    r"computer\s+science|informatics|site\s+reliability|research\s+intern"
+    r"platform|cloud|systems|infrastructure|quant(?:itative)?|trading|"
+    r"robotics|firmware|embedded|computer\s+science|informatics|"
+    r"site\s+reliability|research\s+intern"
     r")\b",
     re.I,
 )

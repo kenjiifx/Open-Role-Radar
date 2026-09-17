@@ -100,7 +100,13 @@ def normalize_raw_job(
         metadata=raw.metadata,
         root=root,
     )
-    academic_term = classify_academic_term(raw.title, description, root=root)
+    academic_term = classify_academic_term(
+        raw.title,
+        description,
+        summary=summary_raw or raw.summary,
+        metadata=raw.metadata,
+        root=root,
+    )
     disciplines = classify_discipline(
         raw.title,
         raw.department,

@@ -2,7 +2,7 @@
 disciplines:
   - id: software
     label: Software Engineering
-    aliases: [software engineering, swe, developer]
+    aliases: [software engineering, software, swe, sde, developer]
   - id: frontend
     label: Frontend
     aliases: [front-end, front end, ui engineer]
@@ -47,25 +47,25 @@ disciplines:
     aliases: [data engineer]
   - id: data_science
     label: Data Science
-    aliases: [data scientist]
+    aliases: [data scientist, ai/ml/data, data science ai machine learning]
   - id: machine_learning
     label: Machine Learning
-    aliases: [ml engineer, ml]
+    aliases: [ml engineer, ml, ai/ml]
   - id: artificial_intelligence
     label: Artificial Intelligence
     aliases: [ai engineer, ai researcher]
   - id: quantitative_development
     label: Quantitative Development
-    aliases: [quant dev, quant developer]
+    aliases: [quant, quant dev, quant developer, quantitative developer, quantitative trading]
   - id: quantitative_research
     label: Quantitative Research
-    aliases: [quant research, quant researcher]
+    aliases: [quant research, quant researcher, quantitative researcher]
   - id: product
     label: Product
-    aliases: [product manager, pm]
+    aliases: [product manager, product management, pm]
   - id: hardware
     label: Hardware
-    aliases: [hardware engineer]
+    aliases: [hardware engineer, hardware engineering]
   - id: embedded
     label: Embedded Systems
     aliases: [embedded engineer, embedded software]

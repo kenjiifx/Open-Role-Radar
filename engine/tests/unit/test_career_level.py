@@ -67,3 +67,22 @@ def test_ats_metadata_promotes_generic_title() -> None:
     )
     assert level == CareerLevel.INTERNSHIP
     assert confidence >= 0.7
+
+
+def test_ats_new_grad_metadata_maps_to_new_grad() -> None:
+    level, confidence = classify_career_level(
+        "Software Engineer",
+        metadata={"experience_level": "New Grad"},
+    )
+    assert level == CareerLevel.NEW_GRAD
+    assert confidence >= 0.7
+
+
+def test_ats_new_graduate_label_not_entry_level() -> None:
+    level, confidence = classify_career_level(
+        "Software Engineer",
+        metadata={"experience_level": "New Graduate"},
+    )
+    assert level == CareerLevel.NEW_GRAD
+    assert level != CareerLevel.ENTRY_LEVEL
+    assert confidence >= 0.7

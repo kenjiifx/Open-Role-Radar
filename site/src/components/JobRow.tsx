@@ -1,10 +1,10 @@
 import { useId, useState } from 'react';
 import { formatDate, formatRelative, openedFreshness, postedAt } from '../lib/dates';
 import { companyDomain, companyInitials, companyLogoUrls } from '../lib/company';
-import { formatDiscipline, isStartupCompany } from '../lib/labels';
+import { formatDiscipline } from '../lib/labels';
 import { companyUrl } from '../lib/paths';
 import { cleanSummary, looksLikeReadableSummary } from '../lib/summary';
-import type { Job, MobilityFlag } from '../lib/types';
+import type { Job } from '../lib/types';
 import { slugifyCompany } from '../lib/types';
 import {
   ACADEMIC_TERM_LABELS,
@@ -27,8 +27,6 @@ interface JobRowProps {
   onToggle: (jobId: string) => void;
   onSelect: (jobId: string) => void;
   onSave: (jobId: string) => void;
-  onDismiss: (jobId: string) => void;
-  onEvidence: (job: Job, flag: MobilityFlag) => void;
 }
 
 function CompanyLogo({ job, priority = false }: { job: Job; priority?: boolean }) {
@@ -65,42 +63,23 @@ function CompanyLogo({ job, priority = false }: { job: Job; priority?: boolean }
   );
 }
 
-function MobilityBadges({
-  job,
-  onEvidence,
-}: {
-  job: Job;
-  onEvidence: (job: Job, flag: MobilityFlag) => void;
-}) {
-  const flags = getMobilityFlags(job.mobility);
+function MobilityBadges({ job }: { job: Job }) {
+  const flags = getMobilityFlags(job.mobility).filter(
+    (flag) => flag === 'visa' || flag === 'relocation',
+  );
   if (flags.length === 0) return null;
 
   return (
     <div className="mobility-badges" role="list" aria-label="Mobility benefits">
       {flags.map((flag) => {
         const claim = job.mobility[
-          flag === 'visa'
-            ? 'visa_sponsorship'
-            : flag === 'relocation'
-              ? 'relocation_assistance'
-              : flag === 'housing'
-                ? 'housing_provided'
-                : 'airfare'
+          flag === 'visa' ? 'visa_sponsorship' : 'relocation_assistance'
         ];
         return (
           <EvidenceTooltip key={flag} claim={claim} label={MOBILITY_LABELS[flag]}>
-            <button
-              type="button"
-              className={`chip chip--${flag}`}
-              role="listitem"
-              onClick={(event) => {
-                event.stopPropagation();
-                onEvidence(job, flag);
-              }}
-              aria-label={`View evidence for ${MOBILITY_LABELS[flag]}`}
-            >
-              {MOBILITY_LABELS[flag]}
-            </button>
+            <span className={`chip chip--${flag}`} role="listitem">
+              {flag === 'visa' ? 'Visa' : 'Relo'}
+            </span>
           </EvidenceTooltip>
         );
       })}
@@ -134,8 +113,6 @@ export default function JobRow({
   onToggle,
   onSelect,
   onSave,
-  onDismiss,
-  onEvidence,
 }: JobRowProps) {
   const detailId = useId();
   const posted = postedAt(job);
@@ -151,7 +128,12 @@ export default function JobRow({
       ? ACADEMIC_TERM_LABELS[job.academic_term]
       : null;
   const skills = (job.skills ?? []).slice(0, 8);
-  const startup = isStartupCompany(job.company_name);
+  const levelLabel =
+    job.career_level !== 'unknown' ? CAREER_LEVEL_LABELS[job.career_level] : null;
+  const workplaceLabel =
+    !term && job.workplace_type !== 'unknown'
+      ? WORKPLACE_LABELS[job.workplace_type]
+      : null;
 
   return (
     <article
@@ -226,16 +208,14 @@ export default function JobRow({
         </div>
 
         <div className="job-card__tags">
-          <span className="chip chip--quiet">{WORKPLACE_LABELS[job.workplace_type]}</span>
-          <span className="chip chip--level">{CAREER_LEVEL_LABELS[job.career_level]}</span>
+          {levelLabel ? <span className="chip chip--level">{levelLabel}</span> : null}
           {term ? <span className="chip chip--season">{term}</span> : null}
-          {startup ? <span className="chip chip--startup">Startup</span> : null}
+          {workplaceLabel ? <span className="chip chip--quiet">{workplaceLabel}</span> : null}
           {freshness.tier === 'hot' ? (
             <span className="chip chip--hot">{freshness.label}</span>
           ) : null}
           {freshness.tier !== 'hot' && isNew ? <span className="chip chip--new">New</span> : null}
-          {saved ? <span className="chip chip--saved">Saved</span> : null}
-          <MobilityBadges job={job} onEvidence={onEvidence} />
+          <MobilityBadges job={job} />
         </div>
 
         <time className="job-card__time" dateTime={posted} title={postedLabel}>
@@ -274,18 +254,6 @@ export default function JobRow({
                 strokeWidth="2"
                 fill={saved ? 'currentColor' : 'none'}
               />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="icon-btn"
-            onClick={() => onDismiss(job.job_id)}
-            aria-label="Dismiss job"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="5" cy="12" r="1.6" fill="currentColor" />
-              <circle cx="12" cy="12" r="1.6" fill="currentColor" />
-              <circle cx="19" cy="12" r="1.6" fill="currentColor" />
             </svg>
           </button>
         </div>

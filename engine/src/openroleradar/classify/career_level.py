@@ -25,8 +25,12 @@ _EARLY_OVERRIDE_RE = re.compile(
 )
 
 _ATS_INTERNSHIP = re.compile(r"\b(intern|internship|co-?op|trainee)\b", re.I)
+_ATS_NEW_GRAD = re.compile(
+    r"\b(new\s+grads?|new\s+graduates?|university\s+grads?|campus\s+hire|grad\s+program)\b",
+    re.I,
+)
 _ATS_ENTRY = re.compile(
-    r"\b(entry[- ]level|junior|early[- ]career|new\s+grad|graduate|student|apprentice)\b",
+    r"\b(entry[- ]level|junior|early[- ]career|student|apprentice)\b",
     re.I,
 )
 
@@ -93,6 +97,8 @@ def _from_ats_metadata(
     joined = " ".join(blobs)
     if _ATS_INTERNSHIP.search(joined):
         return CareerLevel.INTERNSHIP, 0.78
+    if _ATS_NEW_GRAD.search(joined):
+        return CareerLevel.NEW_GRAD, 0.8
     if _ATS_ENTRY.search(joined):
         return CareerLevel.ENTRY_LEVEL, 0.72
     return None

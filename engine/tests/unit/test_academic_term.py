@@ -16,3 +16,39 @@ def test_fall_from_title() -> None:
 
 def test_unknown_when_absent() -> None:
     assert classify_academic_term("New Grad Software Engineer") == AcademicTerm.UNKNOWN
+
+
+def test_simplify_terms_preferred() -> None:
+    assert (
+        classify_academic_term(
+            "Software Engineering Intern",
+            metadata={"simplify_terms": ["Summer 2026"]},
+        )
+        == AcademicTerm.SUMMER
+    )
+
+
+def test_spring_boot_not_spring_term() -> None:
+    assert (
+        classify_academic_term(
+            "Backend Engineer",
+            description="Build APIs with Spring Boot and Java.",
+        )
+        == AcademicTerm.UNKNOWN
+    )
+
+
+def test_rolling_out_not_rolling_term() -> None:
+    assert (
+        classify_academic_term(
+            "Platform Intern",
+            description="We are rolling out a new deployment pipeline.",
+        )
+        == AcademicTerm.UNKNOWN
+    )
+
+
+def test_leftmost_season_wins() -> None:
+    assert (
+        classify_academic_term("Fall / Winter 2026 Software Intern") == AcademicTerm.FALL
+    )

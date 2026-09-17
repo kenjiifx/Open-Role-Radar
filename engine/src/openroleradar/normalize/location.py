@@ -112,6 +112,11 @@ _COUNTRY_CONTINENT: dict[str, str] = {
     "AR": "South America",
 }
 
+_REMOTE_ONLY = re.compile(
+    r"\b(remote|work from home|wfh|distributed|anywhere|telecommute)\b",
+    re.I,
+)
+_HYBRID = re.compile(r"\bhybrid\b", re.I)
 _REMOTE_KEYWORDS = re.compile(
     r"\b(remote|work from home|wfh|hybrid|distributed|anywhere|telecommute)\b",
     re.I,
@@ -373,17 +378,19 @@ def parse_workplace_type(
         corpus = f"{corpus} {description}"
     corpus_lower = corpus.lower()
 
-    has_remote = bool(_REMOTE_KEYWORDS.search(corpus_lower))
+    has_hybrid = bool(_HYBRID.search(corpus_lower))
+    has_remote = bool(_REMOTE_ONLY.search(corpus_lower))
     has_onsite = bool(
         re.search(r"\b(on[- ]site|in[- ]office|office based)\b", corpus_lower)
         or any(
-            loc.raw and not _REMOTE_KEYWORDS.search(loc.raw.lower())
+            loc.raw
+            and not _REMOTE_KEYWORDS.search(loc.raw.lower())
             for loc in parse_locations(locations_raw)
             if loc.city or loc.country_code
         )
     )
 
-    if has_remote and has_onsite:
+    if has_hybrid or (has_remote and has_onsite):
         return WorkplaceType.HYBRID
     if has_remote:
         return WorkplaceType.REMOTE

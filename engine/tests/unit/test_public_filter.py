@@ -69,6 +69,16 @@ def test_public_job_accepts_cs_by_title_when_discipline_other() -> None:
     assert is_public_job(job) is True
 
 
+def test_public_job_accepts_quant_title() -> None:
+    job = sample_job(
+        title="Quantitative Trading Intern",
+        career_level=CareerLevel.INTERNSHIP,
+        career_level_confidence=0.9,
+        disciplines={"primary": "other", "secondary": [], "confidence": 0.1},
+    )
+    assert is_public_job(job) is True
+
+
 def test_public_job_rejects_support_noise_even_if_discipline_matches() -> None:
     job = sample_job(
         title="Technical Support Engineer I",

@@ -49,4 +49,13 @@ describe('filters URL serialization', () => {
     });
     expect(count).toBe(5);
   });
+
+  it('serializes saved-only toggle', () => {
+    const serialized = serializeFiltersToUrl({
+      ...DEFAULT_FILTERS,
+      showSavedOnly: true,
+    });
+    expect(serialized).toContain('showSavedOnly=1');
+    expect(parseFiltersFromUrl(serialized).showSavedOnly).toBe(true);
+  });
 });
