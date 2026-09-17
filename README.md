@@ -10,15 +10,16 @@ First-party early-career roles (internships, co-ops, new grad) scraped from publ
 ## What it does
 
 - Polls **public** Greenhouse, Lever, Ashby, Workday, Workable, and SmartRecruiters boards on a GitHub Actions schedule
-- Also ingests the public **SimplifyJobs / SWE List** GitHub feeds (internships + new grad) and keeps roles whose apply link is still a first-party careers/ATS URL
+- **Fast path every 5 minutes**: parallel Greenhouse / Lever / Ashby polls (the same public ATS JSON APIs Simplify scrapes), plus their GitHub listings dump as a discovery signal that auto-promotes new boards into our direct poll list
 - Classifies early-career titles (intern / co-op / new-grad / junior / engineer I / campus, plus ATS metadata tags)
 - Exports static JSON + Atom feeds; browser refresh reads a live-feed branch so Pages CDN lag doesn’t hide new syncs
 
 ## What it does not do
 
-- Scrape LinkedIn or Indeed (aggregator noise; we only use first-party apply URLs, even when a listing was discovered via Simplify/SWE List)
-- Cover every employer on earth — boards still need a public API we can poll, or a first-party link in the Simplify feed
-- Guarantee sub-minute latency — sync runs every few minutes, then live-feed updates
+- Scrape LinkedIn or Indeed (aggregator noise; we only use first-party apply URLs)
+- Depend on SWE List as a data source — SWE List itself just polls SimplifyJobs GitHub JSON; we hit the underlying ATS boards directly and refresh more often than their ~30m dump
+- Cover every employer on earth — boards still need a public API we can poll
+- Guarantee sub-minute latency — GitHub Actions schedules bottom out around 5 minutes
 
 ## Repo layout
 

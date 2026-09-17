@@ -1,8 +1,14 @@
-"""SimplifyJobs / SWE List public listings adapter.
+"""SimplifyJobs public listings adapter (discovery signal).
 
-SWE List emails are alerts for the public SimplifyJobs GitHub repos. We fetch
-their ``listings.json`` feeds and keep only active roles whose apply URLs point
-at first-party / ATS boards (not LinkedIn/Indeed/etc.).
+SWE List and the Simplify GitHub repos are *not* scrapers themselves — they
+publish a curated ``listings.json`` every ~30 minutes from Simplify's private
+ATS crawler. We still ingest that dump so we can:
+
+1. Surface first-party apply URLs immediately
+2. Auto-promote Greenhouse / Lever / Ashby board tenants into our own parallel
+   poll list (so we stop depending on their dump for those companies)
+
+The fast sync path polls those public ATS APIs directly every 5 minutes.
 """
 
 from __future__ import annotations

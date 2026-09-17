@@ -6,17 +6,36 @@ from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import urlparse
 
+from openroleradar.discovery.ats_detect import detect_ats_from_url
 from openroleradar.discovery.registry import deterministic_id
 from openroleradar.discovery.validate import ValidationResult
 from openroleradar.models.job import Company, Source
 from openroleradar.models.state import LiveState
 from openroleradar.normalize.text import canonicalize_text
 
+# Same public JSON APIs Simplify scrapes for their curated lists.
+FAST_ATS_ADAPTERS = frozenset({"greenhouse", "lever", "ashby"})
+
 
 def _company_name_from_domain(domain: str) -> str:
     host = domain.lower().removeprefix("www.")
     label = host.split(".")[0] if host else "unknown"
     return label.replace("-", " ").title()
+
+
+def _ats_host_domain(domain: str) -> bool:
+    host = domain.lower().removeprefix("www.")
+    return any(
+        token in host
+        for token in (
+            "greenhouse.io",
+            "lever.co",
+            "ashbyhq.com",
+            "myworkdayjobs.com",
+            "workable.com",
+            "smartrecruiters.com",
+        )
+    )
 
 
 def promote_validation(
@@ -87,6 +106,62 @@ def promote_validation(
         existing.health_status = "healthy"
         existing.consecutive_failures = 0
     return existing
+
+
+def promote_ats_board_from_url(
+    state: LiveState,
+    *,
+    apply_url: str,
+    company_name: str,
+    company_domain: str | None = None,
+    discovered_via: str = "simplify",
+    now: datetime | None = None,
+) -> Source | None:
+    """Promote a Greenhouse/Lever/Ashby board discovered from a first-party apply URL.
+
+    Mirrors how Simplify grows coverage: find ATS apply links, then poll the public
+    board API directly instead of waiting on their GitHub dump.
+    """
+    match = detect_ats_from_url(apply_url)
+    if (
+        match is None
+        or not match.supported
+        or match.platform not in FAST_ATS_ADAPTERS
+        or not match.tenant
+    ):
+        return None
+
+    timestamp = now or datetime.now(UTC)
+    name = company_name.strip() or match.tenant
+    domain = (company_domain or "").strip().lower().removeprefix("www.")
+    if not domain or _ats_host_domain(domain):
+        domain = f"{canonicalize_text(name).replace(' ', '-') or match.tenant}.com"
+
+    careers_url = match.careers_url or apply_url
+    source_id = deterministic_id("source", domain, match.platform, match.tenant)
+    already = source_id in state.sources
+    accepted = ValidationResult(
+        accepted=True,
+        confidence=0.9,
+        reason="ats_url",
+        adapter=match.platform,
+        tenant=match.tenant,
+        company_domain=domain,
+        careers_url=careers_url,
+        source_id=source_id,
+        issues=[],
+    )
+    source = promote_validation(
+        state,
+        accepted,
+        discovered_via=discovered_via,
+        company_name=name,
+        now=timestamp,
+    )
+    if source is None or already:
+        return None
+    source.poll_tier = "hot"
+    return source
 
 
 def quarantine_candidate(

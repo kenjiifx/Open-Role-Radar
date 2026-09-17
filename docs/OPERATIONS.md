@@ -7,9 +7,9 @@ Runbook for maintainers and advanced contributors operating OpenRoleRadar in Git
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
 | `ci.yml` | PR / push | Ruff, mypy, pytest, site lint/typecheck/test/build |
-| `sync.yml` | Every 5 min + manual | Poll ATS boards and publish the `live-feed` branch |
+| `sync-fast.yml` | Every 5 min + manual | Parallel Greenhouse/Lever/Ashby + Simplify discovery → `live-feed` |
+| `sync.yml` | Every 30 min + manual | Full sync including Workday → `live-feed` |
 | `pages.yml` | Push to `site/**` + manual | Build Astro and deploy GitHub Pages |
-| `discover.yml` | Daily + manual | GitHub + Common Crawl discovery |
 | `discover.yml` | Daily + manual | GitHub + Common Crawl discovery |
 | `archive.yml` | Monthly + manual | Export compressed historical dataset |
 | `readme.yml` | Daily + manual | Refresh README `GENERATED_STATS` |

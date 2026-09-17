@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from openroleradar.adapters import get_adapter
+from openroleradar.adapters.base import AdapterFetchResult
 from openroleradar.config import find_repo_root, load_project_config
+from openroleradar.discovery.promote import FAST_ATS_ADAPTERS, promote_ats_board_from_url
 from openroleradar.discovery.registry import (
     deterministic_id,
     load_seed_sources,
@@ -186,87 +189,201 @@ class SyncOrchestrator:
         state.companies[company_id] = company
         return company
 
-    async def _fetch_source(
+    async def _poll_adapter(
         self,
         client: SafeHTTPClient,
         source: Source,
-        state: LiveState,
-    ) -> dict[str, Any]:
+    ) -> AdapterFetchResult | dict[str, Any]:
+        """HTTP-only poll — safe to run concurrently across sources."""
         try:
             adapter = get_adapter(source.adapter)
         except KeyError:
-            source.health_status = "unsupported"
-            return {"source_id": source.source_id, "status": "unsupported", "jobs": []}
+            return {"status": "unsupported", "message": "unknown adapter"}
 
         if not getattr(adapter, "supported", True):
-            source.health_status = "unsupported"
-            return {"source_id": source.source_id, "status": "unsupported", "jobs": []}
+            return {"status": "unsupported", "message": "adapter unsupported"}
 
         try:
-            result = await adapter.fetch_jobs(source, client)
-            now = datetime.now(UTC)
-
-            if result.not_modified:
-                source.last_success_at = now
-                source.last_validated_at = now
-                source.consecutive_failures = 0
-                source.health_status = "healthy"
-                if result.etag:
-                    source.etag = result.etag
-                if result.last_modified:
-                    source.last_modified = result.last_modified
-                return {"source_id": source.source_id, "status": "not_modified", "jobs": []}
-
-            # Critical: adapters return status="error" for HTTP 404/etc. Treating that as
-            # an empty healthy board would falsely close every previously known job.
-            if result.status != "ok":
-                source.last_failure_at = now
-                source.consecutive_failures += 1
-                if source.consecutive_failures >= 3:
-                    source.health_status = "degraded"
-                if source.consecutive_failures >= 10:
-                    source.health_status = "failing"
-                message = result.message or result.status
-                logger.warning(
-                    "Source %s adapter status=%s: %s",
-                    source.source_id,
-                    result.status,
-                    message,
-                )
-                state = self.health.record_failure(state, source.adapter, message)
-                return {
-                    "source_id": source.source_id,
-                    "status": "error",
-                    "error": message,
-                    "jobs": [],
-                }
-
-            source.last_success_at = now
-            source.consecutive_failures = 0
-            source.health_status = "healthy"
-            source.last_validated_at = now
-            if result.etag:
-                source.etag = result.etag
-            if result.last_modified:
-                source.last_modified = result.last_modified
-            state = self.health.record_success(state, source.adapter)
-            return {
-                "source_id": source.source_id,
-                "status": "ok",
-                "jobs": result.jobs,
-                "adapter": source.adapter,
-            }
+            return await adapter.fetch_jobs(source, client)
         except Exception as exc:
-            now = datetime.now(UTC)
+            return {"status": "error", "message": str(exc)}
+
+    def _apply_poll_result(
+        self,
+        source: Source,
+        state: LiveState,
+        poll: AdapterFetchResult | dict[str, Any],
+    ) -> dict[str, Any]:
+        """Apply a poll result to source/health state (serial)."""
+        now = datetime.now(UTC)
+
+        if isinstance(poll, dict):
+            status = str(poll.get("status") or "error")
+            if status == "unsupported":
+                source.health_status = "unsupported"
+                return {"source_id": source.source_id, "status": "unsupported", "jobs": []}
+            message = str(poll.get("message") or status)
             source.last_failure_at = now
             source.consecutive_failures += 1
             if source.consecutive_failures >= 3:
                 source.health_status = "degraded"
             if source.consecutive_failures >= 10:
                 source.health_status = "failing"
-            logger.warning("Source %s failed: %s", source.source_id, exc)
-            state = self.health.record_failure(state, source.adapter, str(exc))
-            return {"source_id": source.source_id, "status": "error", "error": str(exc), "jobs": []}
+            logger.warning("Source %s failed: %s", source.source_id, message)
+            self.health.record_failure(state, source.adapter, message)
+            return {
+                "source_id": source.source_id,
+                "status": "error",
+                "error": message,
+                "jobs": [],
+            }
+
+        result = poll
+        if result.not_modified:
+            source.last_success_at = now
+            source.last_validated_at = now
+            source.consecutive_failures = 0
+            source.health_status = "healthy"
+            if result.etag:
+                source.etag = result.etag
+            if result.last_modified:
+                source.last_modified = result.last_modified
+            return {"source_id": source.source_id, "status": "not_modified", "jobs": []}
+
+        if result.status != "ok":
+            source.last_failure_at = now
+            source.consecutive_failures += 1
+            if source.consecutive_failures >= 3:
+                source.health_status = "degraded"
+            if source.consecutive_failures >= 10:
+                source.health_status = "failing"
+            message = result.message or result.status
+            logger.warning(
+                "Source %s adapter status=%s: %s",
+                source.source_id,
+                result.status,
+                message,
+            )
+            self.health.record_failure(state, source.adapter, message)
+            return {
+                "source_id": source.source_id,
+                "status": "error",
+                "error": message,
+                "jobs": [],
+            }
+
+        source.last_success_at = now
+        source.consecutive_failures = 0
+        source.health_status = "healthy"
+        source.last_validated_at = now
+        if result.etag:
+            source.etag = result.etag
+        if result.last_modified:
+            source.last_modified = result.last_modified
+        self.health.record_success(state, source.adapter)
+        return {
+            "source_id": source.source_id,
+            "status": "ok",
+            "jobs": result.jobs,
+            "adapter": source.adapter,
+        }
+
+    async def _fetch_source(
+        self,
+        client: SafeHTTPClient,
+        source: Source,
+        state: LiveState,
+    ) -> dict[str, Any]:
+        poll = await self._poll_adapter(client, source)
+        return self._apply_poll_result(source, state, poll)
+
+    def _promote_boards_from_raw_jobs(
+        self,
+        state: LiveState,
+        raw_jobs: list[RawJob],
+        *,
+        now: datetime,
+    ) -> list[Source]:
+        """Turn Simplify/SWE List apply URLs into first-party ATS boards we poll ourselves."""
+        promoted: list[Source] = []
+        seen: set[str] = set()
+        for raw in raw_jobs:
+            apply_url = raw.apply_url or raw.job_url
+            if not apply_url:
+                continue
+            company_name = str(
+                (raw.metadata or {}).get("company_name") or raw.department or "Unknown"
+            )
+            company_domain = (raw.metadata or {}).get("company_domain")
+            if not isinstance(company_domain, str):
+                company_domain = None
+            source = promote_ats_board_from_url(
+                state,
+                apply_url=apply_url,
+                company_name=company_name,
+                company_domain=company_domain,
+                discovered_via="simplify",
+                now=now,
+            )
+            if source is None or source.source_id in seen:
+                continue
+            seen.add(source.source_id)
+            promoted.append(source)
+        return promoted
+
+    def _ingest_raw_jobs(
+        self,
+        state: LiveState,
+        source: Source,
+        raw_jobs: list[RawJob],
+        *,
+        now: datetime,
+        summary: dict[str, Any],
+    ) -> set[str]:
+        source_job_ids: set[str] = set()
+        touched_company_ids: set[str] = set()
+        for raw in raw_jobs:
+            source_job_ids.add(raw.source_job_id)
+            try:
+                company = self._company_for_raw(state, source, raw, now=now)
+                touched_company_ids.add(company.company_id)
+                job = normalize_raw_job(
+                    raw,
+                    company_id=company.company_id,
+                    company_name=company.name,
+                    adapter=source.adapter,
+                    adapter_tenant=source.adapter_tenant,
+                    source_id=source.source_id,
+                    fetched_at=now,
+                    source_health=source.health_status,
+                    root=self.root,
+                )
+            except Exception as exc:
+                logger.warning("Normalize failed for %s: %s", raw.source_job_id, exc)
+                continue
+
+            existing = state.jobs.get(job.job_id)
+            if existing is None:
+                state.jobs[job.job_id] = job
+                summary["new_jobs"] += 1
+                self.lifecycle.record_opened(state, job)
+            else:
+                changes = self.lifecycle.apply_update(existing, job, now)
+                if changes:
+                    summary["updated_jobs"] += 1
+
+        if not touched_company_ids and source.company_id in state.companies:
+            touched_company_ids.add(source.company_id)
+        for company_id in touched_company_ids:
+            company = state.companies[company_id]
+            company.active_job_count = sum(
+                1
+                for j in state.jobs.values()
+                if j.company_id == company.company_id
+                and j.lifecycle.value in ("open", "reopened")
+            )
+            company.last_seen_at = now
+        return source_job_ids
 
     async def run_sync(
         self,
@@ -290,70 +407,79 @@ class SyncOrchestrator:
             "closed": 0,
             "reopened": 0,
             "failures": 0,
+            "promoted_boards": 0,
             "started_at": now.isoformat(),
         }
 
         seen_by_source: dict[str, set[str]] = {}
+        concurrency = max(1, int(self.config.http.get("global_concurrency", 32)))
+        sem = asyncio.Semaphore(concurrency)
+
+        async def poll_one(source: Source) -> tuple[Source, AdapterFetchResult | dict[str, Any]]:
+            async with sem:
+                return source, await self._poll_adapter(client, source)
 
         async with SafeHTTPClient(self.config) as client:
-            for source in due:
-                result = await self._fetch_source(client, source, state)
-                tier_key = f"{source.poll_tier}_minutes"
-                tier_minutes = int(self.config.polling.get("tiers", {}).get(tier_key, 60))
-                source.next_due_at = now + timedelta(minutes=tier_minutes)
+            pending = list(due)
+            polled_ids: set[str] = set()
 
-                if result["status"] == "not_modified":
-                    summary["not_modified"] += 1
-                    continue
-                if result["status"] in ("error", "unsupported"):
-                    summary["failures"] += 1
-                    continue
+            while pending:
+                batch = [source for source in pending if source.source_id not in polled_ids]
+                pending = []
+                if not batch:
+                    break
 
-                summary["fetched"] += 1
-                source_job_ids: set[str] = set()
-                touched_company_ids: set[str] = set()
-                for raw in result.get("jobs", []):
-                    source_job_ids.add(raw.source_job_id)
-                    try:
-                        company = self._company_for_raw(state, source, raw, now=now)
-                        touched_company_ids.add(company.company_id)
-                        job = normalize_raw_job(
-                            raw,
-                            company_id=company.company_id,
-                            company_name=company.name,
-                            adapter=source.adapter,
-                            adapter_tenant=source.adapter_tenant,
-                            source_id=source.source_id,
-                            fetched_at=now,
-                            source_health=source.health_status,
-                            root=self.root,
-                        )
-                    except Exception as exc:
-                        logger.warning("Normalize failed for %s: %s", raw.source_job_id, exc)
+                polls = await asyncio.gather(
+                    *[poll_one(source) for source in batch],
+                    return_exceptions=True,
+                )
+
+                newly_promoted: list[Source] = []
+                for item in polls:
+                    if isinstance(item, BaseException):
+                        summary["failures"] += 1
+                        logger.warning("Parallel poll crashed: %s", item)
                         continue
 
-                    existing = state.jobs.get(job.job_id)
-                    if existing is None:
-                        state.jobs[job.job_id] = job
-                        summary["new_jobs"] += 1
-                        self.lifecycle.record_opened(state, job)
-                    else:
-                        changes = self.lifecycle.apply_update(existing, job, now)
-                        if changes:
-                            summary["updated_jobs"] += 1
+                    source, poll = item
+                    polled_ids.add(source.source_id)
+                    tier_key = f"{source.poll_tier}_minutes"
+                    tier_minutes = int(self.config.polling.get("tiers", {}).get(tier_key, 60))
+                    source.next_due_at = now + timedelta(minutes=tier_minutes)
 
-                seen_by_source[source.source_id] = source_job_ids
-                if not touched_company_ids and source.company_id in state.companies:
-                    touched_company_ids.add(source.company_id)
-                for company_id in touched_company_ids:
-                    company = state.companies[company_id]
-                    company.active_job_count = sum(
-                        1
-                        for j in state.jobs.values()
-                        if j.company_id == company.company_id
-                        and j.lifecycle.value in ("open", "reopened")
+                    result = self._apply_poll_result(source, state, poll)
+                    if result["status"] == "not_modified":
+                        summary["not_modified"] += 1
+                        continue
+                    if result["status"] in ("error", "unsupported"):
+                        summary["failures"] += 1
+                        continue
+
+                    summary["fetched"] += 1
+                    raw_jobs: list[RawJob] = list(result.get("jobs") or [])
+                    seen_by_source[source.source_id] = self._ingest_raw_jobs(
+                        state, source, raw_jobs, now=now, summary=summary
                     )
-                    company.last_seen_at = now
+
+                    if source.adapter == "simplify":
+                        promoted = self._promote_boards_from_raw_jobs(
+                            state, raw_jobs, now=now
+                        )
+                        summary["promoted_boards"] += len(promoted)
+                        for board in promoted:
+                            if board.source_id in polled_ids:
+                                continue
+                            # Always allow newly discovered public ATS boards in-cycle.
+                            if (
+                                adapters is not None
+                                and board.adapter not in adapters
+                                and board.adapter not in FAST_ATS_ADAPTERS
+                            ):
+                                continue
+                            newly_promoted.append(board)
+
+                # Same-cycle poll for boards discovered from Simplify apply URLs.
+                pending.extend(newly_promoted)
 
         for source_id, seen_ids in seen_by_source.items():
             src = state.sources.get(source_id)

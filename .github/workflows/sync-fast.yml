@@ -1,28 +1,27 @@
-name: Sync and Deploy
+name: Sync Fast Path
+
+# Same method Simplify uses under the hood: poll public Greenhouse / Lever / Ashby
+# board JSON APIs frequently, plus their GitHub dump as a discovery signal.
+# Publishes live-feed without waiting on slow Workday boards.
 
 on:
   schedule:
-    # Slower full pass (includes Workday). Fast path owns the 5-minute cadence.
-    - cron: "*/30 * * * *"
+    # GitHub Actions practical floor ~5 minutes — beat Simplify's ~30m GitHub dump.
+    - cron: "*/5 * * * *"
   workflow_dispatch:
-    inputs:
-      sample:
-        description: Sync only a small sample of sources
-        type: boolean
-        default: false
 
 permissions:
   contents: write
 
 concurrency:
-  group: openroleradar-sync
+  group: openroleradar-sync-fast
   cancel-in-progress: true
 
 jobs:
-  sync:
-    name: Sync and publish live feed
+  sync-fast:
+    name: Fast ATS + Simplify discovery
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -45,22 +44,19 @@ jobs:
           restore-keys: |
             live-state-
 
-      - name: Run sync
+      - name: Sync fast adapters in parallel
         working-directory: engine
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ "${{ github.event.inputs.sample }}" = "true" ]; then
-            uv run openroleradar sync --sample
-          else
-            uv run openroleradar sync
-          fi
+          # Public ATS APIs (Simplify's real method) + their listings dump for discovery.
+          OPENROLERADAR_ADAPTERS: greenhouse,lever,ashby,simplify
+        run: uv run openroleradar sync --adapters greenhouse,lever,ashby,simplify
 
       - name: Build data exports
         working-directory: engine
         run: uv run openroleradar build-data
 
-      - name: Publish live-feed branch (what the site actually reads)
+      - name: Publish live-feed branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -76,7 +72,7 @@ jobs:
           git checkout -b live-feed
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          printf '%s\n' '# Live job feed — force-pushed every sync' > README.md
+          printf '%s\n' '# Live job feed — force-pushed every fast sync' > README.md
           git add -A
           git commit -m "live-feed $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"

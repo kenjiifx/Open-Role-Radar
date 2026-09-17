@@ -1,81 +1,26 @@
 name: Sync Simplify Feeds
 
-# Fast path for SWE List / SimplifyJobs public listings.
-# Publishes live-feed without waiting on the full ATS crawl.
+# Deprecated in favor of sync-fast.yml (public ATS APIs every 5 minutes).
+# Kept as a thin alias so existing bookmarks / dispatch still work.
 
 on:
-  schedule:
-    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: openroleradar-sync-simplify
+  group: openroleradar-sync-fast
   cancel-in-progress: true
 
 jobs:
-  sync-simplify:
-    name: Sync Simplify / SWE List feeds
+  redirect:
+    name: Run Sync Fast Path instead
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@bd01e18f51369d5a26f1651c3cb451d3417e3bba # v6.3.1
-        with:
-          enable-cache: true
-          cache-dependency-glob: engine/uv.lock
-
-      - name: Sync Python dependencies
-        working-directory: engine
-        run: uv sync --all-extras --dev
-
-      - name: Restore live state
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
-        with:
-          path: .local/state
-          key: live-state-${{ github.run_id }}
-          restore-keys: |
-            live-state-
-
-      - name: Sync Simplify feeds only
-        working-directory: engine
+      - name: Trigger Sync Fast Path
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENROLERADAR_ADAPTERS: simplify
-        run: uv run openroleradar sync --adapters simplify
-
-      - name: Build data exports
-        working-directory: engine
-        run: uv run openroleradar build-data
-
-      - name: Publish live-feed branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-          if [ ! -d site/public/data ]; then
-            echo "site/public/data missing — build-data did not export a feed" >&2
-            exit 1
-          fi
-          WORK="$(mktemp -d)"
-          cp -R site/public/data/. "$WORK/"
-          cd "$WORK"
-          git init
-          git checkout -b live-feed
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          printf '%s\n' '# Live job feed — force-pushed every sync' > README.md
-          git add -A
-          git commit -m "live-feed $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push -f origin live-feed
-
-      - name: Save live state
-        uses: actions/cache/save@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
-        with:
-          path: .local/state
-          key: live-state-${{ github.run_id }}
+          gh workflow run "Sync Fast Path" --repo "${GITHUB_REPOSITORY}"
+          echo "Dispatched Sync Fast Path (greenhouse+lever+ashby+simplify every 5m)."
