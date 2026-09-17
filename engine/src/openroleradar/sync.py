@@ -111,7 +111,13 @@ class SyncOrchestrator:
         self.store.save(state)
         return state
 
-    def _sources_due(self, state: LiveState, now: datetime) -> list[Source]:
+    def _sources_due(
+        self,
+        state: LiveState,
+        now: datetime,
+        *,
+        adapters: set[str] | None = None,
+    ) -> list[Source]:
         """Return every enabled source each sync so refresh gets fresh publishes.
 
         Ordering still prefers the oldest / never-polled sources when capped.
@@ -122,6 +128,8 @@ class SyncOrchestrator:
             if not source.enabled:
                 continue
             if source.health_status in ("blocked", "disabled", "unsupported"):
+                continue
+            if adapters is not None and source.adapter not in adapters:
                 continue
             due.append(source)
         # Multi-company feeds (Simplify / SWE List) first — cheap and high-signal.
@@ -260,11 +268,16 @@ class SyncOrchestrator:
             state = self.health.record_failure(state, source.adapter, str(exc))
             return {"source_id": source.source_id, "status": "error", "error": str(exc), "jobs": []}
 
-    async def run_sync(self, *, sample: bool = False) -> dict[str, Any]:
+    async def run_sync(
+        self,
+        *,
+        sample: bool = False,
+        adapters: set[str] | None = None,
+    ) -> dict[str, Any]:
         """Execute a full synchronization cycle."""
         now = datetime.now(UTC)
         state = self.load_or_bootstrap()
-        due = self._sources_due(state, now)
+        due = self._sources_due(state, now, adapters=adapters)
         if sample:
             due = due[:3]
 
@@ -298,10 +311,12 @@ class SyncOrchestrator:
 
                 summary["fetched"] += 1
                 source_job_ids: set[str] = set()
+                touched_company_ids: set[str] = set()
                 for raw in result.get("jobs", []):
                     source_job_ids.add(raw.source_job_id)
                     try:
                         company = self._company_for_raw(state, source, raw, now=now)
+                        touched_company_ids.add(company.company_id)
                         job = normalize_raw_job(
                             raw,
                             company_id=company.company_id,
@@ -328,13 +343,17 @@ class SyncOrchestrator:
                             summary["updated_jobs"] += 1
 
                 seen_by_source[source.source_id] = source_job_ids
-                company.active_job_count = sum(
-                    1
-                    for j in state.jobs.values()
-                    if j.company_id == company.company_id
-                    and j.lifecycle.value in ("open", "reopened")
-                )
-                company.last_seen_at = now
+                if not touched_company_ids and source.company_id in state.companies:
+                    touched_company_ids.add(source.company_id)
+                for company_id in touched_company_ids:
+                    company = state.companies[company_id]
+                    company.active_job_count = sum(
+                        1
+                        for j in state.jobs.values()
+                        if j.company_id == company.company_id
+                        and j.lifecycle.value in ("open", "reopened")
+                    )
+                    company.last_seen_at = now
 
         for source_id, seen_ids in seen_by_source.items():
             src = state.sources.get(source_id)

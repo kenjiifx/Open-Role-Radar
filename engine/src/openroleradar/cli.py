@@ -55,6 +55,13 @@ def _state_store(root: Path) -> LocalStateStore:
 @app.command()
 def sync(
     sample: Annotated[bool, typer.Option("--sample", help="Sync only a few sources")] = False,
+    adapters: Annotated[
+        str | None,
+        typer.Option(
+            "--adapters",
+            help="Comma-separated adapter allowlist (e.g. simplify). Defaults to all.",
+        ),
+    ] = None,
 ) -> None:
     """Poll due sources, normalize jobs, update lifecycle state."""
     root = _repo_root()
@@ -62,8 +69,13 @@ def sync(
     restored = orchestrator.restore_live_state_release()
     if restored:
         console.print("[cyan]Restored live state from GitHub Release[/cyan]")
+    allow = None
+    raw_adapters = adapters or os.environ.get("OPENROLERADAR_ADAPTERS")
+    if raw_adapters:
+        allow = {part.strip().lower() for part in raw_adapters.split(",") if part.strip()}
+        console.print(f"[cyan]Adapter filter:[/cyan] {', '.join(sorted(allow))}")
     console.print("[bold]Starting synchronization...[/bold]")
-    summary = asyncio.run(orchestrator.run_sync(sample=sample))
+    summary = asyncio.run(orchestrator.run_sync(sample=sample, adapters=allow))
     table = Table(title="Sync Summary")
     table.add_column("Metric", style="cyan")
     table.add_column("Value", style="green")
