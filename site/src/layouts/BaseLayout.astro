@@ -16,7 +16,7 @@ const {
 } = Astro.props;
 
 const siteBase = import.meta.env.BASE_URL;
-const siteUrl = Astro.site?.href ?? 'https://kenjiifx.github.io';
+const siteUrl = Astro.site?.href ?? 'https://moosacodes.github.io';
 const canonical = new URL(canonicalPath || '.', `${siteUrl}${siteBase}`).href;
 const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
 ---
@@ -74,7 +74,7 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
           <a href={`${siteBase}#roles`}>Live Feed</a>
           <a href={`${siteBase}status`}>Status</a>
           <a
-            href="https://github.com/kenjiifx/Open-Role-Radar"
+            href="https://github.com/moosacodes/Open-Role-Radar"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -89,7 +89,7 @@ const imageUrl = new URL(ogImage, `${siteUrl}${siteBase}`).href;
           </div>
           <a
             class="site-header__github"
-            href="https://github.com/kenjiifx/Open-Role-Radar"
+            href="https://github.com/moosacodes/Open-Role-Radar"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="OpenRoleRadar on GitHub"

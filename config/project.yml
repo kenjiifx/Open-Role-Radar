@@ -6,9 +6,9 @@ tagline: Global early-career opportunity intelligence
 description: >
   Zero-cost opportunity intelligence platform that polls first-party early-career
   roles from public ATS boards, classifies them, and publishes a searchable static site.
-repository: kenjiifx/Open-Role-Radar
-website_url: https://kenjiifx.github.io/Open-Role-Radar/
-user_agent: OpenRoleRadar/1.0 (+https://github.com/kenjiifx/Open-Role-Radar)
+repository: moosacodes/Open-Role-Radar
+website_url: https://moosacodes.github.io/Open-Role-Radar/
+user_agent: OpenRoleRadar/1.0 (+https://github.com/moosacodes/Open-Role-Radar)
 
 versions:
   state_format: 1
@@ -28,12 +28,12 @@ live_state:
 
 polling:
   tiers:
-    hot_minutes: 3
-    warm_minutes: 3
-    cold_minutes: 10
-    dormant_minutes: 30
+    hot_minutes: 2
+    warm_minutes: 5
+    cold_minutes: 8
+    dormant_minutes: 20
   max_sources_per_sync: 2000
-  max_sync_runtime_minutes: 55
+  max_sync_runtime_minutes: 45
 
 http:
   timeout_seconds: 30

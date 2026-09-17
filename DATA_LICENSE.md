@@ -37,7 +37,7 @@ Commercial redistribution of bulk datasets (e.g. reselling listings) is discoura
 
 When reusing OpenRoleRadar data, please attribute:
 
-> Data aggregated by [OpenRoleRadar](https://github.com/kenjiifx/Open-Role-Radar)
+> Data aggregated by [OpenRoleRadar](https://github.com/moosacodes/Open-Role-Radar)
 
 Include `generated_at` from `api/v1/meta.json` when mirroring snapshots.
 

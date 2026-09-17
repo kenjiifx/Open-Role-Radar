@@ -2,11 +2,12 @@ import type { DataManifest, Job, ShardInfo } from './types';
 import { bucketForJobId } from './sha256';
 
 declare const __SITE_BASE__: string;
+declare const __GITHUB_REPO__: string;
 
 /** Prefer sources that update immediately after sync (bypass Pages CDN lag). */
 const FEED_BASES = [
-  'https://raw.githubusercontent.com/kenjiifx/Open-Role-Radar/live-feed/',
-  'https://cdn.jsdelivr.net/gh/kenjiifx/Open-Role-Radar@live-feed/',
+  `https://raw.githubusercontent.com/${__GITHUB_REPO__}/live-feed/`,
+  `https://cdn.jsdelivr.net/gh/${__GITHUB_REPO__}@live-feed/`,
   `${__SITE_BASE__}data/`,
 ] as const;
 

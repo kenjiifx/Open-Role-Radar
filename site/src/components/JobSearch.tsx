@@ -82,7 +82,7 @@ function HeroBanner() {
           </a>
           <a
             className="btn btn--ghost"
-            href="https://github.com/kenjiifx/Open-Role-Radar"
+            href="https://github.com/moosacodes/Open-Role-Radar"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -267,7 +267,7 @@ export default function JobSearch({
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisible);
     window.addEventListener('pageshow', onPageShow);
-    const timer = window.setInterval(peek, 5_000);
+    const timer = window.setInterval(peek, 3_000);
     return () => {
       window.clearTimeout(armTimer);
       window.removeEventListener('focus', onFocus);

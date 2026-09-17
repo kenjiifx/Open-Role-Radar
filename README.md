@@ -2,10 +2,10 @@
 
 First-party early-career roles (internships, co-ops, new grad) scraped from public employer ATS boards and published as a searchable static site.
 
-[![CI](https://github.com/kenjiifx/Open-Role-Radar/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kenjiifx/Open-Role-Radar/actions/workflows/ci.yml)
-[![Sync](https://github.com/kenjiifx/Open-Role-Radar/actions/workflows/sync.yml/badge.svg?branch=main)](https://github.com/kenjiifx/Open-Role-Radar/actions/workflows/sync.yml)
+[![CI](https://github.com/moosacodes/Open-Role-Radar/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/moosacodes/Open-Role-Radar/actions/workflows/ci.yml)
+[![Sync](https://github.com/moosacodes/Open-Role-Radar/actions/workflows/sync.yml/badge.svg?branch=main)](https://github.com/moosacodes/Open-Role-Radar/actions/workflows/sync.yml)
 
-**Live:** https://kenjiifx.github.io/Open-Role-Radar/
+**Live:** https://moosacodes.github.io/Open-Role-Radar/
 
 ## What it does
 

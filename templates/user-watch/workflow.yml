@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Fetch public feed
         run: |
-          curl -fsSL "${{ vars.ORR_FEED_URL || 'https://kenjiifx.github.io/Open-Role-Radar/feeds/early-career.atom' }}" -o feed.atom
+          curl -fsSL "${{ vars.ORR_FEED_URL || 'https://moosacodes.github.io/Open-Role-Radar/feeds/early-career.atom' }}" -o feed.atom
 
       - name: Filter matches
         env:

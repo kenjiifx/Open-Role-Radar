@@ -2,7 +2,7 @@
 
 OpenRoleRadar publishes a **read-only static JSON API** on GitHub Pages. No authentication is required. Data is regenerated on each successful sync workflow.
 
-**Base URL:** `https://kenjiifx.github.io/Open-Role-Radar/api/v1/`
+**Base URL:** `https://moosacodes.github.io/Open-Role-Radar/api/v1/`
 
 Local paths after `openroleradar build-data`: `site/public/api/v1/`
 
@@ -33,7 +33,7 @@ Dataset metadata and counts.
   "project": {
     "name": "OpenRoleRadar",
     "slug": "openroleradar",
-    "website_url": "https://kenjiifx.github.io/Open-Role-Radar/"
+    "website_url": "https://moosacodes.github.io/Open-Role-Radar/"
   },
   "versions": { "job_schema": 1, "company_schema": 1 }
 }
@@ -107,12 +107,12 @@ check-jsonschema --schemafile schemas/job.schema.json site/public/api/v1/jobs/sh
 import json
 import urllib.request
 
-META = "https://kenjiifx.github.io/Open-Role-Radar/api/v1/meta.json"
-INDEX = "https://kenjiifx.github.io/Open-Role-Radar/api/v1/jobs/index.json"
+META = "https://moosacodes.github.io/Open-Role-Radar/api/v1/meta.json"
+INDEX = "https://moosacodes.github.io/Open-Role-Radar/api/v1/jobs/index.json"
 
 index = json.load(urllib.request.urlopen(INDEX))
 entry = next(j for j in index if j["job_id"] == TARGET_ID)
-shard_url = f"https://kenjiifx.github.io/Open-Role-Radar/api/v1/jobs/shard/{entry['bucket']}.json"
+shard_url = f"https://moosacodes.github.io/Open-Role-Radar/api/v1/jobs/shard/{entry['bucket']}.json"
 shard = json.load(urllib.request.urlopen(shard_url))
 job = shard[TARGET_ID]
 ```

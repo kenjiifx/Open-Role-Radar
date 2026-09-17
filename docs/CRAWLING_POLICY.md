@@ -21,7 +21,7 @@ We do **not** crawl:
 Every request sends the User-Agent from `config/project.yml`:
 
 ```
-OpenRoleRadar/1.0 (+https://github.com/kenjiifx/Open-Role-Radar)
+OpenRoleRadar/1.0 (+https://github.com/moosacodes/Open-Role-Radar)
 ```
 
 ## Rate limiting

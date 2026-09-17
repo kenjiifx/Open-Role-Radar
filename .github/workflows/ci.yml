@@ -83,5 +83,5 @@ jobs:
       - name: Build
         env:
           ASTRO_BASE: /Open-Role-Radar/
-          ASTRO_SITE: https://kenjiifx.github.io
+          ASTRO_SITE: "https://${{ github.repository_owner }}.github.io"
         run: pnpm build

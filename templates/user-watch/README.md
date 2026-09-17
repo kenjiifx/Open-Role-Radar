@@ -6,7 +6,7 @@ Run your own lightweight job alert using the **public** OpenRoleRadar Atom feed�
 
 1. Copy `workflow.yml` into your repository at `.github/workflows/openroleradar-watch.yml`.
 2. (Optional) Add repository variables under **Settings → Secrets and variables → Actions → Variables**:
-   - `ORR_FEED_URL` — defaults to `https://kenjiifx.github.io/Open-Role-Radar/feeds/early-career.atom`
+   - `ORR_FEED_URL` — defaults to `https://moosacodes.github.io/Open-Role-Radar/feeds/early-career.atom`
    - `ORR_KEYWORDS` — comma-separated terms, e.g. `backend,python,remote`
    - `ORR_LOCATIONS` — comma-separated location hints, e.g. `london,berlin,remote`
 3. Create a label named `openroleradar-watch` (or edit the workflow).

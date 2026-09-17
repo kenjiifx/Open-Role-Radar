@@ -7,7 +7,9 @@ Runbook for maintainers and advanced contributors operating OpenRoleRadar in Git
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
 | `ci.yml` | PR / push | Ruff, mypy, pytest, site lint/typecheck/test/build |
-| `sync.yml` | Every 15 min (offset) + manual | Sync, build-data, deploy Pages |
+| `sync.yml` | Every 5 min + manual | Poll ATS boards and publish the `live-feed` branch |
+| `pages.yml` | Push to `site/**` + manual | Build Astro and deploy GitHub Pages |
+| `discover.yml` | Daily + manual | GitHub + Common Crawl discovery |
 | `discover.yml` | Daily + manual | GitHub + Common Crawl discovery |
 | `archive.yml` | Monthly + manual | Export compressed historical dataset |
 | `readme.yml` | Daily + manual | Refresh README `GENERATED_STATS` |
@@ -19,8 +21,8 @@ All workflows pin third-party Actions to full commit SHAs with version comments.
 ## GitHub Pages setup
 
 1. Repository **Settings → Pages → Build and deployment → GitHub Actions**
-2. Ensure `sync.yml` has `permissions: pages: write` and `id-token: write`
-3. Environment `github-pages` is created automatically on first deploy
+2. Ensure `pages.yml` has `permissions: pages: write` and `id-token: write`
+3. Environment `github-pages` is created automatically on first deploy. Only `pages.yml` should deploy to it — `sync.yml` publishes job JSON to `live-feed` instead, so the two jobs cannot collide.
 
 ## Live state cache
 
