@@ -10,6 +10,8 @@ import {
 describe('filters URL serialization', () => {
   it('returns empty string for default filters', () => {
     expect(serializeFiltersToUrl(DEFAULT_FILTERS)).toBe('');
+    expect(DEFAULT_FILTERS.careerLevels).toEqual([]);
+    expect(DEFAULT_FILTERS.disciplines).toEqual([]);
   });
 
   it('round-trips search query and arrays', () => {

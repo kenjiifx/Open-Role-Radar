@@ -1,5 +1,4 @@
 import type { FilterState, FreshnessFilter, SortMode } from './types';
-import { CS_DISCIPLINES } from './labels';
 
 export type { FilterState };
 
@@ -7,19 +6,8 @@ const DEFAULT_PAGE_SIZE = 40;
 
 export const DEFAULT_FILTERS: FilterState = {
   q: '',
-  careerLevels: [
-    'internship',
-    'co_op',
-    'new_grad',
-    'entry_level',
-    'apprenticeship',
-    'graduate_program',
-    'rotational_program',
-    'research_internship',
-    'fellowship',
-    'student_program',
-  ],
-  disciplines: [...CS_DISCIPLINES],
+  careerLevels: [],
+  disciplines: [],
   regions: [],
   workplaceTypes: [],
   academicTerms: [],
@@ -178,8 +166,8 @@ export function filtersAreDefault(filters: FilterState): boolean {
 export function countActiveFilters(filters: FilterState): number {
   let count = 0;
   if (filters.q.trim()) count += 1;
-  if (!arraysEqual(filters.careerLevels, DEFAULT_FILTERS.careerLevels)) count += 1;
-  if (!arraysEqual(filters.disciplines, DEFAULT_FILTERS.disciplines)) count += 1;
+  if (filters.careerLevels.length) count += 1;
+  if (filters.disciplines.length) count += 1;
   if (filters.regions.length) count += 1;
   if (filters.workplaceTypes.length) count += 1;
   if (filters.academicTerms.length) count += 1;
