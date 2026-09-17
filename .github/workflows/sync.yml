@@ -59,17 +59,15 @@ jobs:
         working-directory: engine
         run: uv run openroleradar build-data
 
-      - name: Publish durable live-state release
-        working-directory: engine
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: uv run openroleradar publish-state
-
-      - name: Publish live-feed branch (fresh on every browser refresh)
+      - name: Publish live-feed branch (what the site actually reads)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          if [ ! -d site/public/data ]; then
+            echo "site/public/data missing — build-data did not export a feed" >&2
+            exit 1
+          fi
           WORK="$(mktemp -d)"
           cp -R site/public/data/. "$WORK/"
           cd "$WORK"
@@ -82,6 +80,13 @@ jobs:
           git commit -m "live-feed $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push -f origin live-feed
+
+      - name: Publish durable live-state release
+        continue-on-error: true
+        working-directory: engine
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run openroleradar publish-state
 
       - name: Save live state
         uses: actions/cache/save@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
