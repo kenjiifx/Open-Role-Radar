@@ -68,9 +68,10 @@ class GitHubReleaseStore:
         self.token = token or os.environ.get("GITHUB_TOKEN", "")
         if not self.token:
             raise ValueError("GITHUB_TOKEN environment variable is required")
-        if not self.config.repository:
+        repository = os.environ.get("GITHUB_REPOSITORY") or self.config.repository
+        if not repository:
             raise ValueError("project.repository must be configured")
-        self.owner, self.repo = self.config.repository.split("/", 1)
+        self.owner, self.repo = repository.split("/", 1)
         self._client = client
         self._owns_client = client is None
         self._local = LocalStateStore(Path.cwd() / ".openroleradar" / "cache")
@@ -88,6 +89,7 @@ class GitHubReleaseStore:
             self._client = httpx.Client(
                 headers=self._headers(),
                 timeout=httpx.Timeout(60.0, connect=15.0),
+                follow_redirects=True,
             )
         return self._client
 
